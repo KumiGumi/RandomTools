@@ -6,37 +6,24 @@
 <title>OMS Routing Simulator</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
   font-family: 'Segoe UI', system-ui, sans-serif;
-  background: #060e1a;
-  color: #c8d8f0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  font-size: 13px;
+  background: #060e1a; color: #c8d8f0;
+  height: 100vh; display: flex; flex-direction: column;
+  overflow: hidden; font-size: 13px;
 }
 
 /* ── Header ── */
 header {
-  background: #0a1525;
-  border-bottom: 1px solid #162840;
-  padding: 10px 18px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-shrink: 0;
-  z-index: 10;
+  background: #0a1525; border-bottom: 1px solid #162840;
+  padding: 10px 18px; display: flex; align-items: center;
+  gap: 14px; flex-shrink: 0;
 }
 header h1 { font-size: 16px; color: #5ab4ff; font-weight: 700; letter-spacing: 0.5px; }
 header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-transform: uppercase; }
 .pulse-dot {
-  width: 8px; height: 8px;
-  background: #3ecf6e; border-radius: 50%;
-  box-shadow: 0 0 6px #3ecf6e;
-  animation: pulse 2s ease-in-out infinite;
-  flex-shrink: 0;
+  width: 8px; height: 8px; background: #3ecf6e; border-radius: 50%;
+  box-shadow: 0 0 6px #3ecf6e; animation: pulse 2s ease-in-out infinite; flex-shrink: 0;
 }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
@@ -45,65 +32,64 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 
 /* ── Sidebar ── */
 .sidebar {
-  width: 262px; flex-shrink: 0;
-  background: #0a1525;
-  border-right: 1px solid #162840;
-  display: flex; flex-direction: column;
-  overflow-y: auto;
+  width: 270px; flex-shrink: 0; background: #0a1525;
+  border-right: 1px solid #162840; display: flex; flex-direction: column; overflow-y: auto;
 }
 .sidebar::-webkit-scrollbar { width: 3px; }
 .sidebar::-webkit-scrollbar-thumb { background: #162840; }
 
 .sec-hdr {
-  padding: 8px 12px;
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1.5px;
-  color: #5ab4ff; background: #071020;
-  border-bottom: 1px solid #162840;
+  padding: 8px 12px; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px; color: #5ab4ff;
+  background: #071020; border-bottom: 1px solid #162840;
   display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 1;
+  position: sticky; top: 0; z-index: 2;
 }
 .sec-body { padding: 7px; }
 
-.node-card {
+/* Device cards */
+.dev-card {
   background: #0e1e33; border: 1px solid #162840;
-  border-radius: 5px; padding: 6px 8px;
-  margin-bottom: 5px;
-  display: flex; align-items: center; gap: 7px;
-  transition: border-color 0.2s;
+  border-radius: 5px; padding: 6px 8px; margin-bottom: 4px;
+  display: flex; align-items: center; gap: 7px; transition: border-color 0.2s;
 }
-.node-card:hover { border-color: #254a70; }
-.node-icon { width: 26px; height: 26px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.node-info { flex: 1; min-width: 0; }
-.node-name { color: #ddeeff; font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.node-detail { color: #3a6a9a; font-size: 10px; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dev-card:hover { border-color: #254a70; }
+.dev-card.is-printer { background: #091a0e; border-color: #0d2815; margin-left: 14px; margin-bottom: 3px; }
+.dev-card.is-printer:hover { border-color: #1a4a20; }
 
-.card-btns { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
+.dev-icon { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.dev-info { flex: 1; min-width: 0; }
+.dev-name { color: #ddeeff; font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dev-sub  { color: #3a6a9a; font-size: 10px; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dev-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.5px; padding: 1px 5px;
+  border-radius: 3px; flex-shrink: 0;
+}
+.badge-oms { background: #0f2a4a; color: #5ab4ff; border: 1px solid #1e4a7a; }
+.badge-net { background: #1a2a0a; color: #7acf5a; border: 1px solid #2a5a1a; }
+.badge-prt { background: #0a2010; color: #4abf6a; border: 1px solid #1a4a28; }
 
+.card-btns { display: flex; gap: 3px; align-items: center; flex-shrink: 0; }
 .icon-btn {
-  width: 20px; height: 20px;
-  background: #0e1e33; border: 1px solid #254a70;
-  color: #5ab4ff; border-radius: 3px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 15px; line-height: 1;
-  transition: background 0.15s;
+  width: 20px; height: 20px; background: #0e1e33; border: 1px solid #254a70;
+  color: #5ab4ff; border-radius: 3px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; line-height: 1; transition: background 0.15s;
 }
 .icon-btn:hover { background: #162840; }
-
+.icon-btn.sm { width: 16px; height: 16px; font-size: 11px; border-color: #1a3454; color: #3a8a4a; }
+.icon-btn.sm:hover { background: #0a2010; color: #4abf6a; }
 .edit-btn {
-  width: 17px; height: 17px;
-  background: transparent; border: 1px solid #1a3454;
-  color: #5a90c0; border-radius: 3px; cursor: pointer;
-  font-size: 10px; display: flex; align-items: center; justify-content: center;
+  width: 17px; height: 17px; background: transparent; border: 1px solid #1a3454;
+  color: #5a90c0; border-radius: 3px; cursor: pointer; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; opacity: 0.6; transition: opacity 0.15s;
 }
-.edit-btn:hover { opacity: 1; background: #0e2040; color: #5ab4ff; border-color: #254a70; }
-
+.edit-btn:hover { opacity: 1; background: #0e2040; color: #5ab4ff; }
 .del-btn {
-  width: 17px; height: 17px;
-  background: transparent; border: 1px solid #2a1010;
-  color: #e05050; border-radius: 3px; cursor: pointer;
-  font-size: 10px; display: flex; align-items: center; justify-content: center;
+  width: 17px; height: 17px; background: transparent; border: 1px solid #2a1010;
+  color: #e05050; border-radius: 3px; cursor: pointer; font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0; opacity: 0.55; transition: opacity 0.15s;
 }
 .del-btn:hover { opacity: 1; background: #200808; }
@@ -111,132 +97,145 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 /* ── Content ── */
 .content { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 
-#network-map {
-  flex: 1; background: #040c18;
-  position: relative; overflow: hidden; min-height: 0;
-}
+#network-map { flex: 1; background: #040c18; position: relative; overflow: hidden; min-height: 0; }
 #network-svg { width: 100%; height: 100%; display: block; }
+
+/* ── Print Jobs panel (rules table) ── */
+.pj-panel {
+  height: 175px; flex-shrink: 0; background: #071020;
+  border-top: 1px solid #162840; display: flex; flex-direction: column;
+}
+.pj-panel-hdr {
+  padding: 5px 12px; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px; color: #5ab4ff;
+  border-bottom: 1px solid #162840; display: flex; align-items: center;
+  justify-content: space-between; flex-shrink: 0; background: #08121e;
+}
+.pj-table-wrap { flex: 1; overflow-y: auto; }
+.pj-table-wrap::-webkit-scrollbar { width: 3px; }
+.pj-table-wrap::-webkit-scrollbar-thumb { background: #162840; }
+
+table.pj-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+table.pj-table thead th {
+  padding: 5px 10px; background: #0a1a2e; color: #3a5a7a;
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; text-align: left; position: sticky; top: 0; z-index: 1;
+}
+table.pj-table th:first-child { width: 54px; text-align: center; }
+table.pj-table th:last-child  { width: 52px; }
+table.pj-table tbody tr { border-bottom: 1px solid #0d1c2e; }
+table.pj-table tbody tr:hover td { background: #0e1e33; }
+table.pj-table tbody td { padding: 5px 10px; vertical-align: middle; }
+table.pj-table td:first-child { text-align: center; }
+table.pj-table td:last-child  { text-align: right; }
+.pj-name     { color: #5ab4ff; font-size: 11px; }
+.pj-criteria { color: #6a8aaa; font-family: monospace; font-size: 10px; }
+.pj-criteria .kw { color: #9ab4cc; }
+.pj-add-row {
+  padding: 7px 12px; border-top: 1px solid #0d1c2e;
+  flex-shrink: 0;
+}
+.btn-add-rule {
+  background: #0d2244; border: 1px solid #1a4070; color: #5ab4ff;
+  padding: 5px 12px; border-radius: 4px; cursor: pointer;
+  font-size: 11px; font-weight: 600; font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-add-rule:hover { background: #1a3a6a; }
+
+/* Toggle switch */
+.toggle { position: relative; width: 38px; height: 20px; display: inline-block; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.toggle-track {
+  position: absolute; inset: 0; border-radius: 10px;
+  background: #3a1010; cursor: pointer; transition: background 0.2s;
+}
+.toggle-track::before {
+  content: ''; position: absolute;
+  width: 14px; height: 14px; left: 3px; top: 3px;
+  background: #e05050; border-radius: 50%; transition: transform 0.2s, background 0.2s;
+}
+.toggle input:checked + .toggle-track { background: #0e3a1e; }
+.toggle input:checked + .toggle-track::before { transform: translateX(18px); background: #3ecf6e; }
 
 /* ── Bottom panel ── */
 .bottom-panel {
-  height: 200px; flex-shrink: 0;
-  background: #0a1525; border-top: 1px solid #162840;
-  display: flex;
+  height: 150px; flex-shrink: 0; background: #0a1525;
+  border-top: 1px solid #162840; display: flex;
 }
 .order-panel { width: 50%; border-right: 1px solid #162840; display: flex; flex-direction: column; }
 .log-panel   { width: 50%; display: flex; flex-direction: column; }
-
 .panel-hdr {
-  padding: 6px 11px;
-  font-size: 10px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1.5px;
-  color: #5ab4ff; border-bottom: 1px solid #162840;
-  display: flex; align-items: center; justify-content: space-between;
-  flex-shrink: 0;
+  padding: 5px 11px; font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px; color: #5ab4ff;
+  border-bottom: 1px solid #162840; display: flex; align-items: center;
+  justify-content: space-between; flex-shrink: 0;
 }
-.panel-body { flex: 1; overflow-y: auto; padding: 7px; }
+.panel-body { flex: 1; overflow-y: auto; padding: 6px; }
 .panel-body::-webkit-scrollbar { width: 3px; }
 .panel-body::-webkit-scrollbar-thumb { background: #162840; }
-
 .order-item {
-  background: #0e1e33; border: 1px solid #162840;
-  border-radius: 4px; padding: 5px 8px;
-  margin-bottom: 4px; display: flex; align-items: center; gap: 6px; font-size: 11px;
+  background: #0e1e33; border: 1px solid #162840; border-radius: 4px;
+  padding: 4px 8px; margin-bottom: 3px;
+  display: flex; align-items: center; gap: 6px; font-size: 11px;
 }
-.order-item .oi-name { color: #ddeeff; font-weight: 600; }
+.order-item .oi-name  { color: #ddeeff; font-weight: 600; }
 .order-item .oi-attrs { color: #5ab4ff; font-family: monospace; font-size: 10px; flex: 1; }
-.order-item .card-btns { gap: 3px; }
-
 .order-controls {
-  padding: 6px 8px; border-top: 1px solid #162840;
+  padding: 5px 8px; border-top: 1px solid #162840;
   display: flex; gap: 6px; align-items: center; flex-shrink: 0;
 }
-
 .log-entry { padding: 2px 4px; font-size: 10px; font-family: monospace; border-bottom: 1px solid #08121e; line-height: 1.4; }
 .log-entry .ts { color: #1e3a55; margin-right: 5px; }
-.log-order  { color: #c084fc; }
-.log-route  { color: #5ab4ff; }
-.log-print  { color: #3ecf6e; }
-.log-warn   { color: #fbbf24; }
-.log-info   { color: #3a5a7a; }
+.log-order { color: #c084fc; } .log-route { color: #5ab4ff; }
+.log-print { color: #3ecf6e; } .log-warn  { color: #fbbf24; } .log-info { color: #3a5a7a; }
 
 /* ── Buttons ── */
-.btn {
-  padding: 5px 12px; border-radius: 4px;
-  font-size: 12px; cursor: pointer;
-  font-family: inherit; font-weight: 600;
-  border: 1px solid transparent; transition: all 0.15s;
-}
+.btn { padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 600; border: 1px solid transparent; transition: all 0.15s; }
 .btn-primary { background: #0f4a96; color: #e0f0ff; border-color: #1560c0; }
 .btn-primary:hover { background: #1560c0; }
 .btn-ghost   { background: transparent; color: #5ab4ff; border-color: #162840; }
 .btn-ghost:hover   { background: #0e1e33; }
-.btn-send    { background: #0a3d8a; color: #fff; border-color: #1255b0; padding: 6px 18px; font-size: 13px; }
+.btn-send    { background: #0a3d8a; color: #fff; border-color: #1255b0; padding: 5px 16px; font-size: 12px; }
 .btn-send:hover    { background: #1255b0; }
-.btn-send:disabled { background: #08122a; color: #1e3a55; border-color: #0e1e33; cursor: not-allowed; }
-.btn-danger  { background: transparent; color: #e05050; border-color: #2a1010; padding: 5px 10px; font-size: 11px; }
+.btn-danger  { background: transparent; color: #e05050; border-color: #2a1010; padding: 4px 9px; font-size: 11px; }
 .btn-danger:hover  { background: #180505; }
 
 /* ── Modals ── */
-.overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.78); z-index: 200;
-  align-items: center; justify-content: center;
-}
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 200; align-items: center; justify-content: center; }
 .overlay.open { display: flex; }
 .modal {
-  background: #0a1525; border: 1px solid #1e3a55;
-  border-radius: 8px; padding: 20px; width: 400px;
-  max-height: 88vh; overflow-y: auto;
-  box-shadow: 0 24px 64px rgba(0,0,0,0.85);
+  background: #0a1525; border: 1px solid #1e3a55; border-radius: 8px; padding: 20px;
+  width: 420px; max-height: 88vh; overflow-y: auto; box-shadow: 0 24px 64px rgba(0,0,0,0.85);
 }
 .modal h3 { font-size: 14px; color: #5ab4ff; margin-bottom: 18px; font-weight: 700; }
 .field { margin-bottom: 13px; }
-.field label {
-  display: block; font-size: 10px; color: #3a6a9a;
-  text-transform: uppercase; letter-spacing: 0.8px;
-  margin-bottom: 4px; font-weight: 600;
-}
+.field label { display: block; font-size: 10px; color: #3a6a9a; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; font-weight: 600; }
 .field input, .field select {
-  width: 100%; background: #040c18;
-  border: 1px solid #162840; color: #ddeeff;
-  padding: 7px 10px; border-radius: 4px;
-  font-size: 12px; font-family: inherit; transition: border-color 0.15s;
+  width: 100%; background: #040c18; border: 1px solid #162840; color: #ddeeff;
+  padding: 7px 10px; border-radius: 4px; font-size: 12px; font-family: inherit; transition: border-color 0.15s;
 }
 .field input:focus, .field select:focus { outline: none; border-color: #5ab4ff; }
 .field select option { background: #0a1525; }
 .field .hint { font-size: 10px; color: #2a4a6a; margin-top: 3px; }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
 
-.cond-row {
-  display: flex; align-items: center; gap: 6px; margin-bottom: 5px;
-}
-.cond-row input {
+/* Condition rows in modals */
+.cond-row { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+.cond-row .cr-key { flex: 2; }
+.cond-row .cr-op  { flex: 0 0 90px; }
+.cond-row .cr-val { flex: 2; }
+.cond-row input, .cond-row select {
   background: #040c18; border: 1px solid #162840; color: #ddeeff;
-  padding: 5px 7px; border-radius: 3px;
-  font-size: 11px; font-family: monospace; flex: 1;
+  padding: 5px 7px; border-radius: 3px; font-size: 11px; font-family: monospace; width: 100%;
 }
-.cond-row .eq { color: #3a6a9a; font-family: monospace; font-size: 12px; }
-
+.cond-row input:focus, .cond-row select:focus { outline: none; border-color: #5ab4ff; }
 .add-row-btn {
-  background: transparent; border: 1px dashed #162840;
-  color: #3a6a9a; padding: 5px 10px; border-radius: 3px;
-  cursor: pointer; font-size: 11px; width: 100%;
-  transition: all 0.15s; text-align: center; margin-top: 3px;
+  background: transparent; border: 1px dashed #162840; color: #3a6a9a;
+  padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 11px;
+  width: 100%; transition: all 0.15s; text-align: center; margin-top: 3px;
 }
 .add-row-btn:hover { border-color: #5ab4ff; color: #5ab4ff; }
-
-/* OMS dropdown in item modal */
-.oms-select-row {
-  display: flex; align-items: center; gap: 8px;
-}
-.oms-select-row select {
-  flex: 1; background: #040c18; border: 1px solid #162840; color: #ddeeff;
-  padding: 7px 10px; border-radius: 4px; font-size: 12px; font-family: inherit;
-}
-.oms-select-row select:focus { outline: none; border-color: #5ab4ff; }
-.oms-select-row select option { background: #0a1525; }
-
 .empty-state { padding: 10px; text-align: center; color: #1e3a55; font-size: 11px; }
 </style>
 </head>
@@ -249,53 +248,29 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 </header>
 
 <div class="main-layout">
-  <!-- ── Sidebar ── -->
+  <!-- ── Sidebar: Devices ── -->
   <aside class="sidebar">
     <div class="sec-hdr">
-      OMSs
-      <button class="icon-btn" onclick="openModal('oms')" title="Add OMS">+</button>
+      Devices
+      <button class="icon-btn" onclick="openModal('device')" title="Add Device">+</button>
     </div>
-    <div class="sec-body" id="oms-list"></div>
-
-    <div class="sec-hdr">
-      Printers
-      <button class="icon-btn" onclick="openModal('printer')" title="Add Printer">+</button>
-    </div>
-    <div class="sec-body" id="printer-list"></div>
-
-    <div class="sec-hdr">
-      Print Jobs
-      <button class="icon-btn" onclick="openModal('printjob')" title="Add Print Job">+</button>
-    </div>
-    <div class="sec-body" id="printjob-list"></div>
+    <div class="sec-body" id="device-list"></div>
   </aside>
 
-  <!-- ── Main content ── -->
   <main class="content">
+    <!-- Network Map -->
     <div id="network-map">
-      <svg id="network-svg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet">
+      <svg id="network-svg" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet">
         <defs>
           <pattern id="dots" width="38" height="38" patternUnits="userSpaceOnUse">
             <circle cx="19" cy="19" r="0.9" fill="#0d1f35" opacity="0.9"/>
           </pattern>
-          <filter id="f-blue" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="5" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="f-green" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="5" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="f-purple" x="-60%" y="-60%" width="220%" height="220%">
-            <feGaussianBlur stdDeviation="7" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="f-pkt" x="-200%" y="-200%" width="500%" height="500%">
-            <feGaussianBlur stdDeviation="3.5" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
+          <filter id="f-blue"   x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="f-green"  x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="f-purple" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="f-pkt"    x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         </defs>
-        <rect width="1000" height="520" fill="url(#dots)"/>
+        <rect width="1000" height="500" fill="url(#dots)"/>
         <g id="layer-conn"></g>
         <g id="layer-nodes"></g>
         <g id="layer-labels"></g>
@@ -303,22 +278,49 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
       </svg>
     </div>
 
+    <!-- Print Jobs Rules Table -->
+    <div class="pj-panel">
+      <div class="pj-panel-hdr">
+        Print Job Rules
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span id="pj-count" style="color:#3a5a7a;font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;"></span>
+        </div>
+      </div>
+      <div class="pj-table-wrap">
+        <table class="pj-table">
+          <thead>
+            <tr>
+              <th>Off/On</th>
+              <th>Print Job</th>
+              <th>Criteria</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="pj-table-body"></tbody>
+        </table>
+      </div>
+      <div class="pj-add-row">
+        <button class="btn-add-rule" onclick="openModal('printjob')">+ Add New Print Job</button>
+      </div>
+    </div>
+
+    <!-- Order Builder + Log -->
     <div class="bottom-panel">
       <div class="order-panel">
         <div class="panel-hdr">
           Order Builder
-          <button class="btn btn-ghost" style="padding:3px 8px;font-size:10px;" onclick="openModal('item')">+ Item</button>
+          <button class="btn btn-ghost" style="padding:2px 7px;font-size:10px;" onclick="openModal('item')">+ Item</button>
         </div>
         <div class="panel-body" id="order-items"></div>
         <div class="order-controls">
-          <button class="btn btn-send" id="send-btn" onclick="sendOrder()">&#9654; Send Order</button>
+          <button class="btn btn-send" onclick="sendOrder()">&#9654; Send Order</button>
           <button class="btn btn-danger" onclick="clearOrder()">Clear</button>
         </div>
       </div>
       <div class="log-panel">
         <div class="panel-hdr">
           Routing Log
-          <button class="btn btn-ghost" style="padding:3px 8px;font-size:10px;" onclick="clearLog()">Clear</button>
+          <button class="btn btn-ghost" style="padding:2px 7px;font-size:10px;" onclick="clearLog()">Clear</button>
         </div>
         <div class="panel-body" id="routing-log">
           <div class="empty-state">Send an order to see routing results.</div>
@@ -328,27 +330,30 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
   </main>
 </div>
 
-<!-- ── Modal: OMS (add & edit) ── -->
-<div class="overlay" id="modal-oms">
+<!-- ── Modal: Add/Edit Device ── -->
+<div class="overlay" id="modal-device">
   <div class="modal">
-    <h3 id="oms-modal-title">Add OMS</h3>
+    <h3 id="dev-modal-title">Add Device</h3>
     <div class="field">
-      <label>OMS Name</label>
-      <input id="oms-name" type="text" placeholder="e.g. Grill" />
+      <label>Device Type</label>
+      <select id="dev-type" onchange="devTypeChanged()">
+        <option value="oms">OMS</option>
+        <option value="net-printer">Network Printer</option>
+      </select>
     </div>
     <div class="field">
-      <label>Attribute Value <span style="color:#3a6a9a;">(routes when item has OMS = this)</span></label>
-      <input id="oms-attr" type="text" placeholder="e.g. grill" style="font-family:monospace;" />
-      <div class="hint">Case-insensitive match</div>
+      <label>Name</label>
+      <input id="dev-name" type="text" placeholder="e.g. Grill" />
+      <div class="hint" id="dev-hint">OMS attribute will be set automatically to this name</div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('oms')">Cancel</button>
-      <button class="btn btn-primary" id="oms-save-btn" onclick="doSaveOMS()">Add OMS</button>
+      <button class="btn btn-ghost" onclick="closeModal('device')">Cancel</button>
+      <button class="btn btn-primary" id="dev-save-btn" onclick="doSaveDevice()">Add Device</button>
     </div>
   </div>
 </div>
 
-<!-- ── Modal: Printer (add & edit) ── -->
+<!-- ── Modal: Add/Edit Printer (under an OMS) ── -->
 <div class="overlay" id="modal-printer">
   <div class="modal">
     <h3 id="prt-modal-title">Add Printer</h3>
@@ -358,7 +363,7 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
     </div>
     <div class="field">
       <label>Attached to OMS</label>
-      <select id="prt-oms"></select>
+      <select id="prt-dev"></select>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('printer')">Cancel</button>
@@ -367,23 +372,23 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
   </div>
 </div>
 
-<!-- ── Modal: Print Job (add & edit) ── -->
+<!-- ── Modal: Add/Edit Print Job ── -->
 <div class="overlay" id="modal-printjob">
   <div class="modal">
     <h3 id="pj-modal-title">Add Print Job</h3>
     <div class="field">
-      <label>OMS <span style="color:#3a6a9a;">(receives the routed item)</span></label>
-      <select id="pj-oms" onchange="pjOmsChanged()"></select>
+      <label>Print Job Name / Description</label>
+      <input id="pj-name" type="text" placeholder="e.g. Print Prep at Grill Printer always" />
     </div>
     <div class="field">
-      <label>Printer <span style="color:#3a6a9a;">(will print the ticket)</span></label>
-      <select id="pj-prt"></select>
+      <label>Target Printer</label>
+      <select id="pj-target"></select>
     </div>
     <div class="field">
-      <label>Additional Conditions <span style="color:#3a6a9a;">(empty = always print)</span></label>
+      <label>Criteria <span style="color:#3a6a9a;">(leave empty = always fires)</span></label>
       <div id="pj-conds"></div>
-      <button class="add-row-btn" onclick="addCondRow()">+ Add condition</button>
-      <div class="hint">Item must also have ALL listed attributes to trigger this job</div>
+      <button class="add-row-btn" onclick="addCondRow()">+ Add Condition</button>
+      <div class="hint">All conditions must match (AND logic). IS NOT also fires if attribute is absent.</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('printjob')">Cancel</button>
@@ -392,7 +397,7 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
   </div>
 </div>
 
-<!-- ── Modal: Order Item (add & edit) ── -->
+<!-- ── Modal: Add/Edit Order Item ── -->
 <div class="overlay" id="modal-item">
   <div class="modal">
     <h3 id="item-modal-title">Add Order Item</h3>
@@ -402,18 +407,15 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
     </div>
     <div class="field">
       <label>Route to OMS</label>
-      <div class="oms-select-row">
-        <select id="item-oms-select">
-          <option value="">— No OMS routing —</option>
-        </select>
-      </div>
-      <div class="hint">Sets the OMS attribute on this item automatically</div>
+      <select id="item-oms">
+        <option value="">— No OMS routing —</option>
+      </select>
+      <div class="hint">Sets the OMS attribute automatically</div>
     </div>
     <div class="field">
-      <label>Extra Attributes <span style="color:#3a6a9a;">(optional)</span></label>
+      <label>Extra Attributes <span style="color:#3a6a9a;">(optional — for condition testing)</span></label>
       <div id="item-attrs"></div>
       <button class="add-row-btn" onclick="addAttrRow()">+ Add attribute</button>
-      <div class="hint">For use with print job conditions</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('item')">Cancel</button>
@@ -426,45 +428,37 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 // ════════════════════════════════════════════════════════════
 // State
 // ════════════════════════════════════════════════════════════
-let omsList    = [];
-let printers   = [];
-let printJobs  = [];
+let devices    = []; // { id, type:'oms'|'net-printer', name }
+let printers   = []; // { id, name, deviceId }  — attached to OMS devices
+let printJobs  = []; // { id, enabled, name, targetId, conds:[{key,op,val}] }
 let orderItems = [];
 let orderCount = 0;
-let _idSeq = 1;
-function uid() { return 'n' + (_idSeq++); }
+let _seq = 1;
+const uid = () => 'n' + (_seq++);
 
-// Edit tracking — null = adding new, string = editing by id
-const editingId = { oms: null, printer: null, printjob: null, item: null };
+const editId = { device: null, printer: null, printjob: null, item: null };
 
-// Computed layout positions
+// SVG layout constants
+const VW = 1000, VH = 500;
+const ROUTER_Y = 70, OMS_Y = 235, PRT_Y = 385;
 let nodePos = {};
-const VW = 1000, VH = 520;
-const ROUTER_Y  = 78;
-const OMS_Y     = 255;
-const PRINTER_Y = 420;
 
 // ════════════════════════════════════════════════════════════
-// Default data
+// Defaults  (7 OMSs, no starter order)
 // ════════════════════════════════════════════════════════════
 function initDefaults() {
-  const defs = [
-    { name: 'Grill',   attr: 'grill'  },
-    { name: 'Deli',    attr: 'deli'   },
-    { name: 'Expo',    attr: 'expo'   },
-    { name: 'Global',  attr: 'global' },
-    { name: 'Coffee',  attr: 'coffee' },
-    { name: 'Salad',   attr: 'salad'  },
-    { name: 'Action',  attr: 'action' },
-  ];
-  defs.forEach(d => {
-    const o = { id: uid(), name: d.name, attrValue: d.attr };
-    omsList.push(o);
-    const p = { id: uid(), name: `${d.name} Printer`, omsId: o.id };
+  ['Grill','Deli','Expo','Global','Coffee','Salad','Action'].forEach(n => {
+    const d = { id: uid(), type: 'oms', name: n };
+    devices.push(d);
+    const p = { id: uid(), name: `${n} Printer`, deviceId: d.id };
     printers.push(p);
-    printJobs.push({ id: uid(), omsId: o.id, prtId: p.id, conds: [] });
+    printJobs.push({
+      id: uid(), enabled: true,
+      name: `Print Prep at ${n} Printer always`,
+      targetId: p.id,
+      conds: [{ key: 'OMS', op: 'IS', val: n }]
+    });
   });
-  // Order starts empty
 }
 
 // ════════════════════════════════════════════════════════════
@@ -473,22 +467,27 @@ function initDefaults() {
 function computeLayout() {
   nodePos = {};
   nodePos['router'] = { x: VW / 2, y: ROUTER_Y };
-  const n = omsList.length;
+
+  const omsDev = devices.filter(d => d.type === 'oms');
+  const n = omsDev.length;
   if (!n) return;
-  const spacing = Math.min(190, (VW - 60) / n);
-  const startX  = VW / 2 - ((n - 1) * spacing) / 2;
-  omsList.forEach((o, i) => {
-    nodePos[o.id] = { x: startX + i * spacing, y: OMS_Y };
+  const sp = Math.min(180, (VW - 60) / n);
+  const x0 = VW / 2 - ((n - 1) * sp) / 2;
+  omsDev.forEach((d, i) => { nodePos[d.id] = { x: x0 + i * sp, y: OMS_Y }; });
+
+  // OMS-attached printers
+  omsDev.forEach(d => {
+    const op = nodePos[d.id];
+    const dp = printers.filter(p => p.deviceId === d.id);
+    if (!dp.length) return;
+    const ps = Math.min(90, 160 / dp.length);
+    const px0 = op.x - ((dp.length - 1) * ps) / 2;
+    dp.forEach((p, i) => { nodePos[p.id] = { x: px0 + i * ps, y: PRT_Y }; });
   });
-  omsList.forEach(o => {
-    const op    = nodePos[o.id];
-    const oPrts = printers.filter(p => p.omsId === o.id);
-    const pn = oPrts.length;
-    if (!pn) return;
-    const ps  = Math.min(100, 170 / pn);
-    const px0 = op.x - ((pn - 1) * ps) / 2;
-    oPrts.forEach((p, i) => { nodePos[p.id] = { x: px0 + i * ps, y: PRINTER_Y }; });
-  });
+
+  // Network printers — stacked right side
+  const netPrts = devices.filter(d => d.type === 'net-printer');
+  netPrts.forEach((d, i) => { nodePos[d.id] = { x: 955, y: 90 + i * 70 }; });
 }
 
 // ════════════════════════════════════════════════════════════
@@ -497,66 +496,86 @@ function computeLayout() {
 function renderNetwork() {
   computeLayout();
   let conn = '', nodes = '', lbls = '';
+  const rp = nodePos['router'];
 
-  omsList.forEach(o => {
-    const rp = nodePos['router'], op = nodePos[o.id];
+  // Connections: router → OMS, OMS → local printer
+  devices.filter(d => d.type === 'oms').forEach(d => {
+    const op = nodePos[d.id];
     if (!op) return;
-    conn += `<line id="cl-router-${o.id}" x1="${rp.x}" y1="${rp.y+30}" x2="${op.x}" y2="${op.y-28}"
-      stroke="#102030" stroke-width="1.5" stroke-dasharray="7 5"/>`;
-    printers.filter(p => p.omsId === o.id).forEach(p => {
+    conn += `<line id="cl-router-${d.id}" x1="${rp.x}" y1="${rp.y+30}" x2="${op.x}" y2="${op.y-28}" stroke="#102030" stroke-width="1.5" stroke-dasharray="7 5"/>`;
+    printers.filter(p => p.deviceId === d.id).forEach(p => {
       const pp = nodePos[p.id];
       if (!pp) return;
-      conn += `<line id="cl-${o.id}-${p.id}" x1="${op.x}" y1="${op.y+25}" x2="${pp.x}" y2="${pp.y-22}"
-        stroke="#0a2010" stroke-width="1.5" stroke-dasharray="7 5"/>`;
+      conn += `<line id="cl-${d.id}-${p.id}" x1="${op.x}" y1="${op.y+25}" x2="${pp.x}" y2="${pp.y-22}" stroke="#0a2010" stroke-width="1.5" stroke-dasharray="7 5"/>`;
     });
   });
 
-  const rp = nodePos['router'];
+  // Net printer separating line (if any exist)
+  const netPrts = devices.filter(d => d.type === 'net-printer');
+  if (netPrts.length) {
+    conn += `<line x1="910" y1="30" x2="910" y2="${VH-20}" stroke="#162030" stroke-width="1" stroke-dasharray="4 6"/>`;
+    lbls += `<text x="935" y="22" text-anchor="middle" fill="#1a3a55" font-size="8" font-family="'Segoe UI',sans-serif" letter-spacing="1" font-weight="700">NETWORK</text>`;
+  }
+
+  // Router
   nodes += `<g id="nd-router" transform="translate(${rp.x},${rp.y})">
     <circle r="30" fill="#0b0a20" stroke="#2e1e6e" stroke-width="2"/>
     <circle r="20" fill="none" stroke="#1e1050" stroke-width="1" stroke-dasharray="3 4"/>
     <path d="M-12,-9 L0,5 L12,-9" fill="none" stroke="#6040c0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M-7,-16 L0,-6 L7,-16" fill="none" stroke="#3a2080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
   </g>`;
-  lbls += `<text x="${rp.x}" y="${rp.y+44}" text-anchor="middle" fill="#5a3aaf"
-    font-size="9.5" font-family="'Segoe UI',sans-serif" font-weight="700" letter-spacing="0.8">ORDER ROUTER</text>`;
+  lbls += `<text x="${rp.x}" y="${rp.y+44}" text-anchor="middle" fill="#5a3aaf" font-size="9.5" font-family="'Segoe UI',sans-serif" font-weight="700" letter-spacing="0.8">ORDER ROUTER</text>`;
 
-  omsList.forEach(o => {
-    const p = nodePos[o.id];
+  // OMS nodes (monitor)
+  devices.filter(d => d.type === 'oms').forEach(d => {
+    const p = nodePos[d.id];
     if (!p) return;
-    nodes += `<g id="nd-${o.id}" transform="translate(${p.x},${p.y})">
+    nodes += `<g id="nd-${d.id}" transform="translate(${p.x},${p.y})">
       <rect x="-30" y="-28" width="60" height="42" rx="5" fill="#0b1e3a" stroke="#1e5090" stroke-width="1.8"/>
       <rect x="-24" y="-22" width="48" height="28" rx="2" fill="#030c18"/>
       <line x1="-18" y1="-14" x2="18" y2="-14" stroke="#0e3560" stroke-width="1.8"/>
-      <line x1="-18" y1="-7"  x2="12"  y2="-7"  stroke="#0e3560" stroke-width="1.8"/>
-      <line x1="-18" y1="0"   x2="15"  y2="0"   stroke="#0e3560" stroke-width="1.8"/>
+      <line x1="-18" y1="-7"  x2="12" y2="-7"   stroke="#0e3560" stroke-width="1.8"/>
+      <line x1="-18" y1="0"   x2="15" y2="0"    stroke="#0e3560" stroke-width="1.8"/>
       <rect x="-4" y="14" width="8" height="7" fill="#0b1e3a"/>
       <rect x="-15" y="20" width="30" height="4" rx="2" fill="#0b1e3a" stroke="#1e5090" stroke-width="1.2"/>
     </g>`;
-    lbls += `<text x="${p.x}" y="${p.y+36}" text-anchor="middle" fill="#90c8f8"
-      font-size="11.5" font-family="'Segoe UI',sans-serif" font-weight="700">${esc(o.name)}</text>
-    <text x="${p.x}" y="${p.y+47}" text-anchor="middle" fill="#2a5a8a"
-      font-size="9" font-family="monospace">OMS=${esc(o.attrValue)}</text>`;
+    lbls += `<text x="${p.x}" y="${p.y+36}" text-anchor="middle" fill="#90c8f8" font-size="11" font-family="'Segoe UI',sans-serif" font-weight="700">${esc(d.name)}</text>
+    <text x="${p.x}" y="${p.y+46}" text-anchor="middle" fill="#2a5a8a" font-size="8.5" font-family="monospace">OMS=${esc(d.name)}</text>`;
   });
 
+  // OMS-attached printers
   printers.forEach(p => {
     const pp = nodePos[p.id];
     if (!pp) return;
     nodes += `<g id="nd-${p.id}" transform="translate(${pp.x},${pp.y})">
-      <rect x="-23" y="-14" width="46" height="26" rx="4" fill="#0c2010" stroke="#1a5020" stroke-width="1.8"/>
-      <rect x="-13" y="-25" width="26" height="13" rx="2" fill="#0c2010" stroke="#1a5020" stroke-width="1.2"/>
-      <rect x="-11" y="10"  width="22" height="11" rx="1" fill="#cce8cc"/>
-      <line x1="-16" y1="-4" x2="9" y2="-4" stroke="#1a4820" stroke-width="1.3"/>
-      <line x1="-16" y1="1"  x2="9" y2="1"  stroke="#1a4820" stroke-width="1.3"/>
-      <circle cx="15" cy="-4" r="4" fill="#167a16"/>
+      <rect x="-22" y="-14" width="44" height="26" rx="4" fill="#0c2010" stroke="#1a5020" stroke-width="1.8"/>
+      <rect x="-12" y="-25" width="24" height="13" rx="2" fill="#0c2010" stroke="#1a5020" stroke-width="1.2"/>
+      <rect x="-10" y="10"  width="20" height="11" rx="1" fill="#cce8cc"/>
+      <line x1="-15" y1="-4" x2="8" y2="-4" stroke="#1a4820" stroke-width="1.3"/>
+      <line x1="-15" y1="1"  x2="8" y2="1"  stroke="#1a4820" stroke-width="1.3"/>
+      <circle cx="14" cy="-4" r="4" fill="#167a16"/>
     </g>`;
-    lbls += `<text x="${pp.x}" y="${pp.y+29}" text-anchor="middle" fill="#6abf6a"
-      font-size="10" font-family="'Segoe UI',sans-serif">${esc(p.name)}</text>`;
+    lbls += `<text x="${pp.x}" y="${pp.y+29}" text-anchor="middle" fill="#6abf6a" font-size="9.5" font-family="'Segoe UI',sans-serif">${esc(p.name)}</text>`;
   });
 
-  if (!omsList.length) {
-    nodes += `<text x="${VW/2}" y="${VH/2}" text-anchor="middle" fill="#1e3a55"
-      font-size="14" font-family="'Segoe UI',sans-serif">Add OMSs to see the network map</text>`;
+  // Network printer nodes (right side)
+  devices.filter(d => d.type === 'net-printer').forEach(d => {
+    const p = nodePos[d.id];
+    if (!p) return;
+    nodes += `<g id="nd-${d.id}" transform="translate(${p.x},${p.y})">
+      <rect x="-22" y="-14" width="44" height="26" rx="4" fill="#101a28" stroke="#2a4a6a" stroke-width="1.8"/>
+      <rect x="-12" y="-25" width="24" height="13" rx="2" fill="#101a28" stroke="#2a4a6a" stroke-width="1.2"/>
+      <rect x="-10" y="10"  width="20" height="11" rx="1" fill="#c0d0e8"/>
+      <line x1="-15" y1="-4" x2="8" y2="-4" stroke="#2a4a7a" stroke-width="1.3"/>
+      <line x1="-15" y1="1"  x2="8" y2="1"  stroke="#2a4a7a" stroke-width="1.3"/>
+      <circle cx="14" cy="-4" r="4" fill="#2a6aaa"/>
+    </g>`;
+    lbls += `<text x="${p.x}" y="${p.y+29}" text-anchor="middle" fill="#5a8abf" font-size="9.5" font-family="'Segoe UI',sans-serif">${esc(d.name)}</text>
+    <text x="${p.x}" y="${p.y+38}" text-anchor="middle" fill="#2a4a6a" font-size="8" font-family="monospace">NET</text>`;
+  });
+
+  if (!devices.filter(d => d.type === 'oms').length) {
+    nodes += `<text x="${VW/2}" y="${VH/2}" text-anchor="middle" fill="#1e3a55" font-size="14" font-family="'Segoe UI',sans-serif">Add OMSs in the Devices panel to see the network map</text>`;
   }
 
   document.getElementById('layer-conn').innerHTML   = conn;
@@ -570,56 +589,49 @@ function renderNetwork() {
 function activateNode(id, color, ms) {
   const el = document.getElementById(`nd-${id}`);
   if (!el) return;
-  const strokeColor = color === 'blue' ? '#5ab4ff' : color === 'green' ? '#3ecf6e' : '#9a6adf';
-  const glowFilter  = color === 'blue' ? 'f-blue'  : color === 'green' ? 'f-green'  : 'f-purple';
-  const fillColor   = color === 'blue' ? '#0a2240' : color === 'green' ? '#0a2514'  : '#120a28';
-  const shape = el.querySelector('rect') || el.querySelector('circle');
-  const origStroke = shape?.getAttribute('stroke');
-  const origFill   = shape?.getAttribute('fill');
-  const origFilter = el.getAttribute('filter');
-  if (shape) { shape.setAttribute('stroke', strokeColor); shape.setAttribute('fill', fillColor); }
-  el.setAttribute('filter', `url(#${glowFilter})`);
+  const sc = color==='blue'?'#5ab4ff':color==='green'?'#3ecf6e':'#9a6adf';
+  const gf = color==='blue'?'f-blue':color==='green'?'f-green':'f-purple';
+  const fc = color==='blue'?'#0a2240':color==='green'?'#0a2514':'#120a28';
+  const shape = el.querySelector('rect')||el.querySelector('circle');
+  const os = shape?.getAttribute('stroke'), of_ = shape?.getAttribute('fill'), ofl = el.getAttribute('filter');
+  if (shape) { shape.setAttribute('stroke',sc); shape.setAttribute('fill',fc); }
+  el.setAttribute('filter',`url(#${gf})`);
   setTimeout(() => {
-    if (shape) { shape.setAttribute('stroke', origStroke ?? ''); shape.setAttribute('fill', origFill ?? ''); }
-    el.setAttribute('filter', origFilter ?? '');
+    if (shape) { shape.setAttribute('stroke',os??''); shape.setAttribute('fill',of_??''); }
+    el.setAttribute('filter',ofl??'');
   }, ms);
 }
 
-function highlightLine(lineId, color, ms) {
-  const el = document.getElementById(lineId);
+function highlightLine(id, color, ms) {
+  const el = document.getElementById(id);
   if (!el) return;
-  const sc = color === 'blue' ? '#5ab4ff' : '#3ecf6e';
-  const os = el.getAttribute('stroke'), ow = el.getAttribute('stroke-width'), od = el.getAttribute('stroke-dasharray');
-  el.setAttribute('stroke', sc); el.setAttribute('stroke-width', '2.5'); el.setAttribute('stroke-dasharray', 'none');
-  el.style.filter = `drop-shadow(0 0 3px ${sc})`;
-  setTimeout(() => {
-    el.setAttribute('stroke', os); el.setAttribute('stroke-width', ow); el.setAttribute('stroke-dasharray', od);
-    el.style.filter = '';
-  }, ms);
+  const sc = color==='blue'?'#5ab4ff':'#3ecf6e';
+  const os=el.getAttribute('stroke'), ow=el.getAttribute('stroke-width'), od=el.getAttribute('stroke-dasharray');
+  el.setAttribute('stroke',sc); el.setAttribute('stroke-width','2.5'); el.setAttribute('stroke-dasharray','none');
+  el.style.filter=`drop-shadow(0 0 3px ${sc})`;
+  setTimeout(()=>{ el.setAttribute('stroke',os); el.setAttribute('stroke-width',ow); el.setAttribute('stroke-dasharray',od); el.style.filter=''; }, ms);
 }
 
 function animatePacket(fromId, toId, color, onDone) {
   const fp = nodePos[fromId], tp = nodePos[toId];
   if (!fp || !tp) { onDone?.(); return; }
-  const pktColor = color === 'blue' ? '#5ab4ff' : '#3ecf6e';
-  const fy = fromId === 'router' ? fp.y + 30 : fp.y + 25;
-  const ty = omsList.find(o => o.id === toId) ? tp.y - 28 : tp.y - 22;
+  const pc = color==='blue'?'#5ab4ff':'#3ecf6e';
+  const fy = fromId==='router' ? fp.y+30 : fp.y+25;
+  const ty = devices.find(d=>d.id===toId&&d.type==='oms') ? tp.y-28 : tp.y-22;
   highlightLine(`cl-${fromId}-${toId}`, color, 900);
   const layer = document.getElementById('layer-pkts');
-  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  circle.setAttribute('r', '6'); circle.setAttribute('fill', pktColor);
-  circle.setAttribute('filter', 'url(#f-pkt)');
-  circle.setAttribute('cx', fp.x); circle.setAttribute('cy', fy);
-  layer.appendChild(circle);
-  let t0 = null; const dur = 480;
+  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('r','6'); c.setAttribute('fill',pc); c.setAttribute('filter','url(#f-pkt)');
+  c.setAttribute('cx',fp.x); c.setAttribute('cy',fy);
+  layer.appendChild(c);
+  let t0=null; const dur=500;
   function step(ts) {
-    if (!t0) t0 = ts;
-    const raw = Math.min((ts - t0) / dur, 1);
-    const t   = raw < 0.5 ? 2*raw*raw : -1+(4-2*raw)*raw;
-    circle.setAttribute('cx', fp.x + (tp.x - fp.x) * t);
-    circle.setAttribute('cy', fy  + (ty  - fy)  * t);
-    if (raw < 1) requestAnimationFrame(step);
-    else { circle.remove(); onDone?.(); }
+    if (!t0) t0=ts;
+    const raw=Math.min((ts-t0)/dur,1), t=raw<0.5?2*raw*raw:-1+(4-2*raw)*raw;
+    c.setAttribute('cx', fp.x+(tp.x-fp.x)*t);
+    c.setAttribute('cy', fy+(ty-fy)*t);
+    if (raw<1) requestAnimationFrame(step);
+    else { c.remove(); onDone?.(); }
   }
   requestAnimationFrame(step);
 }
@@ -631,33 +643,43 @@ function sendOrder() {
   if (!orderItems.length) return;
   orderCount++;
   addLog('order', `▶ Order #${orderCount} dispatched — ${orderItems.length} item(s)`);
-  activateNode('router', 'purple', 700);
-  orderItems.forEach((item, i) => setTimeout(() => routeItem(item), i * 720));
+  activateNode('router','purple',700);
+  orderItems.forEach((item,i) => setTimeout(()=>routeItem(item), i*750));
 }
 
 function routeItem(item) {
   const omsVal = item.attrs['OMS'];
   if (!omsVal) { addLog('warn', `  "${item.name}" — no OMS attribute, unrouted`); return; }
-  const target = omsList.find(o => o.attrValue.toLowerCase() === omsVal.toLowerCase());
-  if (!target) { addLog('warn', `  "${item.name}" — OMS="${omsVal}" matches no configured OMS`); activateNode('router','purple',400); return; }
-  addLog('route', `  "${item.name}"  →  ${target.name} OMS  [OMS=${omsVal}]`);
-  animatePacket('router', target.id, 'blue', () => {
-    activateNode(target.id, 'blue', 1400);
-    const jobs = printJobs.filter(pj => {
-      if (pj.omsId !== target.id) return false;
-      return pj.conds.every(c => { const v = item.attrs[c.key]; return v && v.toLowerCase() === c.val.toLowerCase(); });
+  const dev = devices.find(d => d.type==='oms' && d.name.toLowerCase()===omsVal.toLowerCase());
+  if (!dev) { addLog('warn', `  "${item.name}" — no OMS device matches "${omsVal}"`); activateNode('router','purple',400); return; }
+  addLog('route', `  "${item.name}"  →  ${dev.name} OMS`);
+  animatePacket('router', dev.id, 'blue', () => {
+    activateNode(dev.id,'blue',1500);
+    // Effective attrs: item attrs + auto-injected DeviceName
+    const eff = { ...item.attrs, DeviceName: dev.name };
+    const matched = printJobs.filter(pj => {
+      if (!pj.enabled) return false;
+      return pj.conds.every(c => {
+        const actual = (eff[c.key] ?? '').toLowerCase();
+        const expected = c.val.toLowerCase();
+        return c.op === 'IS' ? actual === expected : actual !== expected;
+      });
     });
-    if (!jobs.length) { addLog('info', `    No print job matched for ${target.name}`); return; }
-    jobs.forEach((pj, i) => {
-      const printer = printers.find(p => p.id === pj.prtId);
-      if (!printer) return;
-      setTimeout(() => {
-        const cs = pj.conds.length ? ` [${pj.conds.map(c=>`${c.key}=${c.val}`).join(', ')}]` : '';
-        addLog('print', `    ✓ Printing → "${printer.name}"${cs}`);
-        animatePacket(target.id, printer.id, 'green', () => activateNode(printer.id, 'green', 1400));
-      }, i * 320);
-    });
+    if (!matched.length) { addLog('info', `    No enabled print jobs matched`); return; }
+    matched.forEach((pj,i) => setTimeout(() => {
+      const tgt = findTarget(pj.targetId);
+      const tgtName = tgt ? tgt.name : '(unknown)';
+      const cs = pj.conds.length ? `  [${pj.conds.map(c=>`${c.key} ${c.op} ${c.val}`).join(' AND ')}]` : '';
+      addLog('print', `    ✓ "${pj.name}" → ${tgtName}${cs}`);
+      if (nodePos[pj.targetId]) {
+        animatePacket(dev.id, pj.targetId, 'green', () => activateNode(pj.targetId,'green',1500));
+      }
+    }, i*350));
   });
+}
+
+function findTarget(id) {
+  return printers.find(p=>p.id===id) || devices.find(d=>d.id===id&&d.type==='net-printer');
 }
 
 // ════════════════════════════════════════════════════════════
@@ -668,240 +690,318 @@ function addLog(type, msg) {
   el.querySelector('.empty-state')?.remove();
   const d = document.createElement('div');
   d.className = `log-entry log-${type}`;
-  d.innerHTML = `<span class="ts">${now()}</span>${esc(msg)}`;
+  d.innerHTML = `<span class="ts">${new Date().toTimeString().slice(0,8)}</span>${esc(msg)}`;
   el.appendChild(d); el.scrollTop = el.scrollHeight;
 }
-function clearLog() {
-  document.getElementById('routing-log').innerHTML = '<div class="empty-state">Send an order to see routing results.</div>';
-}
-function now() { return new Date().toTimeString().slice(0,8); }
+function clearLog() { document.getElementById('routing-log').innerHTML='<div class="empty-state">Send an order to see routing results.</div>'; }
 
 // ════════════════════════════════════════════════════════════
-// Sidebar + Order rendering
+// Render: sidebar devices
 // ════════════════════════════════════════════════════════════
-const OMS_SVG = `<svg width="24" height="24" viewBox="-30 -30 60 60">
+const SVG_OMS = `<svg width="22" height="22" viewBox="-28 -28 56 56">
   <rect x="-22" y="-20" width="44" height="30" rx="4" fill="#0b1e3a" stroke="#1e5090" stroke-width="1.5"/>
   <rect x="-17" y="-15" width="34" height="20" rx="1" fill="#030c18"/>
   <line x1="-12" y1="-8" x2="12" y2="-8" stroke="#0e3560" stroke-width="1.5"/>
-  <line x1="-12" y1="-2" x2="8"  y2="-2" stroke="#0e3560" stroke-width="1.5"/>
+  <line x1="-12" y1="-2" x2="8" y2="-2" stroke="#0e3560" stroke-width="1.5"/>
   <rect x="-3" y="10" width="6" height="6" fill="#0b1e3a"/>
   <rect x="-11" y="15" width="22" height="3" rx="1.5" fill="#1e5090"/>
 </svg>`;
-
-const PRT_SVG = `<svg width="24" height="24" viewBox="-30 -30 60 60">
+const SVG_PRT = `<svg width="22" height="22" viewBox="-28 -28 56 56">
   <rect x="-20" y="-10" width="40" height="22" rx="4" fill="#0c2010" stroke="#1a5020" stroke-width="1.5"/>
   <rect x="-12" y="-22" width="24" height="14" rx="2" fill="#0c2010" stroke="#1a5020" stroke-width="1.2"/>
-  <rect x="-10" y="10"  width="20" height="9"  rx="1" fill="#b0d8b0"/>
+  <rect x="-10" y="10"  width="20" height="9" rx="1" fill="#b0d8b0"/>
   <line x1="-14" y1="-3" x2="8" y2="-3" stroke="#1a4820" stroke-width="1.3"/>
-  <line x1="-14" y1="3"  x2="8" y2="3"  stroke="#1a4820" stroke-width="1.3"/>
   <circle cx="14" cy="0" r="4" fill="#167a16"/>
 </svg>`;
+const SVG_NET = `<svg width="22" height="22" viewBox="-28 -28 56 56">
+  <rect x="-20" y="-10" width="40" height="22" rx="4" fill="#101a28" stroke="#2a4a6a" stroke-width="1.5"/>
+  <rect x="-12" y="-22" width="24" height="14" rx="2" fill="#101a28" stroke="#2a4a6a" stroke-width="1.2"/>
+  <rect x="-10" y="10"  width="20" height="9" rx="1" fill="#b0c8e0"/>
+  <line x1="-14" y1="-3" x2="8" y2="-3" stroke="#2a4a7a" stroke-width="1.3"/>
+  <circle cx="14" cy="0" r="4" fill="#2a6aaa"/>
+</svg>`;
 
-function renderSidebar() {
-  // OMSs
-  document.getElementById('oms-list').innerHTML = omsList.length
-    ? omsList.map(o => `
-      <div class="node-card">
-        <div class="node-icon">${OMS_SVG}</div>
-        <div class="node-info">
-          <div class="node-name">${esc(o.name)}</div>
-          <div class="node-detail">OMS = ${esc(o.attrValue)}</div>
+function renderDeviceList() {
+  const el = document.getElementById('device-list');
+  if (!devices.length) { el.innerHTML='<div class="empty-state">No devices. Add an OMS or Network Printer.</div>'; return; }
+  let html = '';
+  devices.forEach(d => {
+    if (d.type === 'oms') {
+      html += `
+      <div class="dev-card">
+        <div class="dev-icon">${SVG_OMS}</div>
+        <div class="dev-info">
+          <div class="dev-name">${esc(d.name)}</div>
+          <div class="dev-sub">OMS = ${esc(d.name)}</div>
         </div>
+        <span class="dev-badge badge-oms">OMS</span>
         <div class="card-btns">
-          <button class="edit-btn" onclick="openEditOMS('${o.id}')" title="Edit">✎</button>
-          <button class="del-btn"  onclick="removeOMS('${o.id}')"   title="Remove">✕</button>
+          <button class="icon-btn sm" onclick="openAddPrinterTo('${d.id}')" title="Add Printer">+</button>
+          <button class="edit-btn" onclick="openEditDevice('${d.id}')" title="Edit">✎</button>
+          <button class="del-btn"  onclick="removeDevice('${d.id}')" title="Remove">✕</button>
         </div>
-      </div>`).join('')
-    : '<div class="empty-state">No OMSs configured.</div>';
-
-  // Printers
-  document.getElementById('printer-list').innerHTML = printers.length
-    ? printers.map(p => {
-        const o = omsList.find(x => x.id === p.omsId);
-        return `
-        <div class="node-card">
-          <div class="node-icon">${PRT_SVG}</div>
-          <div class="node-info">
-            <div class="node-name">${esc(p.name)}</div>
-            <div class="node-detail">→ ${o ? esc(o.name) : 'Unlinked'}</div>
+      </div>`;
+      printers.filter(p => p.deviceId === d.id).forEach(p => {
+        html += `
+        <div class="dev-card is-printer">
+          <div class="dev-icon">${SVG_PRT}</div>
+          <div class="dev-info">
+            <div class="dev-name">${esc(p.name)}</div>
+            <div class="dev-sub">OMS = ${esc(d.name)}</div>
           </div>
+          <span class="dev-badge badge-prt">PRT</span>
           <div class="card-btns">
             <button class="edit-btn" onclick="openEditPrinter('${p.id}')" title="Edit">✎</button>
-            <button class="del-btn"  onclick="removePrinter('${p.id}')"   title="Remove">✕</button>
+            <button class="del-btn"  onclick="removePrinter('${p.id}')" title="Remove">✕</button>
           </div>
-        </div>`;}).join('')
-    : '<div class="empty-state">No printers configured.</div>';
-
-  // Print Jobs
-  document.getElementById('printjob-list').innerHTML = printJobs.length
-    ? printJobs.map(pj => {
-        const o = omsList.find(x => x.id === pj.omsId);
-        const p = printers.find(x => x.id === pj.prtId);
-        const c = pj.conds.length ? pj.conds.map(c=>`${c.key}=${c.val}`).join(', ') : 'always';
-        return `
-        <div class="node-card">
-          <div class="node-info">
-            <div class="node-name" style="font-size:11px;">${o?esc(o.name):'?'} → ${p?esc(p.name):'?'}</div>
-            <div class="node-detail">when: ${esc(c)}</div>
-          </div>
-          <div class="card-btns">
-            <button class="edit-btn" onclick="openEditPrintJob('${pj.id}')" title="Edit">✎</button>
-            <button class="del-btn"  onclick="removePrintJob('${pj.id}')"   title="Remove">✕</button>
-          </div>
-        </div>`;}).join('')
-    : '<div class="empty-state">No print jobs configured.</div>';
+        </div>`;
+      });
+    } else {
+      html += `
+      <div class="dev-card">
+        <div class="dev-icon">${SVG_NET}</div>
+        <div class="dev-info">
+          <div class="dev-name">${esc(d.name)}</div>
+          <div class="dev-sub">DeviceName = ${esc(d.name)}</div>
+        </div>
+        <span class="dev-badge badge-net">NET</span>
+        <div class="card-btns">
+          <button class="edit-btn" onclick="openEditDevice('${d.id}')" title="Edit">✎</button>
+          <button class="del-btn"  onclick="removeDevice('${d.id}')" title="Remove">✕</button>
+        </div>
+      </div>`;
+    }
+  });
+  el.innerHTML = html;
 }
 
+// ════════════════════════════════════════════════════════════
+// Render: print jobs rules table
+// ════════════════════════════════════════════════════════════
+function renderPrintJobs() {
+  const tbody = document.getElementById('pj-table-body');
+  const count = document.getElementById('pj-count');
+  const active = printJobs.filter(j=>j.enabled).length;
+  count.textContent = `${active} active / ${printJobs.length} total`;
+
+  if (!printJobs.length) {
+    tbody.innerHTML = `<tr><td colspan="4" style="padding:12px;text-align:center;color:#1e3a55;font-size:11px;">No print job rules configured.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = printJobs.map(pj => {
+    const tgt = findTarget(pj.targetId);
+    const criteriaStr = pj.conds.length
+      ? 'When: ' + pj.conds.map((c,i) => `<span class="kw">${esc(c.key)}</span> ${esc(c.op)} = ${esc(c.val)}`).join(' <span style="color:#3a5a7a">AND</span> ')
+      : '<span style="color:#3a5a7a;font-style:italic;">Always</span>';
+    return `<tr>
+      <td>
+        <label class="toggle">
+          <input type="checkbox" ${pj.enabled?'checked':''} onchange="togglePrintJob('${pj.id}',this.checked)"/>
+          <span class="toggle-track"></span>
+        </label>
+      </td>
+      <td class="pj-name">${esc(pj.name)}</td>
+      <td class="pj-criteria">${criteriaStr}</td>
+      <td>
+        <div style="display:flex;gap:3px;justify-content:flex-end;">
+          <button class="edit-btn" onclick="openEditPrintJob('${pj.id}')" title="Edit">✎</button>
+          <button class="del-btn"  onclick="removePrintJob('${pj.id}')" title="Remove">✕</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════════════════
+// Render: order items
+// ════════════════════════════════════════════════════════════
 function renderOrderItems() {
-  document.getElementById('order-items').innerHTML = orderItems.length
-    ? orderItems.map(item => {
-        const attrs = Object.entries(item.attrs).map(([k,v])=>`${k}=${v}`).join(', ');
-        return `<div class="order-item">
-          <span class="oi-name">${esc(item.name)}</span>
-          <span class="oi-attrs">[${esc(attrs)}]</span>
-          <div class="card-btns">
-            <button class="edit-btn" onclick="openEditItem('${item.id}')" title="Edit">✎</button>
-            <button class="del-btn"  onclick="removeOrderItem('${item.id}')" title="Remove">✕</button>
-          </div>
-        </div>`;}).join('')
-    : '<div class="empty-state">No items. Add items to the order.</div>';
+  const el = document.getElementById('order-items');
+  if (!orderItems.length) { el.innerHTML='<div class="empty-state">No items. Add items to the order.</div>'; return; }
+  el.innerHTML = orderItems.map(item => {
+    const attrs = Object.entries(item.attrs).map(([k,v])=>`${k}=${v}`).join(', ');
+    return `<div class="order-item">
+      <span class="oi-name">${esc(item.name)}</span>
+      <span class="oi-attrs">[${esc(attrs)}]</span>
+      <div class="card-btns">
+        <button class="edit-btn" onclick="openEditItem('${item.id}')" title="Edit">✎</button>
+        <button class="del-btn"  onclick="removeOrderItem('${item.id}')" title="Remove">✕</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ════════════════════════════════════════════════════════════
 // Data mutations
 // ════════════════════════════════════════════════════════════
-function removeOMS(id)      { omsList = omsList.filter(o=>o.id!==id); printers = printers.filter(p=>p.omsId!==id); printJobs = printJobs.filter(j=>j.omsId!==id); refresh(); }
-function removePrinter(id)  { printers = printers.filter(p=>p.id!==id); printJobs = printJobs.filter(j=>j.prtId!==id); refresh(); }
-function removePrintJob(id) { printJobs = printJobs.filter(j=>j.id!==id); refresh(); }
-function removeOrderItem(id){ orderItems = orderItems.filter(i=>i.id!==id); renderOrderItems(); }
-function clearOrder()       { orderItems = []; renderOrderItems(); }
+function togglePrintJob(id, enabled) {
+  const pj = printJobs.find(x=>x.id===id);
+  if (pj) pj.enabled = enabled;
+  renderPrintJobs();
+}
+function removeDevice(id) {
+  devices   = devices.filter(d=>d.id!==id);
+  printers  = printers.filter(p=>p.deviceId!==id);
+  printJobs = printJobs.filter(j=>j.targetId!==id);
+  refresh();
+}
+function removePrinter(id)  { printers=printers.filter(p=>p.id!==id); printJobs=printJobs.filter(j=>j.targetId!==id); refresh(); }
+function removePrintJob(id) { printJobs=printJobs.filter(j=>j.id!==id); renderPrintJobs(); }
+function removeOrderItem(id){ orderItems=orderItems.filter(i=>i.id!==id); renderOrderItems(); }
+function clearOrder()       { orderItems=[]; renderOrderItems(); }
 
 // ════════════════════════════════════════════════════════════
-// Modals — open (add mode)
+// Modals — open
 // ════════════════════════════════════════════════════════════
 function openModal(type) {
-  editingId[type === 'item' ? 'item' : type === 'printjob' ? 'printjob' : type === 'printer' ? 'printer' : 'oms'] = null;
-  if (type === 'oms') {
-    document.getElementById('oms-modal-title').textContent = 'Add OMS';
-    document.getElementById('oms-save-btn').textContent    = 'Add OMS';
-    document.getElementById('oms-name').value = '';
-    document.getElementById('oms-attr').value = '';
+  editId[type==='printjob'?'printjob':type==='printer'?'printer':type==='item'?'item':'device'] = null;
+  if (type === 'device') {
+    document.getElementById('dev-modal-title').textContent = 'Add Device';
+    document.getElementById('dev-save-btn').textContent    = 'Add Device';
+    document.getElementById('dev-type').value = 'oms';
+    document.getElementById('dev-name').value = '';
+    devTypeChanged();
   }
   if (type === 'printer') {
     document.getElementById('prt-modal-title').textContent = 'Add Printer';
     document.getElementById('prt-save-btn').textContent    = 'Add Printer';
     document.getElementById('prt-name').value = '';
-    document.getElementById('prt-oms').innerHTML = omsList.length
-      ? omsList.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')
-      : '<option value="">— No OMSs —</option>';
+    populatePrinterOmsSel(null);
   }
   if (type === 'printjob') {
     document.getElementById('pj-modal-title').textContent = 'Add Print Job';
     document.getElementById('pj-save-btn').textContent    = 'Add Print Job';
-    document.getElementById('pj-oms').innerHTML = omsList.length
-      ? omsList.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')
-      : '<option value="">— No OMSs —</option>';
+    document.getElementById('pj-name').value = '';
     document.getElementById('pj-conds').innerHTML = '';
-    pjOmsChanged();
+    populatePjTargetSel(null);
   }
   if (type === 'item') {
     document.getElementById('item-modal-title').textContent = 'Add Order Item';
     document.getElementById('item-save-btn').textContent    = 'Add Item';
     document.getElementById('item-name').value = '';
     document.getElementById('item-attrs').innerHTML = '';
-    populateItemOmsDropdown(null);
+    populateItemOmsSel(null);
   }
   document.getElementById(`modal-${type}`).classList.add('open');
 }
 
-function closeModal(type) {
-  document.getElementById(`modal-${type}`).classList.remove('open');
+function closeModal(type) { document.getElementById(`modal-${type}`).classList.remove('open'); }
+
+// ── Edit openers ──
+function openEditDevice(id) {
+  const d = devices.find(x=>x.id===id); if (!d) return;
+  editId.device = id;
+  document.getElementById('dev-modal-title').textContent = 'Edit Device';
+  document.getElementById('dev-save-btn').textContent    = 'Save Changes';
+  document.getElementById('dev-type').value = d.type;
+  document.getElementById('dev-name').value = d.name;
+  devTypeChanged();
+  document.getElementById('modal-device').classList.add('open');
 }
 
-// ════════════════════════════════════════════════════════════
-// Modals — open (edit mode)
-// ════════════════════════════════════════════════════════════
-function openEditOMS(id) {
-  const o = omsList.find(x => x.id === id);
-  if (!o) return;
-  editingId.oms = id;
-  document.getElementById('oms-modal-title').textContent = 'Edit OMS';
-  document.getElementById('oms-save-btn').textContent    = 'Save Changes';
-  document.getElementById('oms-name').value = o.name;
-  document.getElementById('oms-attr').value = o.attrValue;
-  document.getElementById('modal-oms').classList.add('open');
+function openAddPrinterTo(omsDeviceId) {
+  editId.printer = null;
+  document.getElementById('prt-modal-title').textContent = 'Add Printer';
+  document.getElementById('prt-save-btn').textContent    = 'Add Printer';
+  document.getElementById('prt-name').value = '';
+  populatePrinterOmsSel(omsDeviceId);
+  document.getElementById('modal-printer').classList.add('open');
 }
 
 function openEditPrinter(id) {
-  const p = printers.find(x => x.id === id);
-  if (!p) return;
-  editingId.printer = id;
+  const p = printers.find(x=>x.id===id); if (!p) return;
+  editId.printer = id;
   document.getElementById('prt-modal-title').textContent = 'Edit Printer';
   document.getElementById('prt-save-btn').textContent    = 'Save Changes';
   document.getElementById('prt-name').value = p.name;
-  document.getElementById('prt-oms').innerHTML = omsList.map(o =>
-    `<option value="${o.id}" ${o.id===p.omsId?'selected':''}>${esc(o.name)}</option>`).join('');
+  populatePrinterOmsSel(p.deviceId);
   document.getElementById('modal-printer').classList.add('open');
 }
 
 function openEditPrintJob(id) {
-  const pj = printJobs.find(x => x.id === id);
-  if (!pj) return;
-  editingId.printjob = id;
+  const pj = printJobs.find(x=>x.id===id); if (!pj) return;
+  editId.printjob = id;
   document.getElementById('pj-modal-title').textContent = 'Edit Print Job';
   document.getElementById('pj-save-btn').textContent    = 'Save Changes';
-  const omsSel = document.getElementById('pj-oms');
-  omsSel.innerHTML = omsList.map(o =>
-    `<option value="${o.id}" ${o.id===pj.omsId?'selected':''}>${esc(o.name)}</option>`).join('');
-  pjOmsChanged(pj.prtId);
+  document.getElementById('pj-name').value = pj.name;
+  populatePjTargetSel(pj.targetId);
   document.getElementById('pj-conds').innerHTML = '';
-  pj.conds.forEach(c => addCondRow(c.key, c.val));
+  pj.conds.forEach(c => addCondRow(c.key, c.op, c.val));
   document.getElementById('modal-printjob').classList.add('open');
 }
 
 function openEditItem(id) {
-  const item = orderItems.find(x => x.id === id);
-  if (!item) return;
-  editingId.item = id;
+  const item = orderItems.find(x=>x.id===id); if (!item) return;
+  editId.item = id;
   document.getElementById('item-modal-title').textContent = 'Edit Order Item';
   document.getElementById('item-save-btn').textContent    = 'Save Changes';
   document.getElementById('item-name').value = item.name;
   document.getElementById('item-attrs').innerHTML = '';
-  // Pre-select OMS from attrs
-  const omsAttrVal = item.attrs['OMS'] ?? '';
-  populateItemOmsDropdown(omsAttrVal);
-  // Populate extra attrs (non-OMS)
-  Object.entries(item.attrs).forEach(([k, v]) => {
-    if (k !== 'OMS') addAttrRow(k, v);
-  });
+  populateItemOmsSel(item.attrs['OMS'] ?? null);
+  Object.entries(item.attrs).forEach(([k,v]) => { if (k !== 'OMS') addAttrRow(k,v); });
   document.getElementById('modal-item').classList.add('open');
 }
 
-function populateItemOmsDropdown(currentAttrValue) {
-  const sel = document.getElementById('item-oms-select');
+// ── Dropdown helpers ──
+function devTypeChanged() {
+  const t = document.getElementById('dev-type').value;
+  const hint = document.getElementById('dev-hint');
+  hint.textContent = t === 'oms'
+    ? 'OMS attribute will be set automatically to this name'
+    : 'DeviceName attribute will be set automatically to this name';
+}
+
+function populatePrinterOmsSel(selectedId) {
+  const sel = document.getElementById('prt-dev');
+  const omsDev = devices.filter(d=>d.type==='oms');
+  sel.innerHTML = omsDev.length
+    ? omsDev.map(d=>`<option value="${d.id}" ${d.id===selectedId?'selected':''}>${esc(d.name)}</option>`).join('')
+    : '<option value="">— No OMS devices —</option>';
+}
+
+function populatePjTargetSel(selectedId) {
+  const sel = document.getElementById('pj-target');
+  let html = '';
+  const omsDev = devices.filter(d=>d.type==='oms');
+  if (omsDev.length) {
+    html += '<optgroup label="OMS Printers">';
+    omsDev.forEach(d => {
+      printers.filter(p=>p.deviceId===d.id).forEach(p => {
+        html += `<option value="${p.id}" ${p.id===selectedId?'selected':''}>${esc(p.name)} (${esc(d.name)})</option>`;
+      });
+    });
+    html += '</optgroup>';
+  }
+  const netDev = devices.filter(d=>d.type==='net-printer');
+  if (netDev.length) {
+    html += '<optgroup label="Network Printers">';
+    netDev.forEach(d => {
+      html += `<option value="${d.id}" ${d.id===selectedId?'selected':''}>${esc(d.name)}</option>`;
+    });
+    html += '</optgroup>';
+  }
+  sel.innerHTML = html || '<option value="">— No printers available —</option>';
+}
+
+function populateItemOmsSel(selectedAttrVal) {
+  const sel = document.getElementById('item-oms');
   sel.innerHTML = '<option value="">— No OMS routing —</option>' +
-    omsList.map(o => `<option value="${o.attrValue}" ${o.attrValue===currentAttrValue?'selected':''}>${esc(o.name)} (OMS=${esc(o.attrValue)})</option>`).join('');
+    devices.filter(d=>d.type==='oms').map(d =>
+      `<option value="${d.name}" ${d.name===selectedAttrVal?'selected':''}>${esc(d.name)} (OMS=${esc(d.name)})</option>`
+    ).join('');
 }
 
-// ════════════════════════════════════════════════════════════
-// Modal helpers
-// ════════════════════════════════════════════════════════════
-function pjOmsChanged(preSelectPrtId) {
-  const omsId = document.getElementById('pj-oms').value;
-  const prtSel = document.getElementById('pj-prt');
-  const avail = printers.filter(p => p.omsId === omsId);
-  const pool  = avail.length ? avail : printers;
-  prtSel.innerHTML = pool.length
-    ? pool.map(p => `<option value="${p.id}" ${p.id===preSelectPrtId?'selected':''}>${esc(p.name)}</option>`).join('')
-    : '<option value="">— No Printers —</option>';
-}
-
-function addCondRow(k='', v='') {
+// ── Condition / attr row builders ──
+function addCondRow(k='', op='IS', v='') {
   const row = document.createElement('div');
   row.className = 'cond-row';
-  row.innerHTML = `<input type="text" class="ck" placeholder="attribute" value="${esc(k)}"/>
-    <span class="eq">=</span>
-    <input type="text" class="cv" placeholder="value" value="${esc(v)}"/>
+  row.innerHTML = `
+    <input type="text" class="cr-key" placeholder="attribute key" value="${esc(k)}"/>
+    <select class="cr-op">
+      <option value="IS" ${op==='IS'?'selected':''}>IS</option>
+      <option value="IS NOT" ${op==='IS NOT'?'selected':''}>IS NOT</option>
+    </select>
+    <input type="text" class="cr-val" placeholder="value" value="${esc(v)}"/>
     <button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;
   document.getElementById('pj-conds').appendChild(row);
 }
@@ -909,83 +1009,81 @@ function addCondRow(k='', v='') {
 function addAttrRow(k='', v='') {
   const row = document.createElement('div');
   row.className = 'cond-row';
-  row.innerHTML = `<input type="text" class="ak" placeholder="key" value="${esc(k)}" style="max-width:100px;"/>
-    <span class="eq">=</span>
+  row.innerHTML = `
+    <input type="text" class="ak" placeholder="key" value="${esc(k)}" style="max-width:110px;"/>
+    <span style="color:#3a6a9a;font-family:monospace;font-size:12px;">=</span>
     <input type="text" class="av" placeholder="value" value="${esc(v)}"/>
     <button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;
   document.getElementById('item-attrs').appendChild(row);
 }
 
 // ════════════════════════════════════════════════════════════
-// Save functions (handles add + edit)
+// Save functions
 // ════════════════════════════════════════════════════════════
-function doSaveOMS() {
-  const name = document.getElementById('oms-name').value.trim();
-  const attr = document.getElementById('oms-attr').value.trim();
-  if (!name || !attr) { alert('Name and attribute value are required.'); return; }
-  if (editingId.oms) {
-    const o = omsList.find(x => x.id === editingId.oms);
-    if (o) { o.name = name; o.attrValue = attr; }
+function doSaveDevice() {
+  const type = document.getElementById('dev-type').value;
+  const name = document.getElementById('dev-name').value.trim();
+  if (!name) { alert('Name is required.'); return; }
+  if (editId.device) {
+    const d = devices.find(x=>x.id===editId.device);
+    if (d) { d.type=type; d.name=name; }
   } else {
-    omsList.push({ id: uid(), name, attrValue: attr });
+    devices.push({ id: uid(), type, name });
   }
-  closeModal('oms');
-  refresh();
+  closeModal('device'); refresh();
 }
 
 function doSavePrinter() {
-  const name  = document.getElementById('prt-name').value.trim();
-  const omsId = document.getElementById('prt-oms').value;
-  if (!name || !omsId) { alert('Name and OMS are required.'); return; }
-  if (editingId.printer) {
-    const p = printers.find(x => x.id === editingId.printer);
-    if (p) { p.name = name; p.omsId = omsId; }
+  const name    = document.getElementById('prt-name').value.trim();
+  const deviceId = document.getElementById('prt-dev').value;
+  if (!name || !deviceId) { alert('Name and OMS are required.'); return; }
+  if (editId.printer) {
+    const p = printers.find(x=>x.id===editId.printer);
+    if (p) { p.name=name; p.deviceId=deviceId; }
   } else {
-    printers.push({ id: uid(), name, omsId });
+    printers.push({ id: uid(), name, deviceId });
   }
-  closeModal('printer');
-  refresh();
+  closeModal('printer'); refresh();
 }
 
 function doSavePrintJob() {
-  const omsId = document.getElementById('pj-oms').value;
-  const prtId = document.getElementById('pj-prt').value;
-  if (!omsId || !prtId) { alert('OMS and Printer are required.'); return; }
+  const name     = document.getElementById('pj-name').value.trim();
+  const targetId = document.getElementById('pj-target').value;
+  if (!name) { alert('Print job name is required.'); return; }
   const conds = [];
   document.querySelectorAll('#pj-conds .cond-row').forEach(row => {
-    const k = row.querySelector('.ck')?.value.trim();
-    const v = row.querySelector('.cv')?.value.trim();
-    if (k && v) conds.push({ key: k, val: v });
+    const k = row.querySelector('.cr-key')?.value.trim();
+    const op = row.querySelector('.cr-op')?.value || 'IS';
+    const v = row.querySelector('.cr-val')?.value.trim();
+    if (k && v) conds.push({ key:k, op, val:v });
   });
-  if (editingId.printjob) {
-    const pj = printJobs.find(x => x.id === editingId.printjob);
-    if (pj) { pj.omsId = omsId; pj.prtId = prtId; pj.conds = conds; }
+  if (editId.printjob) {
+    const pj = printJobs.find(x=>x.id===editId.printjob);
+    if (pj) { pj.name=name; pj.targetId=targetId; pj.conds=conds; }
   } else {
-    printJobs.push({ id: uid(), omsId, prtId, conds });
+    printJobs.push({ id:uid(), enabled:true, name, targetId, conds });
   }
-  closeModal('printjob');
-  refresh();
+  closeModal('printjob'); refresh();
 }
 
 function doSaveItem() {
   const name = document.getElementById('item-name').value.trim();
   if (!name) { alert('Item name is required.'); return; }
-  const omsAttrVal = document.getElementById('item-oms-select').value;
-  const attrs = {};
-  if (omsAttrVal) attrs['OMS'] = omsAttrVal;
+  const omsVal = document.getElementById('item-oms').value;
+  const attrs  = {};
+  if (omsVal) attrs['OMS'] = omsVal;
   document.querySelectorAll('#item-attrs .cond-row').forEach(row => {
     const k = row.querySelector('.ak')?.value.trim();
     const v = row.querySelector('.av')?.value.trim();
     if (k) attrs[k] = v || '';
   });
-  if (editingId.item) {
-    const item = orderItems.find(x => x.id === editingId.item);
-    if (item) { item.name = name; item.attrs = attrs; }
+  if (editId.item) {
+    const item = orderItems.find(x=>x.id===editId.item);
+    if (item) { item.name=name; item.attrs=attrs; }
   } else {
-    orderItems.push({ id: uid(), name, attrs });
+    orderItems.push({ id:uid(), name, attrs });
   }
-  closeModal('item');
-  renderOrderItems();
+  closeModal('item'); renderOrderItems();
 }
 
 // ════════════════════════════════════════════════════════════
@@ -994,13 +1092,14 @@ function doSaveItem() {
 function esc(s) {
   return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-function refresh() { renderSidebar(); renderOrderItems(); renderNetwork(); }
+
+function refresh() { renderDeviceList(); renderPrintJobs(); renderOrderItems(); renderNetwork(); }
 
 document.querySelectorAll('.overlay').forEach(el =>
-  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); })
+  el.addEventListener('click', e => { if (e.target===el) el.classList.remove('open'); })
 );
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(el => el.classList.remove('open'));
+  if (e.key==='Escape') document.querySelectorAll('.overlay.open').forEach(el=>el.classList.remove('open'));
 });
 
 // ════════════════════════════════════════════════════════════
