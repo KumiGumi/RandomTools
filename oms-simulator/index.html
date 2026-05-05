@@ -341,7 +341,8 @@ table.pj-table td:last-child  { text-align: right; }
           <thead>
             <tr>
               <th>Off/On</th>
-              <th>Print Job</th>
+              <th>Type</th>
+              <th>Print At</th>
               <th>Criteria</th>
               <th></th>
             </tr>
@@ -436,11 +437,14 @@ table.pj-table td:last-child  { text-align: right; }
   <div class="modal">
     <h3 id="pj-modal-title">Add Print Job</h3>
     <div class="field">
-      <label>Print Job Name / Description</label>
-      <input id="pj-name" type="text" placeholder="e.g. Print Prep at Grill LOCALBASE always" />
+      <label>Print Job Type</label>
+      <select id="pj-type">
+        <option value="customer-receipt">Customer Receipt</option>
+        <option value="prep-receipt">Prep Receipt</option>
+      </select>
     </div>
     <div class="field">
-      <label>Target Printer</label>
+      <label>Will Print At</label>
       <select id="pj-target"></select>
     </div>
     <div class="field">
@@ -465,14 +469,7 @@ table.pj-table td:last-child  { text-align: right; }
       <input id="item-name" type="text" placeholder="e.g. Cheeseburger" />
     </div>
     <div class="field">
-      <label>Route to OMS</label>
-      <select id="item-oms">
-        <option value="">— No OMS routing —</option>
-      </select>
-      <div class="hint">Sets the OMS attribute automatically</div>
-    </div>
-    <div class="field">
-      <label>Extra Attributes <span style="color:#3a6a9a;">(optional — for condition testing)</span></label>
+      <label>Attributes <span style="color:#3a6a9a;">(for condition matching)</span></label>
       <div id="item-attrs"></div>
       <button class="add-row-btn" onclick="addAttrRow()">+ Add attribute</button>
     </div>
@@ -546,6 +543,10 @@ function renderNetwork() {
   if (netPrts.length) {
     conn += `<line x1="912" y1="28" x2="912" y2="${VH-20}" stroke="#162030" stroke-width="1" stroke-dasharray="4 7" opacity="0.7"/>`;
     lbls += `<text x="956" y="22" text-anchor="middle" fill="#1a3a55" font-size="8" font-family="'Segoe UI',sans-serif" letter-spacing="1" font-weight="700">NETWORK</text>`;
+    netPrts.forEach(d => {
+      const np = nodePos[d.id]; if (!np) return;
+      conn += `<line id="cl-router-${d.id}" x1="${rp.x}" y1="${rp.y+30}" x2="${np.x}" y2="${np.y-22}" stroke="#102030" stroke-width="1.5" stroke-dasharray="7 5"/>`;
+    });
   }
 
   // Router
@@ -639,29 +640,23 @@ function highlightLine(id, color, ms) {
 function animatePacket(fromId, toId, color, onDone) {
   const fp=nodePos[fromId], tp=nodePos[toId];
   if (!fp||!tp) { onDone?.(); return; }
-  const pc = color==='blue'?'#5ab4ff':'#3ecf6e';
-  const fy = fromId==='router' ? fp.y+30 : fp.y+25;
-  const ty = devices.find(d=>d.id===toId&&d.type==='oms') ? tp.y-28 : tp.y-22;
-  highlightLine(`cl-${fromId}-${toId}`, color, 900);
-  const layer = document.getElementById('layer-pkts');
-  const c = document.createElementNS('http://www.w3.org/2000/svg','circle');
+  const pc=color==='blue'?'#5ab4ff':'#3ecf6e';
+  const fy=fromId==='router'?fp.y+30:fp.y+25;
+  const ty=devices.find(d=>d.id===toId&&d.type==='oms')?tp.y-28:tp.y-22;
+  highlightLine(`cl-${fromId}-${toId}`,color,900);
+  const layer=document.getElementById('layer-pkts');
+  const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
   c.setAttribute('r','6'); c.setAttribute('fill',pc); c.setAttribute('filter','url(#f-pkt)');
   c.setAttribute('cx',fp.x); c.setAttribute('cy',fy);
   layer.appendChild(c);
   let t0=null; const dur=500;
-  (function step(ts) {
-    if (!t0) t0=ts;
-    const raw=Math.min((ts-t0)/dur,1), t=raw<0.5?2*raw*raw:-1+(4-2*raw)*raw;
-    c.setAttribute('cx', fp.x+(tp.x-fp.x)*t);
-    c.setAttribute('cy', fy+(ty-fy)*t);
-    if (raw<1) requestAnimationFrame(step);
-    else { c.remove(); onDone?.(); }
-  })(performance.now());
   requestAnimationFrame(function step(ts){
     if(!t0)t0=ts;
     const raw=Math.min((ts-t0)/dur,1),t=raw<0.5?2*raw*raw:-1+(4-2*raw)*raw;
-    c.setAttribute('cx',fp.x+(tp.x-fp.x)*t);c.setAttribute('cy',fy+(ty-fy)*t);
-    if(raw<1)requestAnimationFrame(step); else{c.remove();onDone?.();}
+    c.setAttribute('cx',fp.x+(tp.x-fp.x)*t);
+    c.setAttribute('cy',fy+(ty-fy)*t);
+    if(raw<1) requestAnimationFrame(step);
+    else { c.remove(); onDone?.(); }
   });
 }
 
@@ -683,34 +678,36 @@ function sendOrder() {
 }
 
 function routeItem(item) {
-  const omsVal = item.attrs['OMS'];
-  if (!omsVal) { addLog('warn',`  "${item.name}" — no OMS attribute, unrouted`); return; }
-  const dev = devices.find(d => d.type==='oms' && d.name.toLowerCase()===omsVal.toLowerCase());
-  if (!dev) { addLog('warn',`  "${item.name}" — no OMS device matches "${omsVal}"`); activateNode('router','purple',400); return; }
-  addLog('route', `  "${item.name}"  →  ${dev.name} OMS`);
-  animatePacket('router', dev.id, 'blue', () => {
-    activateNode(dev.id,'blue',1500);
-    const eff = { ...item.attrs, DeviceName: dev.name };
-    const matched = printJobs.filter(pj => {
-      if (!pj.enabled) return false;
-      return pj.conds.every(c => {
-        const actual   = (eff[c.key] ?? '').toLowerCase();
-        const expected = c.val.toLowerCase();
-        return c.op === 'IS' ? actual === expected : actual !== expected;
-      });
-    });
-    if (!matched.length) { addLog('info',`    No enabled print jobs matched`); return; }
-    matched.forEach((pj,i) => setTimeout(() => {
-      const tgt = findTarget(pj.targetId);
-      const cs = pj.conds.length ? `  [${pj.conds.map(c=>`${c.key} ${c.op} ${c.val}`).join(' AND ')}]` : '';
-      addLog('print', `    ✓ "${pj.name}" → ${tgt?.name ?? '?'}${cs}`);
-      if (nodePos[pj.targetId]) animatePacket(dev.id, pj.targetId, 'green', ()=>activateNode(pj.targetId,'green',1500));
-    }, i*350));
-  });
-}
-
-function findTarget(id) {
-  return printers.find(p=>p.id===id) || devices.find(d=>d.id===id&&d.type==='net-printer');
+  const enabled = printJobs.filter(pj => pj.enabled);
+  if (!enabled.length) { addLog('info', `  "${item.name}" — no enabled print jobs`); return; }
+  const matched = enabled.filter(pj =>
+    pj.conds.every(c => {
+      const actual   = (item.attrs[c.key] ?? '').toLowerCase();
+      const expected = c.val.toLowerCase();
+      return c.op === 'IS' ? actual === expected : actual !== expected;
+    })
+  );
+  if (!matched.length) { addLog('info', `  "${item.name}" — no rules matched`); return; }
+  matched.forEach((pj, i) => setTimeout(() => {
+    const typeLabel = PJ_TYPE_LABELS[pj.type] || pj.type;
+    const tgtPrt = printers.find(p => p.id === pj.targetId);
+    const tgtNet = devices.find(d => d.id === pj.targetId && d.type === 'net-printer');
+    if (tgtPrt) {
+      const omsD = devices.find(d => d.id === tgtPrt.deviceId);
+      if (omsD && nodePos[omsD.id] && nodePos[tgtPrt.id]) {
+        addLog('print', `  ✓ [${typeLabel}]  router → ${omsD.name} → ${tgtPrt.name}`);
+        animatePacket('router', omsD.id, 'blue', () => {
+          activateNode(omsD.id, 'blue', 1200);
+          animatePacket(omsD.id, tgtPrt.id, 'green', () => activateNode(tgtPrt.id, 'green', 1500));
+        });
+      }
+    } else if (tgtNet && nodePos[tgtNet.id]) {
+      addLog('print', `  ✓ [${typeLabel}]  router → ${tgtNet.name} (Network)`);
+      animatePacket('router', tgtNet.id, 'blue', () => activateNode(tgtNet.id, 'blue', 1500));
+    } else {
+      addLog('warn', `  ✗ [${typeLabel}]  target printer not found on map`);
+    }
+  }, i * 700));
 }
 
 // ════════════════════════════════════════════════════════════
@@ -809,6 +806,8 @@ function renderDeviceList() {
 // ════════════════════════════════════════════════════════════
 // Print jobs table
 // ════════════════════════════════════════════════════════════
+const PJ_TYPE_LABELS = { 'customer-receipt': 'Customer Receipt', 'prep-receipt': 'Prep Receipt' };
+
 function renderPrintJobs() {
   const tbody = document.getElementById('pj-table-body');
   const active = printJobs.filter(j=>j.enabled).length;
@@ -817,16 +816,27 @@ function renderPrintJobs() {
   document.getElementById('pj-count2').textContent = countStr;
 
   if (!printJobs.length) {
-    tbody.innerHTML=`<tr><td colspan="4" style="padding:14px;text-align:center;color:#1e3a55;font-size:11px;">No print job rules. Click "Add New Print Job" below.</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="5" style="padding:14px;text-align:center;color:#1e3a55;font-size:11px;">No print job rules. Click "Add New Print Job" below.</td></tr>`;
     return;
   }
   tbody.innerHTML = printJobs.map(pj => {
+    const tgtPrt = printers.find(p=>p.id===pj.targetId);
+    const tgtNet = devices.find(d=>d.id===pj.targetId&&d.type==='net-printer');
+    let printAtStr = '—';
+    if (tgtPrt) {
+      const omsD = devices.find(d=>d.id===tgtPrt.deviceId);
+      printAtStr = omsD ? `${tgtPrt.name} (${omsD.name})` : tgtPrt.name;
+    } else if (tgtNet) {
+      printAtStr = `${tgtNet.name} [NET]`;
+    }
+    const typeStr = PJ_TYPE_LABELS[pj.type] || pj.type || '—';
     const criteriaHtml = pj.conds.length
-      ? 'When: ' + pj.conds.map(c => `<span class="kw">${esc(c.key)}</span> ${esc(c.op)} = ${esc(c.val)}`).join(' <span style="color:#3a5a7a">AND</span> ')
+      ? pj.conds.map(c=>`<span class="kw">${esc(c.key)}</span> ${esc(c.op)} <em>${esc(c.val)}</em>`).join(' <span style="color:#3a5a7a">AND</span> ')
       : '<span style="color:#3a5a7a;font-style:italic;">Always</span>';
     return `<tr>
       <td><label class="toggle"><input type="checkbox" ${pj.enabled?'checked':''} onchange="togglePrintJob('${pj.id}',this.checked)"/><span class="toggle-track"></span></label></td>
-      <td class="pj-name">${esc(pj.name)}</td>
+      <td class="pj-name">${esc(typeStr)}</td>
+      <td style="color:#7acf5a;font-size:10px;font-family:monospace;white-space:nowrap;">${esc(printAtStr)}</td>
       <td class="pj-criteria">${criteriaHtml}</td>
       <td><div style="display:flex;gap:3px;justify-content:flex-end;">
         <button class="edit-btn" onclick="openEditPrintJob('${pj.id}')">✎</button>
@@ -889,7 +899,7 @@ function openModal(type) {
   if (type === 'printjob') {
     document.getElementById('pj-modal-title').textContent = 'Add Print Job';
     document.getElementById('pj-save-btn').textContent    = 'Add Print Job';
-    document.getElementById('pj-name').value = '';
+    document.getElementById('pj-type').value = 'customer-receipt';
     document.getElementById('pj-conds').innerHTML = '';
     populatePjTargetSel(null);
   }
@@ -898,7 +908,6 @@ function openModal(type) {
     document.getElementById('item-save-btn').textContent    = 'Add Item';
     document.getElementById('item-name').value = '';
     document.getElementById('item-attrs').innerHTML = '';
-    populateItemOmsSel(null);
   }
   document.getElementById(`modal-${type}`).classList.add('open');
 }
@@ -938,7 +947,7 @@ function openEditPrintJob(id) {
   editId.printjob=id;
   document.getElementById('pj-modal-title').textContent='Edit Print Job';
   document.getElementById('pj-save-btn').textContent='Save Changes';
-  document.getElementById('pj-name').value=pj.name;
+  document.getElementById('pj-type').value=pj.type||'customer-receipt';
   populatePjTargetSel(pj.targetId);
   document.getElementById('pj-conds').innerHTML='';
   pj.conds.forEach(c=>addCondRow(c.key,c.op,c.val));
@@ -951,8 +960,7 @@ function openEditItem(id) {
   document.getElementById('item-save-btn').textContent='Save Changes';
   document.getElementById('item-name').value=item.name;
   document.getElementById('item-attrs').innerHTML='';
-  populateItemOmsSel(item.attrs['OMS']??null);
-  Object.entries(item.attrs).forEach(([k,v])=>{ if(k!=='OMS') addAttrRow(k,v); });
+  Object.entries(item.attrs).forEach(([k,v])=>addAttrRow(k,v));
   document.getElementById('modal-item').classList.add('open');
 }
 
@@ -985,12 +993,6 @@ function populatePjTargetSel(selId) {
   }
   s.innerHTML=html||'<option value="">— No printers available —</option>';
 }
-function populateItemOmsSel(selVal) {
-  const s=document.getElementById('item-oms');
-  s.innerHTML='<option value="">— No OMS routing —</option>'+
-    devices.filter(d=>d.type==='oms').map(d=>`<option value="${d.name}" ${d.name===selVal?'selected':''}>${esc(d.name)}</option>`).join('');
-}
-
 // ── Row builders ──
 function addCondRow(k='',op='IS',v='') {
   const row=document.createElement('div'); row.className='cond-row';
@@ -1040,9 +1042,9 @@ function doSavePrinter() {
   closeModal('printer'); refresh();
 }
 function doSavePrintJob() {
-  const name=document.getElementById('pj-name').value.trim();
+  const type=document.getElementById('pj-type').value;
   const targetId=document.getElementById('pj-target').value;
-  if (!name) { alert('Print job name is required.'); return; }
+  if (!targetId) { alert('Please select a target printer.'); return; }
   const conds=[];
   document.querySelectorAll('#pj-conds .cond-row').forEach(row=>{
     const k=row.querySelector('.cr-key')?.value.trim();
@@ -1052,16 +1054,14 @@ function doSavePrintJob() {
   });
   if (editId.printjob) {
     const pj=printJobs.find(x=>x.id===editId.printjob);
-    if (pj) { pj.name=name; pj.targetId=targetId; pj.conds=conds; }
-  } else { printJobs.push({ id:uid(), enabled:true, name, targetId, conds }); }
+    if (pj) { pj.type=type; pj.targetId=targetId; pj.conds=conds; }
+  } else { printJobs.push({ id:uid(), enabled:true, type, targetId, conds }); }
   closeModal('printjob'); refresh();
 }
 function doSaveItem() {
   const name=document.getElementById('item-name').value.trim();
   if (!name) { alert('Item name is required.'); return; }
-  const omsVal=document.getElementById('item-oms').value;
   const attrs={};
-  if (omsVal) attrs['OMS']=omsVal;
   document.querySelectorAll('#item-attrs .cond-row').forEach(row=>{
     const k=row.querySelector('.ak')?.value.trim();
     const v=row.querySelector('.av')?.value.trim();
@@ -1079,32 +1079,6 @@ function doSaveItem() {
 // ════════════════════════════════════════════════════════════
 function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function refresh() { renderDeviceList(); renderPrintJobs(); renderOrderItems(); renderNetwork(); }
-
-// Fix duplicate RAF loop bug in animatePacket — redefine cleanly
-(function patchAnimatePacket(){
-  window.animatePacket = function(fromId, toId, color, onDone) {
-    const fp=nodePos[fromId], tp=nodePos[toId];
-    if (!fp||!tp) { onDone?.(); return; }
-    const pc=color==='blue'?'#5ab4ff':'#3ecf6e';
-    const fy=fromId==='router'?fp.y+30:fp.y+25;
-    const ty=devices.find(d=>d.id===toId&&d.type==='oms')?tp.y-28:tp.y-22;
-    highlightLine(`cl-${fromId}-${toId}`,color,900);
-    const layer=document.getElementById('layer-pkts');
-    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-    c.setAttribute('r','6'); c.setAttribute('fill',pc); c.setAttribute('filter','url(#f-pkt)');
-    c.setAttribute('cx',fp.x); c.setAttribute('cy',fy);
-    layer.appendChild(c);
-    let t0=null; const dur=500;
-    requestAnimationFrame(function step(ts){
-      if(!t0)t0=ts;
-      const raw=Math.min((ts-t0)/dur,1),t=raw<0.5?2*raw*raw:-1+(4-2*raw)*raw;
-      c.setAttribute('cx',fp.x+(tp.x-fp.x)*t);
-      c.setAttribute('cy',fy+(ty-fy)*t);
-      if(raw<1) requestAnimationFrame(step);
-      else { c.remove(); onDone?.(); }
-    });
-  };
-})();
 
 document.querySelectorAll('.overlay').forEach(el =>
   el.addEventListener('click', e=>{ if(e.target===el) el.classList.remove('open'); })
