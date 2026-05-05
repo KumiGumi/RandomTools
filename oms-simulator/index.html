@@ -45,7 +45,7 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 
 /* ── Sidebar ── */
 .sidebar {
-  width: 258px; flex-shrink: 0;
+  width: 262px; flex-shrink: 0;
   background: #0a1525;
   border-right: 1px solid #162840;
   display: flex; flex-direction: column;
@@ -67,9 +67,9 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 
 .node-card {
   background: #0e1e33; border: 1px solid #162840;
-  border-radius: 5px; padding: 7px 9px;
+  border-radius: 5px; padding: 6px 8px;
   margin-bottom: 5px;
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; gap: 7px;
   transition: border-color 0.2s;
 }
 .node-card:hover { border-color: #254a70; }
@@ -77,6 +77,8 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 .node-info { flex: 1; min-width: 0; }
 .node-name { color: #ddeeff; font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .node-detail { color: #3a6a9a; font-size: 10px; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.card-btns { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
 
 .icon-btn {
   width: 20px; height: 20px;
@@ -87,6 +89,15 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
   transition: background 0.15s;
 }
 .icon-btn:hover { background: #162840; }
+
+.edit-btn {
+  width: 17px; height: 17px;
+  background: transparent; border: 1px solid #1a3454;
+  color: #5a90c0; border-radius: 3px; cursor: pointer;
+  font-size: 10px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; opacity: 0.6; transition: opacity 0.15s;
+}
+.edit-btn:hover { opacity: 1; background: #0e2040; color: #5ab4ff; border-color: #254a70; }
 
 .del-btn {
   width: 17px; height: 17px;
@@ -108,7 +119,7 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 
 /* ── Bottom panel ── */
 .bottom-panel {
-  height: 195px; flex-shrink: 0;
+  height: 200px; flex-shrink: 0;
   background: #0a1525; border-top: 1px solid #162840;
   display: flex;
 }
@@ -134,6 +145,7 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 }
 .order-item .oi-name { color: #ddeeff; font-weight: 600; }
 .order-item .oi-attrs { color: #5ab4ff; font-family: monospace; font-size: 10px; flex: 1; }
+.order-item .card-btns { gap: 3px; }
 
 .order-controls {
   padding: 6px 8px; border-top: 1px solid #162840;
@@ -155,15 +167,15 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
   font-family: inherit; font-weight: 600;
   border: 1px solid transparent; transition: all 0.15s;
 }
-.btn-primary  { background: #0f4a96; color: #e0f0ff; border-color: #1560c0; }
-.btn-primary:hover  { background: #1560c0; }
-.btn-ghost    { background: transparent; color: #5ab4ff; border-color: #162840; }
-.btn-ghost:hover    { background: #0e1e33; }
-.btn-send     { background: #0a3d8a; color: #fff; border-color: #1255b0; padding: 6px 18px; font-size: 13px; }
-.btn-send:hover     { background: #1255b0; }
-.btn-send:disabled  { background: #08122a; color: #1e3a55; border-color: #0e1e33; cursor: not-allowed; }
-.btn-danger   { background: transparent; color: #e05050; border-color: #2a1010; padding: 5px 10px; font-size: 11px; }
-.btn-danger:hover   { background: #180505; }
+.btn-primary { background: #0f4a96; color: #e0f0ff; border-color: #1560c0; }
+.btn-primary:hover { background: #1560c0; }
+.btn-ghost   { background: transparent; color: #5ab4ff; border-color: #162840; }
+.btn-ghost:hover   { background: #0e1e33; }
+.btn-send    { background: #0a3d8a; color: #fff; border-color: #1255b0; padding: 6px 18px; font-size: 13px; }
+.btn-send:hover    { background: #1255b0; }
+.btn-send:disabled { background: #08122a; color: #1e3a55; border-color: #0e1e33; cursor: not-allowed; }
+.btn-danger  { background: transparent; color: #e05050; border-color: #2a1010; padding: 5px 10px; font-size: 11px; }
+.btn-danger:hover  { background: #180505; }
 
 /* ── Modals ── */
 .overlay {
@@ -174,13 +186,17 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 .overlay.open { display: flex; }
 .modal {
   background: #0a1525; border: 1px solid #1e3a55;
-  border-radius: 8px; padding: 20px; width: 390px;
+  border-radius: 8px; padding: 20px; width: 400px;
   max-height: 88vh; overflow-y: auto;
   box-shadow: 0 24px 64px rgba(0,0,0,0.85);
 }
 .modal h3 { font-size: 14px; color: #5ab4ff; margin-bottom: 18px; font-weight: 700; }
 .field { margin-bottom: 13px; }
-.field label { display: block; font-size: 10px; color: #3a6a9a; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; font-weight: 600; }
+.field label {
+  display: block; font-size: 10px; color: #3a6a9a;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  margin-bottom: 4px; font-weight: 600;
+}
 .field input, .field select {
   width: 100%; background: #040c18;
   border: 1px solid #162840; color: #ddeeff;
@@ -209,6 +225,17 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
   transition: all 0.15s; text-align: center; margin-top: 3px;
 }
 .add-row-btn:hover { border-color: #5ab4ff; color: #5ab4ff; }
+
+/* OMS dropdown in item modal */
+.oms-select-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.oms-select-row select {
+  flex: 1; background: #040c18; border: 1px solid #162840; color: #ddeeff;
+  padding: 7px 10px; border-radius: 4px; font-size: 12px; font-family: inherit;
+}
+.oms-select-row select:focus { outline: none; border-color: #5ab4ff; }
+.oms-select-row select option { background: #0a1525; }
 
 .empty-state { padding: 10px; text-align: center; color: #1e3a55; font-size: 11px; }
 </style>
@@ -245,15 +272,12 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 
   <!-- ── Main content ── -->
   <main class="content">
-    <!-- Network map -->
     <div id="network-map">
       <svg id="network-svg" viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet">
         <defs>
-          <!-- dot grid background -->
           <pattern id="dots" width="38" height="38" patternUnits="userSpaceOnUse">
             <circle cx="19" cy="19" r="0.9" fill="#0d1f35" opacity="0.9"/>
           </pattern>
-          <!-- glow filters -->
           <filter id="f-blue" x="-60%" y="-60%" width="220%" height="220%">
             <feGaussianBlur stdDeviation="5" result="b"/>
             <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
@@ -279,7 +303,6 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
       </svg>
     </div>
 
-    <!-- Bottom panel -->
     <div class="bottom-panel">
       <div class="order-panel">
         <div class="panel-hdr">
@@ -305,30 +328,30 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
   </main>
 </div>
 
-<!-- ── Modal: Add OMS ── -->
+<!-- ── Modal: OMS (add & edit) ── -->
 <div class="overlay" id="modal-oms">
   <div class="modal">
-    <h3>Add OMS</h3>
+    <h3 id="oms-modal-title">Add OMS</h3>
     <div class="field">
       <label>OMS Name</label>
       <input id="oms-name" type="text" placeholder="e.g. Grill" />
     </div>
     <div class="field">
-      <label>Attribute Value  <span style="color:#3a6a9a;">(routes when item has OMS = this value)</span></label>
+      <label>Attribute Value <span style="color:#3a6a9a;">(routes when item has OMS = this)</span></label>
       <input id="oms-attr" type="text" placeholder="e.g. grill" style="font-family:monospace;" />
       <div class="hint">Case-insensitive match</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('oms')">Cancel</button>
-      <button class="btn btn-primary" onclick="doAddOMS()">Add OMS</button>
+      <button class="btn btn-primary" id="oms-save-btn" onclick="doSaveOMS()">Add OMS</button>
     </div>
   </div>
 </div>
 
-<!-- ── Modal: Add Printer ── -->
+<!-- ── Modal: Printer (add & edit) ── -->
 <div class="overlay" id="modal-printer">
   <div class="modal">
-    <h3>Add Printer</h3>
+    <h3 id="prt-modal-title">Add Printer</h3>
     <div class="field">
       <label>Printer Name</label>
       <input id="prt-name" type="text" placeholder="e.g. Grill Ticket Printer" />
@@ -339,53 +362,62 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('printer')">Cancel</button>
-      <button class="btn btn-primary" onclick="doAddPrinter()">Add Printer</button>
+      <button class="btn btn-primary" id="prt-save-btn" onclick="doSavePrinter()">Add Printer</button>
     </div>
   </div>
 </div>
 
-<!-- ── Modal: Add Print Job ── -->
+<!-- ── Modal: Print Job (add & edit) ── -->
 <div class="overlay" id="modal-printjob">
   <div class="modal">
-    <h3>Add Print Job</h3>
+    <h3 id="pj-modal-title">Add Print Job</h3>
     <div class="field">
-      <label>OMS  <span style="color:#3a6a9a;">(receives the routed item)</span></label>
+      <label>OMS <span style="color:#3a6a9a;">(receives the routed item)</span></label>
       <select id="pj-oms" onchange="pjOmsChanged()"></select>
     </div>
     <div class="field">
-      <label>Printer  <span style="color:#3a6a9a;">(will print the ticket)</span></label>
+      <label>Printer <span style="color:#3a6a9a;">(will print the ticket)</span></label>
       <select id="pj-prt"></select>
     </div>
     <div class="field">
-      <label>Additional Conditions  <span style="color:#3a6a9a;">(empty = always print)</span></label>
+      <label>Additional Conditions <span style="color:#3a6a9a;">(empty = always print)</span></label>
       <div id="pj-conds"></div>
       <button class="add-row-btn" onclick="addCondRow()">+ Add condition</button>
-      <div class="hint">Item must also have ALL listed attributes to trigger this print job</div>
+      <div class="hint">Item must also have ALL listed attributes to trigger this job</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('printjob')">Cancel</button>
-      <button class="btn btn-primary" onclick="doAddPrintJob()">Add Print Job</button>
+      <button class="btn btn-primary" id="pj-save-btn" onclick="doSavePrintJob()">Add Print Job</button>
     </div>
   </div>
 </div>
 
-<!-- ── Modal: Add Order Item ── -->
+<!-- ── Modal: Order Item (add & edit) ── -->
 <div class="overlay" id="modal-item">
   <div class="modal">
-    <h3>Add Order Item</h3>
+    <h3 id="item-modal-title">Add Order Item</h3>
     <div class="field">
       <label>Item Name</label>
       <input id="item-name" type="text" placeholder="e.g. Cheeseburger" />
     </div>
     <div class="field">
-      <label>Attributes</label>
+      <label>Route to OMS</label>
+      <div class="oms-select-row">
+        <select id="item-oms-select">
+          <option value="">— No OMS routing —</option>
+        </select>
+      </div>
+      <div class="hint">Sets the OMS attribute on this item automatically</div>
+    </div>
+    <div class="field">
+      <label>Extra Attributes <span style="color:#3a6a9a;">(optional)</span></label>
       <div id="item-attrs"></div>
       <button class="add-row-btn" onclick="addAttrRow()">+ Add attribute</button>
-      <div class="hint">Add OMS = grill (or whatever OMS value) to route this item</div>
+      <div class="hint">For use with print job conditions</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('item')">Cancel</button>
-      <button class="btn btn-primary" onclick="doAddItem()">Add Item</button>
+      <button class="btn btn-primary" id="item-save-btn" onclick="doSaveItem()">Add Item</button>
     </div>
   </div>
 </div>
@@ -402,10 +434,11 @@ let orderCount = 0;
 let _idSeq = 1;
 function uid() { return 'n' + (_idSeq++); }
 
-// Computed layout positions (SVG coords)
-let nodePos = {};
+// Edit tracking — null = adding new, string = editing by id
+const editingId = { oms: null, printer: null, printjob: null, item: null };
 
-// SVG viewBox dimensions
+// Computed layout positions
+let nodePos = {};
 const VW = 1000, VH = 520;
 const ROUTER_Y  = 78;
 const OMS_Y     = 255;
@@ -415,82 +448,69 @@ const PRINTER_Y = 420;
 // Default data
 // ════════════════════════════════════════════════════════════
 function initDefaults() {
-  const g = { id: uid(), name: 'Grill',  attrValue: 'grill' };
-  const f = { id: uid(), name: 'Fryer',  attrValue: 'fryer' };
-  const b = { id: uid(), name: 'Bar',    attrValue: 'bar'   };
-  omsList.push(g, f, b);
-
-  const pg = { id: uid(), name: 'Grill Printer', omsId: g.id };
-  const pf = { id: uid(), name: 'Fryer Printer', omsId: f.id };
-  const pb = { id: uid(), name: 'Bar Printer',   omsId: b.id };
-  printers.push(pg, pf, pb);
-
-  // Always-print jobs
-  printJobs.push({ id: uid(), omsId: g.id, prtId: pg.id, conds: [] });
-  printJobs.push({ id: uid(), omsId: f.id, prtId: pf.id, conds: [] });
-  printJobs.push({ id: uid(), omsId: b.id, prtId: pb.id, conds: [] });
-
-  // Starter order
-  orderItems.push({ id: uid(), name: 'Cheeseburger', attrs: { OMS: 'grill' } });
-  orderItems.push({ id: uid(), name: 'Chicken Wings', attrs: { OMS: 'fryer' } });
-  orderItems.push({ id: uid(), name: 'Old Fashioned', attrs: { OMS: 'bar'  } });
+  const defs = [
+    { name: 'Grill',   attr: 'grill'  },
+    { name: 'Deli',    attr: 'deli'   },
+    { name: 'Expo',    attr: 'expo'   },
+    { name: 'Global',  attr: 'global' },
+    { name: 'Coffee',  attr: 'coffee' },
+    { name: 'Salad',   attr: 'salad'  },
+    { name: 'Action',  attr: 'action' },
+  ];
+  defs.forEach(d => {
+    const o = { id: uid(), name: d.name, attrValue: d.attr };
+    omsList.push(o);
+    const p = { id: uid(), name: `${d.name} Printer`, omsId: o.id };
+    printers.push(p);
+    printJobs.push({ id: uid(), omsId: o.id, prtId: p.id, conds: [] });
+  });
+  // Order starts empty
 }
 
 // ════════════════════════════════════════════════════════════
-// SVG layout
+// SVG Layout
 // ════════════════════════════════════════════════════════════
 function computeLayout() {
   nodePos = {};
   nodePos['router'] = { x: VW / 2, y: ROUTER_Y };
-
   const n = omsList.length;
   if (!n) return;
-  const spacing = Math.min(190, (VW - 90) / n);
+  const spacing = Math.min(190, (VW - 60) / n);
   const startX  = VW / 2 - ((n - 1) * spacing) / 2;
   omsList.forEach((o, i) => {
     nodePos[o.id] = { x: startX + i * spacing, y: OMS_Y };
   });
-
   omsList.forEach(o => {
-    const op = nodePos[o.id];
+    const op    = nodePos[o.id];
     const oPrts = printers.filter(p => p.omsId === o.id);
     const pn = oPrts.length;
     if (!pn) return;
-    const ps = Math.min(100, 170 / pn);
+    const ps  = Math.min(100, 170 / pn);
     const px0 = op.x - ((pn - 1) * ps) / 2;
-    oPrts.forEach((p, i) => {
-      nodePos[p.id] = { x: px0 + i * ps, y: PRINTER_Y };
-    });
+    oPrts.forEach((p, i) => { nodePos[p.id] = { x: px0 + i * ps, y: PRINTER_Y }; });
   });
 }
 
 // ════════════════════════════════════════════════════════════
-// SVG render
+// SVG Render
 // ════════════════════════════════════════════════════════════
 function renderNetwork() {
   computeLayout();
   let conn = '', nodes = '', lbls = '';
 
-  // ── Connections ──
   omsList.forEach(o => {
-    const rp = nodePos['router'];
-    const op = nodePos[o.id];
+    const rp = nodePos['router'], op = nodePos[o.id];
     if (!op) return;
-    conn += `<line id="cl-router-${o.id}"
-      x1="${rp.x}" y1="${rp.y + 30}"
-      x2="${op.x}" y2="${op.y - 28}"
+    conn += `<line id="cl-router-${o.id}" x1="${rp.x}" y1="${rp.y+30}" x2="${op.x}" y2="${op.y-28}"
       stroke="#102030" stroke-width="1.5" stroke-dasharray="7 5"/>`;
     printers.filter(p => p.omsId === o.id).forEach(p => {
       const pp = nodePos[p.id];
       if (!pp) return;
-      conn += `<line id="cl-${o.id}-${p.id}"
-        x1="${op.x}" y1="${op.y + 25}"
-        x2="${pp.x}" y2="${pp.y - 22}"
+      conn += `<line id="cl-${o.id}-${p.id}" x1="${op.x}" y1="${op.y+25}" x2="${pp.x}" y2="${pp.y-22}"
         stroke="#0a2010" stroke-width="1.5" stroke-dasharray="7 5"/>`;
     });
   });
 
-  // ── Router node ──
   const rp = nodePos['router'];
   nodes += `<g id="nd-router" transform="translate(${rp.x},${rp.y})">
     <circle r="30" fill="#0b0a20" stroke="#2e1e6e" stroke-width="2"/>
@@ -498,14 +518,12 @@ function renderNetwork() {
     <path d="M-12,-9 L0,5 L12,-9" fill="none" stroke="#6040c0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
     <path d="M-7,-16 L0,-6 L7,-16" fill="none" stroke="#3a2080" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
   </g>`;
-  lbls += `<text x="${rp.x}" y="${rp.y + 44}" text-anchor="middle"
-    fill="#5a3aaf" font-size="9.5" font-family="'Segoe UI',sans-serif" font-weight="700" letter-spacing="0.8">ORDER ROUTER</text>`;
+  lbls += `<text x="${rp.x}" y="${rp.y+44}" text-anchor="middle" fill="#5a3aaf"
+    font-size="9.5" font-family="'Segoe UI',sans-serif" font-weight="700" letter-spacing="0.8">ORDER ROUTER</text>`;
 
-  // ── OMS (monitor) nodes ──
   omsList.forEach(o => {
     const p = nodePos[o.id];
     if (!p) return;
-    // Monitor SVG inline (centered at 0,0)
     nodes += `<g id="nd-${o.id}" transform="translate(${p.x},${p.y})">
       <rect x="-30" y="-28" width="60" height="42" rx="5" fill="#0b1e3a" stroke="#1e5090" stroke-width="1.8"/>
       <rect x="-24" y="-22" width="48" height="28" rx="2" fill="#030c18"/>
@@ -515,13 +533,12 @@ function renderNetwork() {
       <rect x="-4" y="14" width="8" height="7" fill="#0b1e3a"/>
       <rect x="-15" y="20" width="30" height="4" rx="2" fill="#0b1e3a" stroke="#1e5090" stroke-width="1.2"/>
     </g>`;
-    lbls += `<text x="${p.x}" y="${p.y + 36}" text-anchor="middle"
-      fill="#90c8f8" font-size="11.5" font-family="'Segoe UI',sans-serif" font-weight="700">${esc(o.name)}</text>
-    <text x="${p.x}" y="${p.y + 47}" text-anchor="middle"
-      fill="#2a5a8a" font-size="9" font-family="monospace">OMS=${esc(o.attrValue)}</text>`;
+    lbls += `<text x="${p.x}" y="${p.y+36}" text-anchor="middle" fill="#90c8f8"
+      font-size="11.5" font-family="'Segoe UI',sans-serif" font-weight="700">${esc(o.name)}</text>
+    <text x="${p.x}" y="${p.y+47}" text-anchor="middle" fill="#2a5a8a"
+      font-size="9" font-family="monospace">OMS=${esc(o.attrValue)}</text>`;
   });
 
-  // ── Printer nodes ──
   printers.forEach(p => {
     const pp = nodePos[p.id];
     if (!pp) return;
@@ -533,14 +550,13 @@ function renderNetwork() {
       <line x1="-16" y1="1"  x2="9" y2="1"  stroke="#1a4820" stroke-width="1.3"/>
       <circle cx="15" cy="-4" r="4" fill="#167a16"/>
     </g>`;
-    lbls += `<text x="${pp.x}" y="${pp.y + 29}" text-anchor="middle"
-      fill="#6abf6a" font-size="10" font-family="'Segoe UI',sans-serif">${esc(p.name)}</text>`;
+    lbls += `<text x="${pp.x}" y="${pp.y+29}" text-anchor="middle" fill="#6abf6a"
+      font-size="10" font-family="'Segoe UI',sans-serif">${esc(p.name)}</text>`;
   });
 
-  // Empty state hint
   if (!omsList.length) {
-    nodes += `<text x="${VW/2}" y="${VH/2}" text-anchor="middle"
-      fill="#1e3a55" font-size="14" font-family="'Segoe UI',sans-serif">Add OMSs to see the network map</text>`;
+    nodes += `<text x="${VW/2}" y="${VH/2}" text-anchor="middle" fill="#1e3a55"
+      font-size="14" font-family="'Segoe UI',sans-serif">Add OMSs to see the network map</text>`;
   }
 
   document.getElementById('layer-conn').innerHTML   = conn;
@@ -551,28 +567,18 @@ function renderNetwork() {
 // ════════════════════════════════════════════════════════════
 // Animations
 // ════════════════════════════════════════════════════════════
-
 function activateNode(id, color, ms) {
   const el = document.getElementById(`nd-${id}`);
   if (!el) return;
-  const strokeColor = color === 'blue'   ? '#5ab4ff'
-                    : color === 'green'  ? '#3ecf6e'
-                    :                      '#9a6adf';
-  const glowFilter  = color === 'blue'   ? 'f-blue'
-                    : color === 'green'  ? 'f-green'
-                    :                      'f-purple';
-  const fillColor   = color === 'blue'   ? '#0a2240'
-                    : color === 'green'  ? '#0a2514'
-                    :                      '#120a28';
-
+  const strokeColor = color === 'blue' ? '#5ab4ff' : color === 'green' ? '#3ecf6e' : '#9a6adf';
+  const glowFilter  = color === 'blue' ? 'f-blue'  : color === 'green' ? 'f-green'  : 'f-purple';
+  const fillColor   = color === 'blue' ? '#0a2240' : color === 'green' ? '#0a2514'  : '#120a28';
   const shape = el.querySelector('rect') || el.querySelector('circle');
   const origStroke = shape?.getAttribute('stroke');
   const origFill   = shape?.getAttribute('fill');
   const origFilter = el.getAttribute('filter');
-
   if (shape) { shape.setAttribute('stroke', strokeColor); shape.setAttribute('fill', fillColor); }
   el.setAttribute('filter', `url(#${glowFilter})`);
-
   setTimeout(() => {
     if (shape) { shape.setAttribute('stroke', origStroke ?? ''); shape.setAttribute('fill', origFill ?? ''); }
     el.setAttribute('filter', origFilter ?? '');
@@ -582,56 +588,37 @@ function activateNode(id, color, ms) {
 function highlightLine(lineId, color, ms) {
   const el = document.getElementById(lineId);
   if (!el) return;
-  const strokeColor = color === 'blue' ? '#5ab4ff' : '#3ecf6e';
-  const origStroke  = el.getAttribute('stroke');
-  const origWidth   = el.getAttribute('stroke-width');
-  const origDash    = el.getAttribute('stroke-dasharray');
-  el.setAttribute('stroke', strokeColor);
-  el.setAttribute('stroke-width', '2.5');
-  el.setAttribute('stroke-dasharray', 'none');
-  el.style.filter = `drop-shadow(0 0 3px ${strokeColor})`;
+  const sc = color === 'blue' ? '#5ab4ff' : '#3ecf6e';
+  const os = el.getAttribute('stroke'), ow = el.getAttribute('stroke-width'), od = el.getAttribute('stroke-dasharray');
+  el.setAttribute('stroke', sc); el.setAttribute('stroke-width', '2.5'); el.setAttribute('stroke-dasharray', 'none');
+  el.style.filter = `drop-shadow(0 0 3px ${sc})`;
   setTimeout(() => {
-    el.setAttribute('stroke', origStroke);
-    el.setAttribute('stroke-width', origWidth);
-    el.setAttribute('stroke-dasharray', origDash);
+    el.setAttribute('stroke', os); el.setAttribute('stroke-width', ow); el.setAttribute('stroke-dasharray', od);
     el.style.filter = '';
   }, ms);
 }
 
 function animatePacket(fromId, toId, color, onDone) {
-  const fp = nodePos[fromId];
-  const tp = nodePos[toId];
+  const fp = nodePos[fromId], tp = nodePos[toId];
   if (!fp || !tp) { onDone?.(); return; }
-
   const pktColor = color === 'blue' ? '#5ab4ff' : '#3ecf6e';
-
-  // Start/end Y adjustments based on node type
   const fy = fromId === 'router' ? fp.y + 30 : fp.y + 25;
   const ty = omsList.find(o => o.id === toId) ? tp.y - 28 : tp.y - 22;
-
-  // Highlight the connection line
-  const lineId = `cl-${fromId}-${toId}`;
-  highlightLine(lineId, color, 900);
-
-  // Create SVG circle
+  highlightLine(`cl-${fromId}-${toId}`, color, 900);
   const layer = document.getElementById('layer-pkts');
   const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  circle.setAttribute('r', '6');
-  circle.setAttribute('fill', pktColor);
+  circle.setAttribute('r', '6'); circle.setAttribute('fill', pktColor);
   circle.setAttribute('filter', 'url(#f-pkt)');
-  circle.setAttribute('cx', fp.x);
-  circle.setAttribute('cy', fy);
+  circle.setAttribute('cx', fp.x); circle.setAttribute('cy', fy);
   layer.appendChild(circle);
-
-  let t0 = null;
-  const dur = 480;
+  let t0 = null; const dur = 480;
   function step(ts) {
     if (!t0) t0 = ts;
     const raw = Math.min((ts - t0) / dur, 1);
-    const t   = raw < 0.5 ? 2 * raw * raw : -1 + (4 - 2 * raw) * raw; // ease-in-out
+    const t   = raw < 0.5 ? 2*raw*raw : -1+(4-2*raw)*raw;
     circle.setAttribute('cx', fp.x + (tp.x - fp.x) * t);
     circle.setAttribute('cy', fy  + (ty  - fy)  * t);
-    if (raw < 1) { requestAnimationFrame(step); }
+    if (raw < 1) requestAnimationFrame(step);
     else { circle.remove(); onDone?.(); }
   }
   requestAnimationFrame(step);
@@ -640,59 +627,34 @@ function animatePacket(fromId, toId, color, onDone) {
 // ════════════════════════════════════════════════════════════
 // Routing engine
 // ════════════════════════════════════════════════════════════
-
 function sendOrder() {
   if (!orderItems.length) return;
   orderCount++;
   addLog('order', `▶ Order #${orderCount} dispatched — ${orderItems.length} item(s)`);
   activateNode('router', 'purple', 700);
-
-  orderItems.forEach((item, i) => {
-    setTimeout(() => routeItem(item), i * 720);
-  });
+  orderItems.forEach((item, i) => setTimeout(() => routeItem(item), i * 720));
 }
 
 function routeItem(item) {
   const omsVal = item.attrs['OMS'];
-  if (!omsVal) {
-    addLog('warn', `  "${item.name}" — no OMS attribute, unrouted`);
-    return;
-  }
-
+  if (!omsVal) { addLog('warn', `  "${item.name}" — no OMS attribute, unrouted`); return; }
   const target = omsList.find(o => o.attrValue.toLowerCase() === omsVal.toLowerCase());
-  if (!target) {
-    addLog('warn', `  "${item.name}" — OMS="${omsVal}" matches no configured OMS`);
-    activateNode('router', 'purple', 400);
-    return;
-  }
-
+  if (!target) { addLog('warn', `  "${item.name}" — OMS="${omsVal}" matches no configured OMS`); activateNode('router','purple',400); return; }
   addLog('route', `  "${item.name}"  →  ${target.name} OMS  [OMS=${omsVal}]`);
-
   animatePacket('router', target.id, 'blue', () => {
     activateNode(target.id, 'blue', 1400);
-
     const jobs = printJobs.filter(pj => {
       if (pj.omsId !== target.id) return false;
-      return pj.conds.every(c => {
-        const v = item.attrs[c.key];
-        return v && v.toLowerCase() === c.val.toLowerCase();
-      });
+      return pj.conds.every(c => { const v = item.attrs[c.key]; return v && v.toLowerCase() === c.val.toLowerCase(); });
     });
-
-    if (!jobs.length) {
-      addLog('info', `    No print job matched for ${target.name}`);
-      return;
-    }
-
+    if (!jobs.length) { addLog('info', `    No print job matched for ${target.name}`); return; }
     jobs.forEach((pj, i) => {
       const printer = printers.find(p => p.id === pj.prtId);
       if (!printer) return;
       setTimeout(() => {
-        const condStr = pj.conds.length ? ` [${pj.conds.map(c => `${c.key}=${c.val}`).join(', ')}]` : '';
-        addLog('print', `    ✓ Printing → "${printer.name}"${condStr}`);
-        animatePacket(target.id, printer.id, 'green', () => {
-          activateNode(printer.id, 'green', 1400);
-        });
+        const cs = pj.conds.length ? ` [${pj.conds.map(c=>`${c.key}=${c.val}`).join(', ')}]` : '';
+        addLog('print', `    ✓ Printing → "${printer.name}"${cs}`);
+        animatePacket(target.id, printer.id, 'green', () => activateNode(printer.id, 'green', 1400));
       }, i * 320);
     });
   });
@@ -701,30 +663,22 @@ function routeItem(item) {
 // ════════════════════════════════════════════════════════════
 // Log
 // ════════════════════════════════════════════════════════════
-
 function addLog(type, msg) {
   const el = document.getElementById('routing-log');
   el.querySelector('.empty-state')?.remove();
   const d = document.createElement('div');
   d.className = `log-entry log-${type}`;
   d.innerHTML = `<span class="ts">${now()}</span>${esc(msg)}`;
-  el.appendChild(d);
-  el.scrollTop = el.scrollHeight;
+  el.appendChild(d); el.scrollTop = el.scrollHeight;
 }
-
 function clearLog() {
-  document.getElementById('routing-log').innerHTML =
-    '<div class="empty-state">Send an order to see routing results.</div>';
+  document.getElementById('routing-log').innerHTML = '<div class="empty-state">Send an order to see routing results.</div>';
 }
-
-function now() {
-  return new Date().toTimeString().slice(0, 8);
-}
+function now() { return new Date().toTimeString().slice(0,8); }
 
 // ════════════════════════════════════════════════════════════
-// Sidebar rendering
+// Sidebar + Order rendering
 // ════════════════════════════════════════════════════════════
-
 const OMS_SVG = `<svg width="24" height="24" viewBox="-30 -30 60 60">
   <rect x="-22" y="-20" width="44" height="30" rx="4" fill="#0b1e3a" stroke="#1e5090" stroke-width="1.5"/>
   <rect x="-17" y="-15" width="34" height="20" rx="1" fill="#030c18"/>
@@ -745,116 +699,117 @@ const PRT_SVG = `<svg width="24" height="24" viewBox="-30 -30 60 60">
 
 function renderSidebar() {
   // OMSs
-  const ol = document.getElementById('oms-list');
-  ol.innerHTML = omsList.length ? omsList.map(o => `
-    <div class="node-card">
-      <div class="node-icon">${OMS_SVG}</div>
-      <div class="node-info">
-        <div class="node-name">${esc(o.name)}</div>
-        <div class="node-detail">OMS = ${esc(o.attrValue)}</div>
-      </div>
-      <button class="del-btn" onclick="removeOMS('${o.id}')">✕</button>
-    </div>`).join('')
+  document.getElementById('oms-list').innerHTML = omsList.length
+    ? omsList.map(o => `
+      <div class="node-card">
+        <div class="node-icon">${OMS_SVG}</div>
+        <div class="node-info">
+          <div class="node-name">${esc(o.name)}</div>
+          <div class="node-detail">OMS = ${esc(o.attrValue)}</div>
+        </div>
+        <div class="card-btns">
+          <button class="edit-btn" onclick="openEditOMS('${o.id}')" title="Edit">✎</button>
+          <button class="del-btn"  onclick="removeOMS('${o.id}')"   title="Remove">✕</button>
+        </div>
+      </div>`).join('')
     : '<div class="empty-state">No OMSs configured.</div>';
 
   // Printers
-  const pl = document.getElementById('printer-list');
-  pl.innerHTML = printers.length ? printers.map(p => {
-    const o = omsList.find(x => x.id === p.omsId);
-    return `
-    <div class="node-card">
-      <div class="node-icon">${PRT_SVG}</div>
-      <div class="node-info">
-        <div class="node-name">${esc(p.name)}</div>
-        <div class="node-detail">→ ${o ? esc(o.name) : 'Unlinked'}</div>
-      </div>
-      <button class="del-btn" onclick="removePrinter('${p.id}')">✕</button>
-    </div>`;}).join('')
+  document.getElementById('printer-list').innerHTML = printers.length
+    ? printers.map(p => {
+        const o = omsList.find(x => x.id === p.omsId);
+        return `
+        <div class="node-card">
+          <div class="node-icon">${PRT_SVG}</div>
+          <div class="node-info">
+            <div class="node-name">${esc(p.name)}</div>
+            <div class="node-detail">→ ${o ? esc(o.name) : 'Unlinked'}</div>
+          </div>
+          <div class="card-btns">
+            <button class="edit-btn" onclick="openEditPrinter('${p.id}')" title="Edit">✎</button>
+            <button class="del-btn"  onclick="removePrinter('${p.id}')"   title="Remove">✕</button>
+          </div>
+        </div>`;}).join('')
     : '<div class="empty-state">No printers configured.</div>';
 
-  // Print jobs
-  const jl = document.getElementById('printjob-list');
-  jl.innerHTML = printJobs.length ? printJobs.map(pj => {
-    const o = omsList.find(x => x.id === pj.omsId);
-    const p = printers.find(x => x.id === pj.prtId);
-    const c = pj.conds.length ? pj.conds.map(c => `${c.key}=${c.val}`).join(', ') : 'always';
-    return `
-    <div class="node-card">
-      <div class="node-info">
-        <div class="node-name" style="font-size:11px;">${o ? esc(o.name) : '?'} → ${p ? esc(p.name) : '?'}</div>
-        <div class="node-detail">when: ${esc(c)}</div>
-      </div>
-      <button class="del-btn" onclick="removePrintJob('${pj.id}')">✕</button>
-    </div>`;}).join('')
+  // Print Jobs
+  document.getElementById('printjob-list').innerHTML = printJobs.length
+    ? printJobs.map(pj => {
+        const o = omsList.find(x => x.id === pj.omsId);
+        const p = printers.find(x => x.id === pj.prtId);
+        const c = pj.conds.length ? pj.conds.map(c=>`${c.key}=${c.val}`).join(', ') : 'always';
+        return `
+        <div class="node-card">
+          <div class="node-info">
+            <div class="node-name" style="font-size:11px;">${o?esc(o.name):'?'} → ${p?esc(p.name):'?'}</div>
+            <div class="node-detail">when: ${esc(c)}</div>
+          </div>
+          <div class="card-btns">
+            <button class="edit-btn" onclick="openEditPrintJob('${pj.id}')" title="Edit">✎</button>
+            <button class="del-btn"  onclick="removePrintJob('${pj.id}')"   title="Remove">✕</button>
+          </div>
+        </div>`;}).join('')
     : '<div class="empty-state">No print jobs configured.</div>';
 }
 
 function renderOrderItems() {
-  const el = document.getElementById('order-items');
-  el.innerHTML = orderItems.length ? orderItems.map(item => {
-    const attrs = Object.entries(item.attrs).map(([k,v]) => `${k}=${v}`).join(', ');
-    return `<div class="order-item">
-      <span class="oi-name">${esc(item.name)}</span>
-      <span class="oi-attrs">[${esc(attrs)}]</span>
-      <button class="del-btn" onclick="removeOrderItem('${item.id}')">✕</button>
-    </div>`;}).join('')
+  document.getElementById('order-items').innerHTML = orderItems.length
+    ? orderItems.map(item => {
+        const attrs = Object.entries(item.attrs).map(([k,v])=>`${k}=${v}`).join(', ');
+        return `<div class="order-item">
+          <span class="oi-name">${esc(item.name)}</span>
+          <span class="oi-attrs">[${esc(attrs)}]</span>
+          <div class="card-btns">
+            <button class="edit-btn" onclick="openEditItem('${item.id}')" title="Edit">✎</button>
+            <button class="del-btn"  onclick="removeOrderItem('${item.id}')" title="Remove">✕</button>
+          </div>
+        </div>`;}).join('')
     : '<div class="empty-state">No items. Add items to the order.</div>';
 }
 
 // ════════════════════════════════════════════════════════════
 // Data mutations
 // ════════════════════════════════════════════════════════════
-
-function removeOMS(id) {
-  omsList    = omsList.filter(o => o.id !== id);
-  printers   = printers.filter(p => p.omsId !== id);
-  printJobs  = printJobs.filter(j => j.omsId !== id);
-  refresh();
-}
-function removePrinter(id) {
-  printers  = printers.filter(p => p.id !== id);
-  printJobs = printJobs.filter(j => j.prtId !== id);
-  refresh();
-}
-function removePrintJob(id) {
-  printJobs = printJobs.filter(j => j.id !== id);
-  refresh();
-}
-function removeOrderItem(id) {
-  orderItems = orderItems.filter(i => i.id !== id);
-  renderOrderItems();
-}
-function clearOrder() {
-  orderItems = [];
-  renderOrderItems();
-}
+function removeOMS(id)      { omsList = omsList.filter(o=>o.id!==id); printers = printers.filter(p=>p.omsId!==id); printJobs = printJobs.filter(j=>j.omsId!==id); refresh(); }
+function removePrinter(id)  { printers = printers.filter(p=>p.id!==id); printJobs = printJobs.filter(j=>j.prtId!==id); refresh(); }
+function removePrintJob(id) { printJobs = printJobs.filter(j=>j.id!==id); refresh(); }
+function removeOrderItem(id){ orderItems = orderItems.filter(i=>i.id!==id); renderOrderItems(); }
+function clearOrder()       { orderItems = []; renderOrderItems(); }
 
 // ════════════════════════════════════════════════════════════
-// Modals
+// Modals — open (add mode)
 // ════════════════════════════════════════════════════════════
-
 function openModal(type) {
+  editingId[type === 'item' ? 'item' : type === 'printjob' ? 'printjob' : type === 'printer' ? 'printer' : 'oms'] = null;
+  if (type === 'oms') {
+    document.getElementById('oms-modal-title').textContent = 'Add OMS';
+    document.getElementById('oms-save-btn').textContent    = 'Add OMS';
+    document.getElementById('oms-name').value = '';
+    document.getElementById('oms-attr').value = '';
+  }
   if (type === 'printer') {
+    document.getElementById('prt-modal-title').textContent = 'Add Printer';
+    document.getElementById('prt-save-btn').textContent    = 'Add Printer';
+    document.getElementById('prt-name').value = '';
     document.getElementById('prt-oms').innerHTML = omsList.length
-      ? omsList.map(o => `<option value="${o.id}">${esc(o.name)}</option>`).join('')
+      ? omsList.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')
       : '<option value="">— No OMSs —</option>';
   }
   if (type === 'printjob') {
-    const os = document.getElementById('pj-oms');
-    os.innerHTML = omsList.length
-      ? omsList.map(o => `<option value="${o.id}">${esc(o.name)}</option>`).join('')
+    document.getElementById('pj-modal-title').textContent = 'Add Print Job';
+    document.getElementById('pj-save-btn').textContent    = 'Add Print Job';
+    document.getElementById('pj-oms').innerHTML = omsList.length
+      ? omsList.map(o=>`<option value="${o.id}">${esc(o.name)}</option>`).join('')
       : '<option value="">— No OMSs —</option>';
     document.getElementById('pj-conds').innerHTML = '';
     pjOmsChanged();
   }
   if (type === 'item') {
+    document.getElementById('item-modal-title').textContent = 'Add Order Item';
+    document.getElementById('item-save-btn').textContent    = 'Add Item';
     document.getElementById('item-name').value = '';
     document.getElementById('item-attrs').innerHTML = '';
-    addAttrRow('OMS', '');
-  }
-  if (type === 'oms') {
-    document.getElementById('oms-name').value = '';
-    document.getElementById('oms-attr').value = '';
+    populateItemOmsDropdown(null);
   }
   document.getElementById(`modal-${type}`).classList.add('open');
 }
@@ -863,14 +818,82 @@ function closeModal(type) {
   document.getElementById(`modal-${type}`).classList.remove('open');
 }
 
-function pjOmsChanged() {
+// ════════════════════════════════════════════════════════════
+// Modals — open (edit mode)
+// ════════════════════════════════════════════════════════════
+function openEditOMS(id) {
+  const o = omsList.find(x => x.id === id);
+  if (!o) return;
+  editingId.oms = id;
+  document.getElementById('oms-modal-title').textContent = 'Edit OMS';
+  document.getElementById('oms-save-btn').textContent    = 'Save Changes';
+  document.getElementById('oms-name').value = o.name;
+  document.getElementById('oms-attr').value = o.attrValue;
+  document.getElementById('modal-oms').classList.add('open');
+}
+
+function openEditPrinter(id) {
+  const p = printers.find(x => x.id === id);
+  if (!p) return;
+  editingId.printer = id;
+  document.getElementById('prt-modal-title').textContent = 'Edit Printer';
+  document.getElementById('prt-save-btn').textContent    = 'Save Changes';
+  document.getElementById('prt-name').value = p.name;
+  document.getElementById('prt-oms').innerHTML = omsList.map(o =>
+    `<option value="${o.id}" ${o.id===p.omsId?'selected':''}>${esc(o.name)}</option>`).join('');
+  document.getElementById('modal-printer').classList.add('open');
+}
+
+function openEditPrintJob(id) {
+  const pj = printJobs.find(x => x.id === id);
+  if (!pj) return;
+  editingId.printjob = id;
+  document.getElementById('pj-modal-title').textContent = 'Edit Print Job';
+  document.getElementById('pj-save-btn').textContent    = 'Save Changes';
+  const omsSel = document.getElementById('pj-oms');
+  omsSel.innerHTML = omsList.map(o =>
+    `<option value="${o.id}" ${o.id===pj.omsId?'selected':''}>${esc(o.name)}</option>`).join('');
+  pjOmsChanged(pj.prtId);
+  document.getElementById('pj-conds').innerHTML = '';
+  pj.conds.forEach(c => addCondRow(c.key, c.val));
+  document.getElementById('modal-printjob').classList.add('open');
+}
+
+function openEditItem(id) {
+  const item = orderItems.find(x => x.id === id);
+  if (!item) return;
+  editingId.item = id;
+  document.getElementById('item-modal-title').textContent = 'Edit Order Item';
+  document.getElementById('item-save-btn').textContent    = 'Save Changes';
+  document.getElementById('item-name').value = item.name;
+  document.getElementById('item-attrs').innerHTML = '';
+  // Pre-select OMS from attrs
+  const omsAttrVal = item.attrs['OMS'] ?? '';
+  populateItemOmsDropdown(omsAttrVal);
+  // Populate extra attrs (non-OMS)
+  Object.entries(item.attrs).forEach(([k, v]) => {
+    if (k !== 'OMS') addAttrRow(k, v);
+  });
+  document.getElementById('modal-item').classList.add('open');
+}
+
+function populateItemOmsDropdown(currentAttrValue) {
+  const sel = document.getElementById('item-oms-select');
+  sel.innerHTML = '<option value="">— No OMS routing —</option>' +
+    omsList.map(o => `<option value="${o.attrValue}" ${o.attrValue===currentAttrValue?'selected':''}>${esc(o.name)} (OMS=${esc(o.attrValue)})</option>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════
+// Modal helpers
+// ════════════════════════════════════════════════════════════
+function pjOmsChanged(preSelectPrtId) {
   const omsId = document.getElementById('pj-oms').value;
   const prtSel = document.getElementById('pj-prt');
-  const available = printers.filter(p => p.omsId === omsId);
-  prtSel.innerHTML = available.length
-    ? available.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('')
-    : printers.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('') ||
-      '<option value="">— No Printers —</option>';
+  const avail = printers.filter(p => p.omsId === omsId);
+  const pool  = avail.length ? avail : printers;
+  prtSel.innerHTML = pool.length
+    ? pool.map(p => `<option value="${p.id}" ${p.id===preSelectPrtId?'selected':''}>${esc(p.name)}</option>`).join('')
+    : '<option value="">— No Printers —</option>';
 }
 
 function addCondRow(k='', v='') {
@@ -893,26 +916,38 @@ function addAttrRow(k='', v='') {
   document.getElementById('item-attrs').appendChild(row);
 }
 
-// Add buttons
-function doAddOMS() {
+// ════════════════════════════════════════════════════════════
+// Save functions (handles add + edit)
+// ════════════════════════════════════════════════════════════
+function doSaveOMS() {
   const name = document.getElementById('oms-name').value.trim();
   const attr = document.getElementById('oms-attr').value.trim();
   if (!name || !attr) { alert('Name and attribute value are required.'); return; }
-  omsList.push({ id: uid(), name, attrValue: attr });
+  if (editingId.oms) {
+    const o = omsList.find(x => x.id === editingId.oms);
+    if (o) { o.name = name; o.attrValue = attr; }
+  } else {
+    omsList.push({ id: uid(), name, attrValue: attr });
+  }
   closeModal('oms');
   refresh();
 }
 
-function doAddPrinter() {
+function doSavePrinter() {
   const name  = document.getElementById('prt-name').value.trim();
   const omsId = document.getElementById('prt-oms').value;
   if (!name || !omsId) { alert('Name and OMS are required.'); return; }
-  printers.push({ id: uid(), name, omsId });
+  if (editingId.printer) {
+    const p = printers.find(x => x.id === editingId.printer);
+    if (p) { p.name = name; p.omsId = omsId; }
+  } else {
+    printers.push({ id: uid(), name, omsId });
+  }
   closeModal('printer');
   refresh();
 }
 
-function doAddPrintJob() {
+function doSavePrintJob() {
   const omsId = document.getElementById('pj-oms').value;
   const prtId = document.getElementById('pj-prt').value;
   if (!omsId || !prtId) { alert('OMS and Printer are required.'); return; }
@@ -922,21 +957,33 @@ function doAddPrintJob() {
     const v = row.querySelector('.cv')?.value.trim();
     if (k && v) conds.push({ key: k, val: v });
   });
-  printJobs.push({ id: uid(), omsId, prtId, conds });
+  if (editingId.printjob) {
+    const pj = printJobs.find(x => x.id === editingId.printjob);
+    if (pj) { pj.omsId = omsId; pj.prtId = prtId; pj.conds = conds; }
+  } else {
+    printJobs.push({ id: uid(), omsId, prtId, conds });
+  }
   closeModal('printjob');
   refresh();
 }
 
-function doAddItem() {
+function doSaveItem() {
   const name = document.getElementById('item-name').value.trim();
   if (!name) { alert('Item name is required.'); return; }
+  const omsAttrVal = document.getElementById('item-oms-select').value;
   const attrs = {};
+  if (omsAttrVal) attrs['OMS'] = omsAttrVal;
   document.querySelectorAll('#item-attrs .cond-row').forEach(row => {
     const k = row.querySelector('.ak')?.value.trim();
     const v = row.querySelector('.av')?.value.trim();
     if (k) attrs[k] = v || '';
   });
-  orderItems.push({ id: uid(), name, attrs });
+  if (editingId.item) {
+    const item = orderItems.find(x => x.id === editingId.item);
+    if (item) { item.name = name; item.attrs = attrs; }
+  } else {
+    orderItems.push({ id: uid(), name, attrs });
+  }
   closeModal('item');
   renderOrderItems();
 }
@@ -944,26 +991,16 @@ function doAddItem() {
 // ════════════════════════════════════════════════════════════
 // Utilities
 // ════════════════════════════════════════════════════════════
-
 function esc(s) {
-  return String(s ?? '')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function refresh() { renderSidebar(); renderOrderItems(); renderNetwork(); }
 
-function refresh() {
-  renderSidebar();
-  renderOrderItems();
-  renderNetwork();
-}
-
-// Close overlay on background click
 document.querySelectorAll('.overlay').forEach(el =>
   el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); })
 );
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape')
-    document.querySelectorAll('.overlay.open').forEach(el => el.classList.remove('open'));
+  if (e.key === 'Escape') document.querySelectorAll('.overlay.open').forEach(el => el.classList.remove('open'));
 });
 
 // ════════════════════════════════════════════════════════════
