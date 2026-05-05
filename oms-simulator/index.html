@@ -678,36 +678,55 @@ function sendOrder() {
 }
 
 function routeItem(item) {
-  const enabled = printJobs.filter(pj => pj.enabled);
-  if (!enabled.length) { addLog('info', `  "${item.name}" — no enabled print jobs`); return; }
-  const matched = enabled.filter(pj =>
-    pj.conds.every(c => {
-      const actual   = (item.attrs[c.key] ?? '').toLowerCase();
-      const expected = c.val.toLowerCase();
-      return c.op === 'IS' ? actual === expected : actual !== expected;
-    })
-  );
-  if (!matched.length) { addLog('info', `  "${item.name}" — no rules matched`); return; }
-  matched.forEach((pj, i) => setTimeout(() => {
-    const typeLabel = PJ_TYPE_LABELS[pj.type] || pj.type;
-    const tgtPrt = printers.find(p => p.id === pj.targetId);
-    const tgtNet = devices.find(d => d.id === pj.targetId && d.type === 'net-printer');
-    if (tgtPrt) {
-      const omsD = devices.find(d => d.id === tgtPrt.deviceId);
-      if (omsD && nodePos[omsD.id] && nodePos[tgtPrt.id]) {
-        addLog('print', `  ✓ [${typeLabel}]  router → ${omsD.name} → ${tgtPrt.name}`);
-        animatePacket('router', omsD.id, 'blue', () => {
-          activateNode(omsD.id, 'blue', 1200);
-          animatePacket(omsD.id, tgtPrt.id, 'green', () => activateNode(tgtPrt.id, 'green', 1500));
-        });
-      }
-    } else if (tgtNet && nodePos[tgtNet.id]) {
-      addLog('print', `  ✓ [${typeLabel}]  router → ${tgtNet.name} (Network)`);
-      animatePacket('router', tgtNet.id, 'blue', () => activateNode(tgtNet.id, 'blue', 1500));
+  const attrStr = Object.entries(item.attrs).map(([k,v])=>`${k}=${v}`).join(', ') || 'no attrs';
+  addLog('route', `  "${item.name}" [${attrStr}]`);
+
+  const omsVal = item.attrs['OMS'];
+  const sourceOms = omsVal ? devices.find(d=>d.type==='oms'&&d.name.toLowerCase()===omsVal.toLowerCase()) : null;
+  const sourcePrt = sourceOms ? printers.find(p=>p.deviceId===sourceOms.id) : null;
+
+  const matched = printJobs.filter(pj => pj.enabled && pj.conds.every(c => {
+    const actual   = (item.attrs[c.key] ?? '').toLowerCase();
+    const expected = c.val.toLowerCase();
+    return c.op === 'IS' ? actual === expected : actual !== expected;
+  }));
+
+  if (!matched.length) { addLog('info', `    No rules matched`); return; }
+
+  const sourceJobs = matched.filter(pj => pj.printAt === 'source');
+  const netJobs    = matched.filter(pj => pj.printAt !== 'source');
+
+  // Route to OMS first, then fire SOURCE print jobs from there
+  if (sourceJobs.length) {
+    if (!sourceOms || !nodePos[sourceOms.id]) {
+      sourceJobs.forEach(pj => addLog('warn', `    ✗ [${PJ_TYPE_LABELS[pj.type]||pj.type}] SOURCE — no OMS found for "${omsVal||'(none)'}"`));
     } else {
-      addLog('warn', `  ✗ [${typeLabel}]  target printer not found on map`);
+      animatePacket('router', sourceOms.id, 'blue', () => {
+        activateNode(sourceOms.id, 'blue', 1200);
+        sourceJobs.forEach((pj, i) => setTimeout(() => {
+          const lbl = PJ_TYPE_LABELS[pj.type] || pj.type;
+          if (sourcePrt && nodePos[sourcePrt.id]) {
+            addLog('print', `    ✓ [${lbl}] ${sourceOms.name} → SOURCE (${sourcePrt.name})`);
+            animatePacket(sourceOms.id, sourcePrt.id, 'green', () => activateNode(sourcePrt.id, 'green', 1500));
+          } else {
+            addLog('warn', `    ✗ [${lbl}] SOURCE — no printer found at ${sourceOms.name}`);
+          }
+        }, i * 500));
+      });
     }
-  }, i * 700));
+  }
+
+  // Network printer jobs go directly from router
+  netJobs.forEach((pj, i) => setTimeout(() => {
+    const lbl    = PJ_TYPE_LABELS[pj.type] || pj.type;
+    const netDev = devices.find(d => d.id === pj.printAt && d.type === 'net-printer');
+    if (netDev && nodePos[netDev.id]) {
+      addLog('print', `    ✓ [${lbl}] router → ${netDev.name} (Network)`);
+      animatePacket('router', netDev.id, 'blue', () => activateNode(netDev.id, 'blue', 1500));
+    } else {
+      addLog('warn', `    ✗ [${lbl}] network target not on map`);
+    }
+  }, i * 500));
 }
 
 // ════════════════════════════════════════════════════════════
@@ -820,14 +839,12 @@ function renderPrintJobs() {
     return;
   }
   tbody.innerHTML = printJobs.map(pj => {
-    const tgtPrt = printers.find(p=>p.id===pj.targetId);
-    const tgtNet = devices.find(d=>d.id===pj.targetId&&d.type==='net-printer');
-    let printAtStr = '—';
-    if (tgtPrt) {
-      const omsD = devices.find(d=>d.id===tgtPrt.deviceId);
-      printAtStr = omsD ? `${tgtPrt.name} (${omsD.name})` : tgtPrt.name;
-    } else if (tgtNet) {
-      printAtStr = `${tgtNet.name} [NET]`;
+    let printAtStr;
+    if (!pj.printAt || pj.printAt === 'source') {
+      printAtStr = 'SOURCE';
+    } else {
+      const netDev = devices.find(d=>d.id===pj.printAt&&d.type==='net-printer');
+      printAtStr = netDev ? `${netDev.name} [NET]` : '—';
     }
     const typeStr = PJ_TYPE_LABELS[pj.type] || pj.type || '—';
     const criteriaHtml = pj.conds.length
@@ -872,8 +889,8 @@ function togglePrintJob(id, enabled) {
   const pj = printJobs.find(x=>x.id===id); if (pj) pj.enabled=enabled;
   renderPrintJobs();
 }
-function removeDevice(id)    { devices=devices.filter(d=>d.id!==id); printers=printers.filter(p=>p.deviceId!==id); printJobs=printJobs.filter(j=>j.targetId!==id); refresh(); }
-function removePrinter(id)   { printers=printers.filter(p=>p.id!==id); printJobs=printJobs.filter(j=>j.targetId!==id); refresh(); }
+function removeDevice(id)    { devices=devices.filter(d=>d.id!==id); printers=printers.filter(p=>p.deviceId!==id); printJobs=printJobs.filter(j=>j.printAt!==id); refresh(); }
+function removePrinter(id)   { printers=printers.filter(p=>p.id!==id); refresh(); }
 function removePrintJob(id)  { printJobs=printJobs.filter(j=>j.id!==id); renderPrintJobs(); }
 function removeOrderItem(id) { orderItems=orderItems.filter(i=>i.id!==id); renderOrderItems(); }
 function clearOrder()        { orderItems=[]; renderOrderItems(); }
@@ -901,7 +918,7 @@ function openModal(type) {
     document.getElementById('pj-save-btn').textContent    = 'Add Print Job';
     document.getElementById('pj-type').value = 'customer-receipt';
     document.getElementById('pj-conds').innerHTML = '';
-    populatePjTargetSel(null);
+    populatePjTargetSel('source');
   }
   if (type === 'item') {
     document.getElementById('item-modal-title').textContent = 'Add Order Item';
@@ -948,7 +965,7 @@ function openEditPrintJob(id) {
   document.getElementById('pj-modal-title').textContent='Edit Print Job';
   document.getElementById('pj-save-btn').textContent='Save Changes';
   document.getElementById('pj-type').value=pj.type||'customer-receipt';
-  populatePjTargetSel(pj.targetId);
+  populatePjTargetSel(pj.printAt);
   document.getElementById('pj-conds').innerHTML='';
   pj.conds.forEach(c=>addCondRow(c.key,c.op,c.val));
   document.getElementById('modal-printjob').classList.add('open');
@@ -978,20 +995,15 @@ function populatePrinterDevSel(selId) {
 }
 function populatePjTargetSel(selId) {
   const s=document.getElementById('pj-target');
-  let html='';
-  const omsDev=devices.filter(d=>d.type==='oms');
-  if (omsDev.length) {
-    html+='<optgroup label="OMS Printers">';
-    omsDev.forEach(d=>printers.filter(p=>p.deviceId===d.id).forEach(p=>{ html+=`<option value="${p.id}" ${p.id===selId?'selected':''}>${esc(p.name)} (${esc(d.name)})</option>`; }));
-    html+='</optgroup>';
-  }
+  const isSrc = !selId || selId === 'source';
+  let html = `<option value="source"${isSrc?' selected':''}>SOURCE — OMS Printer</option>`;
   const net=devices.filter(d=>d.type==='net-printer');
   if (net.length) {
     html+='<optgroup label="Network Printers">';
-    net.forEach(d=>{ html+=`<option value="${d.id}" ${d.id===selId?'selected':''}>${esc(d.name)}</option>`; });
+    net.forEach(d=>{ html+=`<option value="${d.id}"${d.id===selId?' selected':''}>${esc(d.name)}</option>`; });
     html+='</optgroup>';
   }
-  s.innerHTML=html||'<option value="">— No printers available —</option>';
+  s.innerHTML=html;
 }
 // ── Row builders ──
 function addCondRow(k='',op='IS',v='') {
@@ -1043,8 +1055,7 @@ function doSavePrinter() {
 }
 function doSavePrintJob() {
   const type=document.getElementById('pj-type').value;
-  const targetId=document.getElementById('pj-target').value;
-  if (!targetId) { alert('Please select a target printer.'); return; }
+  const printAt=document.getElementById('pj-target').value;
   const conds=[];
   document.querySelectorAll('#pj-conds .cond-row').forEach(row=>{
     const k=row.querySelector('.cr-key')?.value.trim();
@@ -1054,8 +1065,8 @@ function doSavePrintJob() {
   });
   if (editId.printjob) {
     const pj=printJobs.find(x=>x.id===editId.printjob);
-    if (pj) { pj.type=type; pj.targetId=targetId; pj.conds=conds; }
-  } else { printJobs.push({ id:uid(), enabled:true, type, targetId, conds }); }
+    if (pj) { pj.type=type; pj.printAt=printAt; pj.conds=conds; }
+  } else { printJobs.push({ id:uid(), enabled:true, type, printAt, conds }); }
   closeModal('printjob'); refresh();
 }
 function doSaveItem() {
@@ -1084,7 +1095,12 @@ document.querySelectorAll('.overlay').forEach(el =>
   el.addEventListener('click', e=>{ if(e.target===el) el.classList.remove('open'); })
 );
 document.addEventListener('keydown', e=>{
-  if(e.key==='Escape') document.querySelectorAll('.overlay.open').forEach(el=>el.classList.remove('open'));
+  if (e.key==='Escape') {
+    document.querySelectorAll('.overlay.open').forEach(el=>el.classList.remove('open'));
+  } else if (e.key==='Enter' && e.target.tagName==='INPUT') {
+    const modal = e.target.closest('.modal');
+    if (modal) { e.preventDefault(); modal.querySelector('.btn-primary')?.click(); }
+  }
 });
 
 // ════════════════════════════════════════════════════════════
