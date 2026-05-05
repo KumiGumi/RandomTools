@@ -685,11 +685,19 @@ function routeItem(item) {
   const sourceOms = omsVal ? devices.find(d=>d.type==='oms'&&d.name.toLowerCase()===omsVal.toLowerCase()) : null;
   const sourcePrt = sourceOms ? printers.find(p=>p.deviceId===sourceOms.id) : null;
 
-  const matched = printJobs.filter(pj => pj.enabled && pj.conds.every(c => {
-    const actual   = (item.attrs[c.key] ?? '').toLowerCase();
-    const expected = c.val.toLowerCase();
-    return c.op === 'IS' ? actual === expected : actual !== expected;
-  }));
+  const matched = printJobs.filter(pj => {
+    if (!pj.enabled) return false;
+    // All rule conditions must pass
+    const condsPass = pj.conds.every(c => {
+      const actual   = (item.attrs[c.key] ?? '').toLowerCase();
+      const expected = c.val.toLowerCase();
+      return c.op === 'IS' ? actual === expected : actual !== expected;
+    });
+    if (!condsPass) return false;
+    // Every item attribute must be covered by at least one rule condition
+    const covered = new Set(pj.conds.map(c => c.key));
+    return Object.keys(item.attrs).every(k => covered.has(k));
+  });
 
   if (!matched.length) { addLog('info', `    No rules matched`); return; }
 
