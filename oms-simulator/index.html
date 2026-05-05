@@ -47,29 +47,30 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 }
 .sec-body { padding: 7px; }
 
-/* Device cards */
+/* ── Device cards ── */
 .dev-card {
   background: #0e1e33; border: 1px solid #162840;
   border-radius: 5px; padding: 6px 8px; margin-bottom: 4px;
   display: flex; align-items: center; gap: 7px; transition: border-color 0.2s;
 }
 .dev-card:hover { border-color: #254a70; }
-.dev-card.is-printer { background: #091a0e; border-color: #0d2815; margin-left: 14px; margin-bottom: 3px; }
+.dev-card.is-printer {
+  background: #091a0e; border-color: #0d2815;
+  margin-left: 14px; margin-bottom: 3px;
+}
 .dev-card.is-printer:hover { border-color: #1a4a20; }
 
 .dev-icon { width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
 .dev-info { flex: 1; min-width: 0; }
-.dev-name { color: #ddeeff; font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dev-sub  { color: #3a6a9a; font-size: 10px; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.dev-badge {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.5px; padding: 1px 5px;
-  border-radius: 3px; flex-shrink: 0;
-}
-.badge-oms { background: #0f2a4a; color: #5ab4ff; border: 1px solid #1e4a7a; }
-.badge-net { background: #1a2a0a; color: #7acf5a; border: 1px solid #2a5a1a; }
-.badge-prt { background: #0a2010; color: #4abf6a; border: 1px solid #1a4a28; }
+.dev-name   { color: #ddeeff; font-weight: 600; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dev-sub    { color: #3a6a9a; font-size: 10px; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dev-badge  { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; padding: 1px 5px; border-radius: 3px; flex-shrink: 0; }
+.badge-oms  { background: #0f2a4a; color: #5ab4ff; border: 1px solid #1e4a7a; }
+.badge-net  { background: #1a2a0a; color: #7acf5a; border: 1px solid #2a5a1a; }
+.badge-prt  { background: #0a2010; color: #4abf6a; border: 1px solid #1a4a28; }
 
 .card-btns { display: flex; gap: 3px; align-items: center; flex-shrink: 0; }
+
 .icon-btn {
   width: 20px; height: 20px; background: #0e1e33; border: 1px solid #254a70;
   color: #5ab4ff; border-radius: 3px; cursor: pointer;
@@ -79,6 +80,7 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 .icon-btn:hover { background: #162840; }
 .icon-btn.sm { width: 16px; height: 16px; font-size: 11px; border-color: #1a3454; color: #3a8a4a; }
 .icon-btn.sm:hover { background: #0a2010; color: #4abf6a; }
+
 .edit-btn {
   width: 17px; height: 17px; background: transparent; border: 1px solid #1a3454;
   color: #5a90c0; border-radius: 3px; cursor: pointer; font-size: 10px;
@@ -86,6 +88,7 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
   flex-shrink: 0; opacity: 0.6; transition: opacity 0.15s;
 }
 .edit-btn:hover { opacity: 1; background: #0e2040; color: #5ab4ff; }
+
 .del-btn {
   width: 17px; height: 17px; background: transparent; border: 1px solid #2a1010;
   color: #e05050; border-radius: 3px; cursor: pointer; font-size: 10px;
@@ -94,24 +97,28 @@ header .subtitle { font-size: 10px; color: #3a5a7a; letter-spacing: 1.5px; text-
 }
 .del-btn:hover { opacity: 1; background: #200808; }
 
-/* ── Content ── */
+/* ── Content area ── */
 .content { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
 
-#network-map { flex: 1; background: #040c18; position: relative; overflow: hidden; min-height: 0; }
+#network-map {
+  flex: 3; min-height: 0; background: #040c18;
+  position: relative; overflow: hidden;
+}
 #network-svg { width: 100%; height: 100%; display: block; }
 
-/* ── Print Jobs panel (rules table) ── */
+/* ── Print Jobs panel ── */
 .pj-panel {
-  height: 175px; flex-shrink: 0; background: #071020;
-  border-top: 1px solid #162840; display: flex; flex-direction: column;
+  flex: 2; min-height: 180px; background: #071020;
+  border-top: 1px solid #162840;
+  display: flex; flex-direction: column;
 }
 .pj-panel-hdr {
-  padding: 5px 12px; font-size: 10px; font-weight: 700;
+  padding: 6px 12px; font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1.5px; color: #5ab4ff;
   border-bottom: 1px solid #162840; display: flex; align-items: center;
   justify-content: space-between; flex-shrink: 0; background: #08121e;
 }
-.pj-table-wrap { flex: 1; overflow-y: auto; }
+.pj-table-wrap { flex: 1; overflow-y: auto; min-height: 0; }
 .pj-table-wrap::-webkit-scrollbar { width: 3px; }
 .pj-table-wrap::-webkit-scrollbar-thumb { background: #162840; }
 
@@ -121,29 +128,30 @@ table.pj-table thead th {
   font-size: 9px; font-weight: 700; text-transform: uppercase;
   letter-spacing: 1px; text-align: left; position: sticky; top: 0; z-index: 1;
 }
-table.pj-table th:first-child { width: 54px; text-align: center; }
+table.pj-table th:first-child { width: 56px; text-align: center; }
 table.pj-table th:last-child  { width: 52px; }
 table.pj-table tbody tr { border-bottom: 1px solid #0d1c2e; }
 table.pj-table tbody tr:hover td { background: #0e1e33; }
-table.pj-table tbody td { padding: 5px 10px; vertical-align: middle; }
+table.pj-table tbody td { padding: 6px 10px; vertical-align: middle; }
 table.pj-table td:first-child { text-align: center; }
 table.pj-table td:last-child  { text-align: right; }
-.pj-name     { color: #5ab4ff; font-size: 11px; }
+.pj-name     { color: #5ab4ff; }
 .pj-criteria { color: #6a8aaa; font-family: monospace; font-size: 10px; }
 .pj-criteria .kw { color: #9ab4cc; }
-.pj-add-row {
+
+.pj-footer {
   padding: 7px 12px; border-top: 1px solid #0d1c2e;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0; background: #08121e;
 }
 .btn-add-rule {
   background: #0d2244; border: 1px solid #1a4070; color: #5ab4ff;
   padding: 5px 12px; border-radius: 4px; cursor: pointer;
-  font-size: 11px; font-weight: 600; font-family: inherit;
-  transition: background 0.15s;
+  font-size: 11px; font-weight: 600; font-family: inherit; transition: background 0.15s;
 }
 .btn-add-rule:hover { background: #1a3a6a; }
 
-/* Toggle switch */
+/* ── Toggle switch ── */
 .toggle { position: relative; width: 38px; height: 20px; display: inline-block; flex-shrink: 0; }
 .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
 .toggle-track {
@@ -153,27 +161,56 @@ table.pj-table td:last-child  { text-align: right; }
 .toggle-track::before {
   content: ''; position: absolute;
   width: 14px; height: 14px; left: 3px; top: 3px;
-  background: #e05050; border-radius: 50%; transition: transform 0.2s, background 0.2s;
+  background: #c04040; border-radius: 50%; transition: transform 0.2s, background 0.2s;
 }
 .toggle input:checked + .toggle-track { background: #0e3a1e; }
 .toggle input:checked + .toggle-track::before { transform: translateX(18px); background: #3ecf6e; }
 
-/* ── Bottom panel ── */
-.bottom-panel {
-  height: 150px; flex-shrink: 0; background: #0a1525;
-  border-top: 1px solid #162840; display: flex;
+/* ── Order drawer (slides up from bottom) ── */
+.order-drawer {
+  position: fixed;
+  bottom: -310px;
+  left: 270px; right: 0;
+  height: 300px;
+  background: #0a1525;
+  border-top: 2px solid #2a4a7a;
+  border-left: 1px solid #162840;
+  transition: bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -12px 48px rgba(0,0,0,0.65);
 }
-.order-panel { width: 50%; border-right: 1px solid #162840; display: flex; flex-direction: column; }
-.log-panel   { width: 50%; display: flex; flex-direction: column; }
+.order-drawer.open { bottom: 0; }
+
+.drawer-hdr {
+  padding: 7px 14px; background: #071525;
+  border-bottom: 1px solid #1e3a55;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.drawer-hdr-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #5ab4ff;
+}
+.drawer-hdr-actions { display: flex; gap: 7px; align-items: center; }
+
+.drawer-body {
+  flex: 1; display: flex; min-height: 0;
+}
+.drawer-order { width: 50%; border-right: 1px solid #162840; display: flex; flex-direction: column; }
+.drawer-log   { width: 50%; display: flex; flex-direction: column; }
+
 .panel-hdr {
   padding: 5px 11px; font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 1.5px; color: #5ab4ff;
-  border-bottom: 1px solid #162840; display: flex; align-items: center;
-  justify-content: space-between; flex-shrink: 0;
+  border-bottom: 1px solid #162840;
+  display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
 }
 .panel-body { flex: 1; overflow-y: auto; padding: 6px; }
 .panel-body::-webkit-scrollbar { width: 3px; }
 .panel-body::-webkit-scrollbar-thumb { background: #162840; }
+
 .order-item {
   background: #0e1e33; border: 1px solid #162840; border-radius: 4px;
   padding: 4px 8px; margin-bottom: 3px;
@@ -181,10 +218,13 @@ table.pj-table td:last-child  { text-align: right; }
 }
 .order-item .oi-name  { color: #ddeeff; font-weight: 600; }
 .order-item .oi-attrs { color: #5ab4ff; font-family: monospace; font-size: 10px; flex: 1; }
-.order-controls {
-  padding: 5px 8px; border-top: 1px solid #162840;
+
+.drawer-footer {
+  padding: 6px 10px; border-top: 1px solid #162840;
   display: flex; gap: 6px; align-items: center; flex-shrink: 0;
+  background: #071525;
 }
+
 .log-entry { padding: 2px 4px; font-size: 10px; font-family: monospace; border-bottom: 1px solid #08121e; line-height: 1.4; }
 .log-entry .ts { color: #1e3a55; margin-right: 5px; }
 .log-order { color: #c084fc; } .log-route { color: #5ab4ff; }
@@ -196,10 +236,16 @@ table.pj-table td:last-child  { text-align: right; }
 .btn-primary:hover { background: #1560c0; }
 .btn-ghost   { background: transparent; color: #5ab4ff; border-color: #162840; }
 .btn-ghost:hover   { background: #0e1e33; }
-.btn-send    { background: #0a3d8a; color: #fff; border-color: #1255b0; padding: 5px 16px; font-size: 12px; }
+.btn-send    { background: #0a3d8a; color: #fff; border-color: #1255b0; padding: 5px 16px; font-size: 12px; font-weight: 700; }
 .btn-send:hover    { background: #1255b0; }
 .btn-danger  { background: transparent; color: #e05050; border-color: #2a1010; padding: 4px 9px; font-size: 11px; }
 .btn-danger:hover  { background: #180505; }
+.btn-test {
+  background: #0a3060; border: 1px solid #1a4a8a; color: #8ac8ff;
+  padding: 4px 12px; border-radius: 4px; cursor: pointer;
+  font-size: 11px; font-weight: 700; font-family: inherit; transition: all 0.15s;
+}
+.btn-test:hover { background: #143a70; color: #aadcff; }
 
 /* ── Modals ── */
 .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.78); z-index: 200; align-items: center; justify-content: center; }
@@ -220,22 +266,23 @@ table.pj-table td:last-child  { text-align: right; }
 .field .hint { font-size: 10px; color: #2a4a6a; margin-top: 3px; }
 .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
 
-/* Condition rows in modals */
 .cond-row { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
-.cond-row .cr-key { flex: 2; }
-.cond-row .cr-op  { flex: 0 0 90px; }
-.cond-row .cr-val { flex: 2; }
 .cond-row input, .cond-row select {
   background: #040c18; border: 1px solid #162840; color: #ddeeff;
-  padding: 5px 7px; border-radius: 3px; font-size: 11px; font-family: monospace; width: 100%;
+  padding: 5px 7px; border-radius: 3px; font-size: 11px; font-family: monospace;
 }
 .cond-row input:focus, .cond-row select:focus { outline: none; border-color: #5ab4ff; }
+.cond-row .cr-key { flex: 2; min-width: 0; }
+.cond-row .cr-op  { flex: 0 0 82px; }
+.cond-row .cr-val { flex: 2; min-width: 0; }
+
 .add-row-btn {
   background: transparent; border: 1px dashed #162840; color: #3a6a9a;
   padding: 5px 10px; border-radius: 3px; cursor: pointer; font-size: 11px;
   width: 100%; transition: all 0.15s; text-align: center; margin-top: 3px;
 }
 .add-row-btn:hover { border-color: #5ab4ff; color: #5ab4ff; }
+
 .empty-state { padding: 10px; text-align: center; color: #1e3a55; font-size: 11px; }
 </style>
 </head>
@@ -254,7 +301,9 @@ table.pj-table td:last-child  { text-align: right; }
       Devices
       <button class="icon-btn" onclick="openModal('device')" title="Add Device">+</button>
     </div>
-    <div class="sec-body" id="device-list"></div>
+    <div class="sec-body" id="device-list">
+      <div class="empty-state">No devices. Add an OMS or Network Printer to get started.</div>
+    </div>
   </aside>
 
   <main class="content">
@@ -278,12 +327,13 @@ table.pj-table td:last-child  { text-align: right; }
       </svg>
     </div>
 
-    <!-- Print Jobs Rules Table -->
+    <!-- Print Jobs Rules Table (takes remaining space) -->
     <div class="pj-panel">
       <div class="pj-panel-hdr">
         Print Job Rules
-        <div style="display:flex;gap:6px;align-items:center;">
+        <div style="display:flex;gap:8px;align-items:center;">
           <span id="pj-count" style="color:#3a5a7a;font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;"></span>
+          <button class="btn-test" onclick="openOrderDrawer()">&#9654; Send Order</button>
         </div>
       </div>
       <div class="pj-table-wrap">
@@ -299,35 +349,44 @@ table.pj-table td:last-child  { text-align: right; }
           <tbody id="pj-table-body"></tbody>
         </table>
       </div>
-      <div class="pj-add-row">
+      <div class="pj-footer">
         <button class="btn-add-rule" onclick="openModal('printjob')">+ Add New Print Job</button>
-      </div>
-    </div>
-
-    <!-- Order Builder + Log -->
-    <div class="bottom-panel">
-      <div class="order-panel">
-        <div class="panel-hdr">
-          Order Builder
-          <button class="btn btn-ghost" style="padding:2px 7px;font-size:10px;" onclick="openModal('item')">+ Item</button>
-        </div>
-        <div class="panel-body" id="order-items"></div>
-        <div class="order-controls">
-          <button class="btn btn-send" onclick="sendOrder()">&#9654; Send Order</button>
-          <button class="btn btn-danger" onclick="clearOrder()">Clear</button>
-        </div>
-      </div>
-      <div class="log-panel">
-        <div class="panel-hdr">
-          Routing Log
-          <button class="btn btn-ghost" style="padding:2px 7px;font-size:10px;" onclick="clearLog()">Clear</button>
-        </div>
-        <div class="panel-body" id="routing-log">
-          <div class="empty-state">Send an order to see routing results.</div>
-        </div>
+        <span id="pj-count2" style="color:#2a4a6a;font-size:10px;"></span>
       </div>
     </div>
   </main>
+</div>
+
+<!-- ── Order Drawer (slides up) ── -->
+<div id="order-drawer" class="order-drawer">
+  <div class="drawer-hdr">
+    <span class="drawer-hdr-title">&#9654; Order Session</span>
+    <div class="drawer-hdr-actions">
+      <button class="btn btn-ghost" style="padding:3px 9px;font-size:10px;" onclick="openModal('item')">+ Item</button>
+      <button class="btn btn-danger" style="padding:3px 8px;font-size:10px;" onclick="clearOrder()">Clear</button>
+      <button class="btn btn-ghost" style="padding:3px 8px;font-size:10px;color:#6a8aaa;" onclick="closeOrderDrawer()">✕ Close</button>
+    </div>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-order">
+      <div class="panel-hdr">Order Items</div>
+      <div class="panel-body" id="order-items">
+        <div class="empty-state">No items yet. Click + Item to add.</div>
+      </div>
+      <div class="drawer-footer">
+        <button class="btn btn-send" onclick="sendOrder()">&#9654; Send Order</button>
+      </div>
+    </div>
+    <div class="drawer-log">
+      <div class="panel-hdr">
+        Routing Log
+        <button class="btn btn-ghost" style="padding:2px 7px;font-size:10px;" onclick="clearLog()">Clear</button>
+      </div>
+      <div class="panel-body" id="routing-log">
+        <div class="empty-state">Send an order to see routing results.</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ── Modal: Add/Edit Device ── -->
@@ -344,7 +403,7 @@ table.pj-table td:last-child  { text-align: right; }
     <div class="field">
       <label>Name</label>
       <input id="dev-name" type="text" placeholder="e.g. Grill" />
-      <div class="hint" id="dev-hint">OMS attribute will be set automatically to this name</div>
+      <div class="hint" id="dev-hint">Attribute OMS = this name is set automatically. A LOCALBASE printer will be created.</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('device')">Cancel</button>
@@ -353,13 +412,13 @@ table.pj-table td:last-child  { text-align: right; }
   </div>
 </div>
 
-<!-- ── Modal: Add/Edit Printer (under an OMS) ── -->
+<!-- ── Modal: Add/Edit Printer ── -->
 <div class="overlay" id="modal-printer">
   <div class="modal">
     <h3 id="prt-modal-title">Add Printer</h3>
     <div class="field">
       <label>Printer Name</label>
-      <input id="prt-name" type="text" placeholder="e.g. Grill Ticket Printer" />
+      <input id="prt-name" type="text" placeholder="e.g. LOCALBASE" />
     </div>
     <div class="field">
       <label>Attached to OMS</label>
@@ -378,17 +437,17 @@ table.pj-table td:last-child  { text-align: right; }
     <h3 id="pj-modal-title">Add Print Job</h3>
     <div class="field">
       <label>Print Job Name / Description</label>
-      <input id="pj-name" type="text" placeholder="e.g. Print Prep at Grill Printer always" />
+      <input id="pj-name" type="text" placeholder="e.g. Print Prep at Grill LOCALBASE always" />
     </div>
     <div class="field">
       <label>Target Printer</label>
       <select id="pj-target"></select>
     </div>
     <div class="field">
-      <label>Criteria <span style="color:#3a6a9a;">(leave empty = always fires)</span></label>
+      <label>Criteria <span style="color:#3a6a9a;">(empty = always fires when order received)</span></label>
       <div id="pj-conds"></div>
       <button class="add-row-btn" onclick="addCondRow()">+ Add Condition</button>
-      <div class="hint">All conditions must match (AND logic). IS NOT also fires if attribute is absent.</div>
+      <div class="hint">All conditions joined with AND. IS NOT also fires when attribute is absent.</div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('printjob')">Cancel</button>
@@ -426,40 +485,21 @@ table.pj-table td:last-child  { text-align: right; }
 
 <script>
 // ════════════════════════════════════════════════════════════
-// State
+// State  (all empty on startup)
 // ════════════════════════════════════════════════════════════
-let devices    = []; // { id, type:'oms'|'net-printer', name }
-let printers   = []; // { id, name, deviceId }  — attached to OMS devices
-let printJobs  = []; // { id, enabled, name, targetId, conds:[{key,op,val}] }
+let devices    = [];
+let printers   = [];
+let printJobs  = [];
 let orderItems = [];
 let orderCount = 0;
 let _seq = 1;
 const uid = () => 'n' + (_seq++);
-
 const editId = { device: null, printer: null, printjob: null, item: null };
 
-// SVG layout constants
+// SVG layout
 const VW = 1000, VH = 500;
 const ROUTER_Y = 70, OMS_Y = 235, PRT_Y = 385;
 let nodePos = {};
-
-// ════════════════════════════════════════════════════════════
-// Defaults  (7 OMSs, no starter order)
-// ════════════════════════════════════════════════════════════
-function initDefaults() {
-  ['Grill','Deli','Expo','Global','Coffee','Salad','Action'].forEach(n => {
-    const d = { id: uid(), type: 'oms', name: n };
-    devices.push(d);
-    const p = { id: uid(), name: `${n} Printer`, deviceId: d.id };
-    printers.push(p);
-    printJobs.push({
-      id: uid(), enabled: true,
-      name: `Print Prep at ${n} Printer always`,
-      targetId: p.id,
-      conds: [{ key: 'OMS', op: 'IS', val: n }]
-    });
-  });
-}
 
 // ════════════════════════════════════════════════════════════
 // SVG Layout
@@ -467,15 +507,12 @@ function initDefaults() {
 function computeLayout() {
   nodePos = {};
   nodePos['router'] = { x: VW / 2, y: ROUTER_Y };
-
   const omsDev = devices.filter(d => d.type === 'oms');
   const n = omsDev.length;
   if (!n) return;
   const sp = Math.min(180, (VW - 60) / n);
   const x0 = VW / 2 - ((n - 1) * sp) / 2;
   omsDev.forEach((d, i) => { nodePos[d.id] = { x: x0 + i * sp, y: OMS_Y }; });
-
-  // OMS-attached printers
   omsDev.forEach(d => {
     const op = nodePos[d.id];
     const dp = printers.filter(p => p.deviceId === d.id);
@@ -484,8 +521,6 @@ function computeLayout() {
     const px0 = op.x - ((dp.length - 1) * ps) / 2;
     dp.forEach((p, i) => { nodePos[p.id] = { x: px0 + i * ps, y: PRT_Y }; });
   });
-
-  // Network printers — stacked right side
   const netPrts = devices.filter(d => d.type === 'net-printer');
   netPrts.forEach((d, i) => { nodePos[d.id] = { x: 955, y: 90 + i * 70 }; });
 }
@@ -498,23 +533,19 @@ function renderNetwork() {
   let conn = '', nodes = '', lbls = '';
   const rp = nodePos['router'];
 
-  // Connections: router → OMS, OMS → local printer
   devices.filter(d => d.type === 'oms').forEach(d => {
-    const op = nodePos[d.id];
-    if (!op) return;
+    const op = nodePos[d.id]; if (!op) return;
     conn += `<line id="cl-router-${d.id}" x1="${rp.x}" y1="${rp.y+30}" x2="${op.x}" y2="${op.y-28}" stroke="#102030" stroke-width="1.5" stroke-dasharray="7 5"/>`;
     printers.filter(p => p.deviceId === d.id).forEach(p => {
-      const pp = nodePos[p.id];
-      if (!pp) return;
+      const pp = nodePos[p.id]; if (!pp) return;
       conn += `<line id="cl-${d.id}-${p.id}" x1="${op.x}" y1="${op.y+25}" x2="${pp.x}" y2="${pp.y-22}" stroke="#0a2010" stroke-width="1.5" stroke-dasharray="7 5"/>`;
     });
   });
 
-  // Net printer separating line (if any exist)
   const netPrts = devices.filter(d => d.type === 'net-printer');
   if (netPrts.length) {
-    conn += `<line x1="910" y1="30" x2="910" y2="${VH-20}" stroke="#162030" stroke-width="1" stroke-dasharray="4 6"/>`;
-    lbls += `<text x="935" y="22" text-anchor="middle" fill="#1a3a55" font-size="8" font-family="'Segoe UI',sans-serif" letter-spacing="1" font-weight="700">NETWORK</text>`;
+    conn += `<line x1="912" y1="28" x2="912" y2="${VH-20}" stroke="#162030" stroke-width="1" stroke-dasharray="4 7" opacity="0.7"/>`;
+    lbls += `<text x="956" y="22" text-anchor="middle" fill="#1a3a55" font-size="8" font-family="'Segoe UI',sans-serif" letter-spacing="1" font-weight="700">NETWORK</text>`;
   }
 
   // Router
@@ -526,10 +557,9 @@ function renderNetwork() {
   </g>`;
   lbls += `<text x="${rp.x}" y="${rp.y+44}" text-anchor="middle" fill="#5a3aaf" font-size="9.5" font-family="'Segoe UI',sans-serif" font-weight="700" letter-spacing="0.8">ORDER ROUTER</text>`;
 
-  // OMS nodes (monitor)
+  // OMS nodes
   devices.filter(d => d.type === 'oms').forEach(d => {
-    const p = nodePos[d.id];
-    if (!p) return;
+    const p = nodePos[d.id]; if (!p) return;
     nodes += `<g id="nd-${d.id}" transform="translate(${p.x},${p.y})">
       <rect x="-30" y="-28" width="60" height="42" rx="5" fill="#0b1e3a" stroke="#1e5090" stroke-width="1.8"/>
       <rect x="-24" y="-22" width="48" height="28" rx="2" fill="#030c18"/>
@@ -545,8 +575,7 @@ function renderNetwork() {
 
   // OMS-attached printers
   printers.forEach(p => {
-    const pp = nodePos[p.id];
-    if (!pp) return;
+    const pp = nodePos[p.id]; if (!pp) return;
     nodes += `<g id="nd-${p.id}" transform="translate(${pp.x},${pp.y})">
       <rect x="-22" y="-14" width="44" height="26" rx="4" fill="#0c2010" stroke="#1a5020" stroke-width="1.8"/>
       <rect x="-12" y="-25" width="24" height="13" rx="2" fill="#0c2010" stroke="#1a5020" stroke-width="1.2"/>
@@ -558,10 +587,9 @@ function renderNetwork() {
     lbls += `<text x="${pp.x}" y="${pp.y+29}" text-anchor="middle" fill="#6abf6a" font-size="9.5" font-family="'Segoe UI',sans-serif">${esc(p.name)}</text>`;
   });
 
-  // Network printer nodes (right side)
+  // Network printers
   devices.filter(d => d.type === 'net-printer').forEach(d => {
-    const p = nodePos[d.id];
-    if (!p) return;
+    const p = nodePos[d.id]; if (!p) return;
     nodes += `<g id="nd-${d.id}" transform="translate(${p.x},${p.y})">
       <rect x="-22" y="-14" width="44" height="26" rx="4" fill="#101a28" stroke="#2a4a6a" stroke-width="1.8"/>
       <rect x="-12" y="-25" width="24" height="13" rx="2" fill="#101a28" stroke="#2a4a6a" stroke-width="1.2"/>
@@ -575,7 +603,8 @@ function renderNetwork() {
   });
 
   if (!devices.filter(d => d.type === 'oms').length) {
-    nodes += `<text x="${VW/2}" y="${VH/2}" text-anchor="middle" fill="#1e3a55" font-size="14" font-family="'Segoe UI',sans-serif">Add OMSs in the Devices panel to see the network map</text>`;
+    nodes += `<text x="${VW/2}" y="${VH/2 - 12}" text-anchor="middle" fill="#1e3a55" font-size="15" font-family="'Segoe UI',sans-serif">Add OMSs in the Devices panel</text>
+    <text x="${VW/2}" y="${VH/2 + 12}" text-anchor="middle" fill="#162840" font-size="12" font-family="'Segoe UI',sans-serif">to see the network map</text>`;
   }
 
   document.getElementById('layer-conn').innerHTML   = conn;
@@ -587,34 +616,29 @@ function renderNetwork() {
 // Animations
 // ════════════════════════════════════════════════════════════
 function activateNode(id, color, ms) {
-  const el = document.getElementById(`nd-${id}`);
-  if (!el) return;
+  const el = document.getElementById(`nd-${id}`); if (!el) return;
   const sc = color==='blue'?'#5ab4ff':color==='green'?'#3ecf6e':'#9a6adf';
   const gf = color==='blue'?'f-blue':color==='green'?'f-green':'f-purple';
   const fc = color==='blue'?'#0a2240':color==='green'?'#0a2514':'#120a28';
   const shape = el.querySelector('rect')||el.querySelector('circle');
-  const os = shape?.getAttribute('stroke'), of_ = shape?.getAttribute('fill'), ofl = el.getAttribute('filter');
+  const os=shape?.getAttribute('stroke'), of_=shape?.getAttribute('fill'), ofl=el.getAttribute('filter');
   if (shape) { shape.setAttribute('stroke',sc); shape.setAttribute('fill',fc); }
   el.setAttribute('filter',`url(#${gf})`);
-  setTimeout(() => {
-    if (shape) { shape.setAttribute('stroke',os??''); shape.setAttribute('fill',of_??''); }
-    el.setAttribute('filter',ofl??'');
-  }, ms);
+  setTimeout(()=>{ if(shape){shape.setAttribute('stroke',os??'');shape.setAttribute('fill',of_??'');} el.setAttribute('filter',ofl??''); }, ms);
 }
 
 function highlightLine(id, color, ms) {
-  const el = document.getElementById(id);
-  if (!el) return;
+  const el = document.getElementById(id); if (!el) return;
   const sc = color==='blue'?'#5ab4ff':'#3ecf6e';
-  const os=el.getAttribute('stroke'), ow=el.getAttribute('stroke-width'), od=el.getAttribute('stroke-dasharray');
+  const os=el.getAttribute('stroke'),ow=el.getAttribute('stroke-width'),od=el.getAttribute('stroke-dasharray');
   el.setAttribute('stroke',sc); el.setAttribute('stroke-width','2.5'); el.setAttribute('stroke-dasharray','none');
   el.style.filter=`drop-shadow(0 0 3px ${sc})`;
   setTimeout(()=>{ el.setAttribute('stroke',os); el.setAttribute('stroke-width',ow); el.setAttribute('stroke-dasharray',od); el.style.filter=''; }, ms);
 }
 
 function animatePacket(fromId, toId, color, onDone) {
-  const fp = nodePos[fromId], tp = nodePos[toId];
-  if (!fp || !tp) { onDone?.(); return; }
+  const fp=nodePos[fromId], tp=nodePos[toId];
+  if (!fp||!tp) { onDone?.(); return; }
   const pc = color==='blue'?'#5ab4ff':'#3ecf6e';
   const fy = fromId==='router' ? fp.y+30 : fp.y+25;
   const ty = devices.find(d=>d.id===toId&&d.type==='oms') ? tp.y-28 : tp.y-22;
@@ -625,22 +649,33 @@ function animatePacket(fromId, toId, color, onDone) {
   c.setAttribute('cx',fp.x); c.setAttribute('cy',fy);
   layer.appendChild(c);
   let t0=null; const dur=500;
-  function step(ts) {
+  (function step(ts) {
     if (!t0) t0=ts;
     const raw=Math.min((ts-t0)/dur,1), t=raw<0.5?2*raw*raw:-1+(4-2*raw)*raw;
     c.setAttribute('cx', fp.x+(tp.x-fp.x)*t);
     c.setAttribute('cy', fy+(ty-fy)*t);
     if (raw<1) requestAnimationFrame(step);
     else { c.remove(); onDone?.(); }
-  }
-  requestAnimationFrame(step);
+  })(performance.now());
+  requestAnimationFrame(function step(ts){
+    if(!t0)t0=ts;
+    const raw=Math.min((ts-t0)/dur,1),t=raw<0.5?2*raw*raw:-1+(4-2*raw)*raw;
+    c.setAttribute('cx',fp.x+(tp.x-fp.x)*t);c.setAttribute('cy',fy+(ty-fy)*t);
+    if(raw<1)requestAnimationFrame(step); else{c.remove();onDone?.();}
+  });
 }
+
+// ════════════════════════════════════════════════════════════
+// Order Drawer
+// ════════════════════════════════════════════════════════════
+function openOrderDrawer()  { document.getElementById('order-drawer').classList.add('open'); }
+function closeOrderDrawer() { document.getElementById('order-drawer').classList.remove('open'); }
 
 // ════════════════════════════════════════════════════════════
 // Routing engine
 // ════════════════════════════════════════════════════════════
 function sendOrder() {
-  if (!orderItems.length) return;
+  if (!orderItems.length) { addLog('warn', 'No items in order.'); return; }
   orderCount++;
   addLog('order', `▶ Order #${orderCount} dispatched — ${orderItems.length} item(s)`);
   activateNode('router','purple',700);
@@ -649,31 +684,27 @@ function sendOrder() {
 
 function routeItem(item) {
   const omsVal = item.attrs['OMS'];
-  if (!omsVal) { addLog('warn', `  "${item.name}" — no OMS attribute, unrouted`); return; }
+  if (!omsVal) { addLog('warn',`  "${item.name}" — no OMS attribute, unrouted`); return; }
   const dev = devices.find(d => d.type==='oms' && d.name.toLowerCase()===omsVal.toLowerCase());
-  if (!dev) { addLog('warn', `  "${item.name}" — no OMS device matches "${omsVal}"`); activateNode('router','purple',400); return; }
+  if (!dev) { addLog('warn',`  "${item.name}" — no OMS device matches "${omsVal}"`); activateNode('router','purple',400); return; }
   addLog('route', `  "${item.name}"  →  ${dev.name} OMS`);
   animatePacket('router', dev.id, 'blue', () => {
     activateNode(dev.id,'blue',1500);
-    // Effective attrs: item attrs + auto-injected DeviceName
     const eff = { ...item.attrs, DeviceName: dev.name };
     const matched = printJobs.filter(pj => {
       if (!pj.enabled) return false;
       return pj.conds.every(c => {
-        const actual = (eff[c.key] ?? '').toLowerCase();
+        const actual   = (eff[c.key] ?? '').toLowerCase();
         const expected = c.val.toLowerCase();
         return c.op === 'IS' ? actual === expected : actual !== expected;
       });
     });
-    if (!matched.length) { addLog('info', `    No enabled print jobs matched`); return; }
+    if (!matched.length) { addLog('info',`    No enabled print jobs matched`); return; }
     matched.forEach((pj,i) => setTimeout(() => {
       const tgt = findTarget(pj.targetId);
-      const tgtName = tgt ? tgt.name : '(unknown)';
       const cs = pj.conds.length ? `  [${pj.conds.map(c=>`${c.key} ${c.op} ${c.val}`).join(' AND ')}]` : '';
-      addLog('print', `    ✓ "${pj.name}" → ${tgtName}${cs}`);
-      if (nodePos[pj.targetId]) {
-        animatePacket(dev.id, pj.targetId, 'green', () => activateNode(pj.targetId,'green',1500));
-      }
+      addLog('print', `    ✓ "${pj.name}" → ${tgt?.name ?? '?'}${cs}`);
+      if (nodePos[pj.targetId]) animatePacket(dev.id, pj.targetId, 'green', ()=>activateNode(pj.targetId,'green',1500));
     }, i*350));
   });
 }
@@ -689,46 +720,48 @@ function addLog(type, msg) {
   const el = document.getElementById('routing-log');
   el.querySelector('.empty-state')?.remove();
   const d = document.createElement('div');
-  d.className = `log-entry log-${type}`;
-  d.innerHTML = `<span class="ts">${new Date().toTimeString().slice(0,8)}</span>${esc(msg)}`;
-  el.appendChild(d); el.scrollTop = el.scrollHeight;
+  d.className=`log-entry log-${type}`;
+  d.innerHTML=`<span class="ts">${new Date().toTimeString().slice(0,8)}</span>${esc(msg)}`;
+  el.appendChild(d); el.scrollTop=el.scrollHeight;
 }
 function clearLog() { document.getElementById('routing-log').innerHTML='<div class="empty-state">Send an order to see routing results.</div>'; }
 
 // ════════════════════════════════════════════════════════════
-// Render: sidebar devices
+// Sidebar rendering
 // ════════════════════════════════════════════════════════════
 const SVG_OMS = `<svg width="22" height="22" viewBox="-28 -28 56 56">
   <rect x="-22" y="-20" width="44" height="30" rx="4" fill="#0b1e3a" stroke="#1e5090" stroke-width="1.5"/>
   <rect x="-17" y="-15" width="34" height="20" rx="1" fill="#030c18"/>
   <line x1="-12" y1="-8" x2="12" y2="-8" stroke="#0e3560" stroke-width="1.5"/>
-  <line x1="-12" y1="-2" x2="8" y2="-2" stroke="#0e3560" stroke-width="1.5"/>
+  <line x1="-12" y1="-2" x2="8"  y2="-2" stroke="#0e3560" stroke-width="1.5"/>
   <rect x="-3" y="10" width="6" height="6" fill="#0b1e3a"/>
   <rect x="-11" y="15" width="22" height="3" rx="1.5" fill="#1e5090"/>
 </svg>`;
 const SVG_PRT = `<svg width="22" height="22" viewBox="-28 -28 56 56">
   <rect x="-20" y="-10" width="40" height="22" rx="4" fill="#0c2010" stroke="#1a5020" stroke-width="1.5"/>
   <rect x="-12" y="-22" width="24" height="14" rx="2" fill="#0c2010" stroke="#1a5020" stroke-width="1.2"/>
-  <rect x="-10" y="10"  width="20" height="9" rx="1" fill="#b0d8b0"/>
+  <rect x="-10" y="10"  width="20" height="9"  rx="1" fill="#b0d8b0"/>
   <line x1="-14" y1="-3" x2="8" y2="-3" stroke="#1a4820" stroke-width="1.3"/>
   <circle cx="14" cy="0" r="4" fill="#167a16"/>
 </svg>`;
 const SVG_NET = `<svg width="22" height="22" viewBox="-28 -28 56 56">
   <rect x="-20" y="-10" width="40" height="22" rx="4" fill="#101a28" stroke="#2a4a6a" stroke-width="1.5"/>
   <rect x="-12" y="-22" width="24" height="14" rx="2" fill="#101a28" stroke="#2a4a6a" stroke-width="1.2"/>
-  <rect x="-10" y="10"  width="20" height="9" rx="1" fill="#b0c8e0"/>
+  <rect x="-10" y="10"  width="20" height="9"  rx="1" fill="#b0c8e0"/>
   <line x1="-14" y1="-3" x2="8" y2="-3" stroke="#2a4a7a" stroke-width="1.3"/>
   <circle cx="14" cy="0" r="4" fill="#2a6aaa"/>
 </svg>`;
 
 function renderDeviceList() {
   const el = document.getElementById('device-list');
-  if (!devices.length) { el.innerHTML='<div class="empty-state">No devices. Add an OMS or Network Printer.</div>'; return; }
+  if (!devices.length) {
+    el.innerHTML='<div class="empty-state">No devices. Add an OMS or Network Printer to get started.</div>';
+    return;
+  }
   let html = '';
   devices.forEach(d => {
     if (d.type === 'oms') {
-      html += `
-      <div class="dev-card">
+      html += `<div class="dev-card">
         <div class="dev-icon">${SVG_OMS}</div>
         <div class="dev-info">
           <div class="dev-name">${esc(d.name)}</div>
@@ -742,8 +775,7 @@ function renderDeviceList() {
         </div>
       </div>`;
       printers.filter(p => p.deviceId === d.id).forEach(p => {
-        html += `
-        <div class="dev-card is-printer">
+        html += `<div class="dev-card is-printer">
           <div class="dev-icon">${SVG_PRT}</div>
           <div class="dev-info">
             <div class="dev-name">${esc(p.name)}</div>
@@ -757,8 +789,7 @@ function renderDeviceList() {
         </div>`;
       });
     } else {
-      html += `
-      <div class="dev-card">
+      html += `<div class="dev-card">
         <div class="dev-icon">${SVG_NET}</div>
         <div class="dev-info">
           <div class="dev-name">${esc(d.name)}</div>
@@ -776,56 +807,49 @@ function renderDeviceList() {
 }
 
 // ════════════════════════════════════════════════════════════
-// Render: print jobs rules table
+// Print jobs table
 // ════════════════════════════════════════════════════════════
 function renderPrintJobs() {
   const tbody = document.getElementById('pj-table-body');
-  const count = document.getElementById('pj-count');
   const active = printJobs.filter(j=>j.enabled).length;
-  count.textContent = `${active} active / ${printJobs.length} total`;
+  const countStr = printJobs.length ? `${active} active / ${printJobs.length} total` : '';
+  document.getElementById('pj-count').textContent  = countStr;
+  document.getElementById('pj-count2').textContent = countStr;
 
   if (!printJobs.length) {
-    tbody.innerHTML = `<tr><td colspan="4" style="padding:12px;text-align:center;color:#1e3a55;font-size:11px;">No print job rules configured.</td></tr>`;
+    tbody.innerHTML=`<tr><td colspan="4" style="padding:14px;text-align:center;color:#1e3a55;font-size:11px;">No print job rules. Click "Add New Print Job" below.</td></tr>`;
     return;
   }
   tbody.innerHTML = printJobs.map(pj => {
-    const tgt = findTarget(pj.targetId);
-    const criteriaStr = pj.conds.length
-      ? 'When: ' + pj.conds.map((c,i) => `<span class="kw">${esc(c.key)}</span> ${esc(c.op)} = ${esc(c.val)}`).join(' <span style="color:#3a5a7a">AND</span> ')
+    const criteriaHtml = pj.conds.length
+      ? 'When: ' + pj.conds.map(c => `<span class="kw">${esc(c.key)}</span> ${esc(c.op)} = ${esc(c.val)}`).join(' <span style="color:#3a5a7a">AND</span> ')
       : '<span style="color:#3a5a7a;font-style:italic;">Always</span>';
     return `<tr>
-      <td>
-        <label class="toggle">
-          <input type="checkbox" ${pj.enabled?'checked':''} onchange="togglePrintJob('${pj.id}',this.checked)"/>
-          <span class="toggle-track"></span>
-        </label>
-      </td>
+      <td><label class="toggle"><input type="checkbox" ${pj.enabled?'checked':''} onchange="togglePrintJob('${pj.id}',this.checked)"/><span class="toggle-track"></span></label></td>
       <td class="pj-name">${esc(pj.name)}</td>
-      <td class="pj-criteria">${criteriaStr}</td>
-      <td>
-        <div style="display:flex;gap:3px;justify-content:flex-end;">
-          <button class="edit-btn" onclick="openEditPrintJob('${pj.id}')" title="Edit">✎</button>
-          <button class="del-btn"  onclick="removePrintJob('${pj.id}')" title="Remove">✕</button>
-        </div>
-      </td>
+      <td class="pj-criteria">${criteriaHtml}</td>
+      <td><div style="display:flex;gap:3px;justify-content:flex-end;">
+        <button class="edit-btn" onclick="openEditPrintJob('${pj.id}')">✎</button>
+        <button class="del-btn"  onclick="removePrintJob('${pj.id}')">✕</button>
+      </div></td>
     </tr>`;
   }).join('');
 }
 
 // ════════════════════════════════════════════════════════════
-// Render: order items
+// Order items
 // ════════════════════════════════════════════════════════════
 function renderOrderItems() {
   const el = document.getElementById('order-items');
-  if (!orderItems.length) { el.innerHTML='<div class="empty-state">No items. Add items to the order.</div>'; return; }
+  if (!orderItems.length) { el.innerHTML='<div class="empty-state">No items yet. Click + Item to add.</div>'; return; }
   el.innerHTML = orderItems.map(item => {
     const attrs = Object.entries(item.attrs).map(([k,v])=>`${k}=${v}`).join(', ');
     return `<div class="order-item">
       <span class="oi-name">${esc(item.name)}</span>
       <span class="oi-attrs">[${esc(attrs)}]</span>
       <div class="card-btns">
-        <button class="edit-btn" onclick="openEditItem('${item.id}')" title="Edit">✎</button>
-        <button class="del-btn"  onclick="removeOrderItem('${item.id}')" title="Remove">✕</button>
+        <button class="edit-btn" onclick="openEditItem('${item.id}')">✎</button>
+        <button class="del-btn"  onclick="removeOrderItem('${item.id}')">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -835,23 +859,17 @@ function renderOrderItems() {
 // Data mutations
 // ════════════════════════════════════════════════════════════
 function togglePrintJob(id, enabled) {
-  const pj = printJobs.find(x=>x.id===id);
-  if (pj) pj.enabled = enabled;
+  const pj = printJobs.find(x=>x.id===id); if (pj) pj.enabled=enabled;
   renderPrintJobs();
 }
-function removeDevice(id) {
-  devices   = devices.filter(d=>d.id!==id);
-  printers  = printers.filter(p=>p.deviceId!==id);
-  printJobs = printJobs.filter(j=>j.targetId!==id);
-  refresh();
-}
-function removePrinter(id)  { printers=printers.filter(p=>p.id!==id); printJobs=printJobs.filter(j=>j.targetId!==id); refresh(); }
-function removePrintJob(id) { printJobs=printJobs.filter(j=>j.id!==id); renderPrintJobs(); }
-function removeOrderItem(id){ orderItems=orderItems.filter(i=>i.id!==id); renderOrderItems(); }
-function clearOrder()       { orderItems=[]; renderOrderItems(); }
+function removeDevice(id)    { devices=devices.filter(d=>d.id!==id); printers=printers.filter(p=>p.deviceId!==id); printJobs=printJobs.filter(j=>j.targetId!==id); refresh(); }
+function removePrinter(id)   { printers=printers.filter(p=>p.id!==id); printJobs=printJobs.filter(j=>j.targetId!==id); refresh(); }
+function removePrintJob(id)  { printJobs=printJobs.filter(j=>j.id!==id); renderPrintJobs(); }
+function removeOrderItem(id) { orderItems=orderItems.filter(i=>i.id!==id); renderOrderItems(); }
+function clearOrder()        { orderItems=[]; renderOrderItems(); }
 
 // ════════════════════════════════════════════════════════════
-// Modals — open
+// Modals — open (add mode)
 // ════════════════════════════════════════════════════════════
 function openModal(type) {
   editId[type==='printjob'?'printjob':type==='printer'?'printer':type==='item'?'item':'device'] = null;
@@ -866,7 +884,7 @@ function openModal(type) {
     document.getElementById('prt-modal-title').textContent = 'Add Printer';
     document.getElementById('prt-save-btn').textContent    = 'Add Printer';
     document.getElementById('prt-name').value = '';
-    populatePrinterOmsSel(null);
+    populatePrinterDevSel(null);
   }
   if (type === 'printjob') {
     document.getElementById('pj-modal-title').textContent = 'Add Print Job';
@@ -889,129 +907,103 @@ function closeModal(type) { document.getElementById(`modal-${type}`).classList.r
 
 // ── Edit openers ──
 function openEditDevice(id) {
-  const d = devices.find(x=>x.id===id); if (!d) return;
-  editId.device = id;
-  document.getElementById('dev-modal-title').textContent = 'Edit Device';
-  document.getElementById('dev-save-btn').textContent    = 'Save Changes';
-  document.getElementById('dev-type').value = d.type;
-  document.getElementById('dev-name').value = d.name;
+  const d=devices.find(x=>x.id===id); if (!d) return;
+  editId.device=id;
+  document.getElementById('dev-modal-title').textContent='Edit Device';
+  document.getElementById('dev-save-btn').textContent='Save Changes';
+  document.getElementById('dev-type').value=d.type;
+  document.getElementById('dev-name').value=d.name;
   devTypeChanged();
   document.getElementById('modal-device').classList.add('open');
 }
-
-function openAddPrinterTo(omsDeviceId) {
-  editId.printer = null;
-  document.getElementById('prt-modal-title').textContent = 'Add Printer';
-  document.getElementById('prt-save-btn').textContent    = 'Add Printer';
-  document.getElementById('prt-name').value = '';
-  populatePrinterOmsSel(omsDeviceId);
+function openAddPrinterTo(omsDevId) {
+  editId.printer=null;
+  document.getElementById('prt-modal-title').textContent='Add Printer';
+  document.getElementById('prt-save-btn').textContent='Add Printer';
+  document.getElementById('prt-name').value='';
+  populatePrinterDevSel(omsDevId);
   document.getElementById('modal-printer').classList.add('open');
 }
-
 function openEditPrinter(id) {
-  const p = printers.find(x=>x.id===id); if (!p) return;
-  editId.printer = id;
-  document.getElementById('prt-modal-title').textContent = 'Edit Printer';
-  document.getElementById('prt-save-btn').textContent    = 'Save Changes';
-  document.getElementById('prt-name').value = p.name;
-  populatePrinterOmsSel(p.deviceId);
+  const p=printers.find(x=>x.id===id); if (!p) return;
+  editId.printer=id;
+  document.getElementById('prt-modal-title').textContent='Edit Printer';
+  document.getElementById('prt-save-btn').textContent='Save Changes';
+  document.getElementById('prt-name').value=p.name;
+  populatePrinterDevSel(p.deviceId);
   document.getElementById('modal-printer').classList.add('open');
 }
-
 function openEditPrintJob(id) {
-  const pj = printJobs.find(x=>x.id===id); if (!pj) return;
-  editId.printjob = id;
-  document.getElementById('pj-modal-title').textContent = 'Edit Print Job';
-  document.getElementById('pj-save-btn').textContent    = 'Save Changes';
-  document.getElementById('pj-name').value = pj.name;
+  const pj=printJobs.find(x=>x.id===id); if (!pj) return;
+  editId.printjob=id;
+  document.getElementById('pj-modal-title').textContent='Edit Print Job';
+  document.getElementById('pj-save-btn').textContent='Save Changes';
+  document.getElementById('pj-name').value=pj.name;
   populatePjTargetSel(pj.targetId);
-  document.getElementById('pj-conds').innerHTML = '';
-  pj.conds.forEach(c => addCondRow(c.key, c.op, c.val));
+  document.getElementById('pj-conds').innerHTML='';
+  pj.conds.forEach(c=>addCondRow(c.key,c.op,c.val));
   document.getElementById('modal-printjob').classList.add('open');
 }
-
 function openEditItem(id) {
-  const item = orderItems.find(x=>x.id===id); if (!item) return;
-  editId.item = id;
-  document.getElementById('item-modal-title').textContent = 'Edit Order Item';
-  document.getElementById('item-save-btn').textContent    = 'Save Changes';
-  document.getElementById('item-name').value = item.name;
-  document.getElementById('item-attrs').innerHTML = '';
-  populateItemOmsSel(item.attrs['OMS'] ?? null);
-  Object.entries(item.attrs).forEach(([k,v]) => { if (k !== 'OMS') addAttrRow(k,v); });
+  const item=orderItems.find(x=>x.id===id); if (!item) return;
+  editId.item=id;
+  document.getElementById('item-modal-title').textContent='Edit Order Item';
+  document.getElementById('item-save-btn').textContent='Save Changes';
+  document.getElementById('item-name').value=item.name;
+  document.getElementById('item-attrs').innerHTML='';
+  populateItemOmsSel(item.attrs['OMS']??null);
+  Object.entries(item.attrs).forEach(([k,v])=>{ if(k!=='OMS') addAttrRow(k,v); });
   document.getElementById('modal-item').classList.add('open');
 }
 
 // ── Dropdown helpers ──
 function devTypeChanged() {
   const t = document.getElementById('dev-type').value;
-  const hint = document.getElementById('dev-hint');
-  hint.textContent = t === 'oms'
-    ? 'OMS attribute will be set automatically to this name'
-    : 'DeviceName attribute will be set automatically to this name';
+  document.getElementById('dev-hint').textContent = t==='oms'
+    ? 'Attribute OMS = this name is set automatically. A LOCALBASE printer will be created.'
+    : 'DeviceName attribute = this name. Appears in the network section of the map.';
 }
-
-function populatePrinterOmsSel(selectedId) {
-  const sel = document.getElementById('prt-dev');
-  const omsDev = devices.filter(d=>d.type==='oms');
-  sel.innerHTML = omsDev.length
-    ? omsDev.map(d=>`<option value="${d.id}" ${d.id===selectedId?'selected':''}>${esc(d.name)}</option>`).join('')
-    : '<option value="">— No OMS devices —</option>';
+function populatePrinterDevSel(selId) {
+  const s=document.getElementById('prt-dev');
+  const omsDev=devices.filter(d=>d.type==='oms');
+  s.innerHTML=omsDev.length ? omsDev.map(d=>`<option value="${d.id}" ${d.id===selId?'selected':''}>${esc(d.name)}</option>`).join('') : '<option value="">— No OMS devices —</option>';
 }
-
-function populatePjTargetSel(selectedId) {
-  const sel = document.getElementById('pj-target');
-  let html = '';
-  const omsDev = devices.filter(d=>d.type==='oms');
+function populatePjTargetSel(selId) {
+  const s=document.getElementById('pj-target');
+  let html='';
+  const omsDev=devices.filter(d=>d.type==='oms');
   if (omsDev.length) {
-    html += '<optgroup label="OMS Printers">';
-    omsDev.forEach(d => {
-      printers.filter(p=>p.deviceId===d.id).forEach(p => {
-        html += `<option value="${p.id}" ${p.id===selectedId?'selected':''}>${esc(p.name)} (${esc(d.name)})</option>`;
-      });
-    });
-    html += '</optgroup>';
+    html+='<optgroup label="OMS Printers">';
+    omsDev.forEach(d=>printers.filter(p=>p.deviceId===d.id).forEach(p=>{ html+=`<option value="${p.id}" ${p.id===selId?'selected':''}>${esc(p.name)} (${esc(d.name)})</option>`; }));
+    html+='</optgroup>';
   }
-  const netDev = devices.filter(d=>d.type==='net-printer');
-  if (netDev.length) {
-    html += '<optgroup label="Network Printers">';
-    netDev.forEach(d => {
-      html += `<option value="${d.id}" ${d.id===selectedId?'selected':''}>${esc(d.name)}</option>`;
-    });
-    html += '</optgroup>';
+  const net=devices.filter(d=>d.type==='net-printer');
+  if (net.length) {
+    html+='<optgroup label="Network Printers">';
+    net.forEach(d=>{ html+=`<option value="${d.id}" ${d.id===selId?'selected':''}>${esc(d.name)}</option>`; });
+    html+='</optgroup>';
   }
-  sel.innerHTML = html || '<option value="">— No printers available —</option>';
+  s.innerHTML=html||'<option value="">— No printers available —</option>';
+}
+function populateItemOmsSel(selVal) {
+  const s=document.getElementById('item-oms');
+  s.innerHTML='<option value="">— No OMS routing —</option>'+
+    devices.filter(d=>d.type==='oms').map(d=>`<option value="${d.name}" ${d.name===selVal?'selected':''}>${esc(d.name)}</option>`).join('');
 }
 
-function populateItemOmsSel(selectedAttrVal) {
-  const sel = document.getElementById('item-oms');
-  sel.innerHTML = '<option value="">— No OMS routing —</option>' +
-    devices.filter(d=>d.type==='oms').map(d =>
-      `<option value="${d.name}" ${d.name===selectedAttrVal?'selected':''}>${esc(d.name)} (OMS=${esc(d.name)})</option>`
-    ).join('');
-}
-
-// ── Condition / attr row builders ──
-function addCondRow(k='', op='IS', v='') {
-  const row = document.createElement('div');
-  row.className = 'cond-row';
-  row.innerHTML = `
-    <input type="text" class="cr-key" placeholder="attribute key" value="${esc(k)}"/>
-    <select class="cr-op">
-      <option value="IS" ${op==='IS'?'selected':''}>IS</option>
-      <option value="IS NOT" ${op==='IS NOT'?'selected':''}>IS NOT</option>
-    </select>
+// ── Row builders ──
+function addCondRow(k='',op='IS',v='') {
+  const row=document.createElement('div'); row.className='cond-row';
+  row.innerHTML=`<input type="text" class="cr-key" placeholder="attribute" value="${esc(k)}"/>
+    <select class="cr-op"><option value="IS" ${op==='IS'?'selected':''}>IS</option><option value="IS NOT" ${op==='IS NOT'?'selected':''}>IS NOT</option></select>
     <input type="text" class="cr-val" placeholder="value" value="${esc(v)}"/>
     <button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;
   document.getElementById('pj-conds').appendChild(row);
 }
-
-function addAttrRow(k='', v='') {
-  const row = document.createElement('div');
-  row.className = 'cond-row';
-  row.innerHTML = `
-    <input type="text" class="ak" placeholder="key" value="${esc(k)}" style="max-width:110px;"/>
-    <span style="color:#3a6a9a;font-family:monospace;font-size:12px;">=</span>
+function addAttrRow(k='',v='') {
+  const row=document.createElement('div'); row.className='cond-row';
+  row.innerHTML=`<input type="text" class="ak" placeholder="key" value="${esc(k)}" style="max-width:110px;"/>
+    <span style="color:#3a6a9a;font-family:monospace;padding:0 3px;">=</span>
     <input type="text" class="av" placeholder="value" value="${esc(v)}"/>
     <button class="del-btn" onclick="this.parentElement.remove()">✕</button>`;
   document.getElementById('item-attrs').appendChild(row);
@@ -1021,91 +1013,109 @@ function addAttrRow(k='', v='') {
 // Save functions
 // ════════════════════════════════════════════════════════════
 function doSaveDevice() {
-  const type = document.getElementById('dev-type').value;
-  const name = document.getElementById('dev-name').value.trim();
+  const type=document.getElementById('dev-type').value;
+  const name=document.getElementById('dev-name').value.trim();
   if (!name) { alert('Name is required.'); return; }
   if (editId.device) {
-    const d = devices.find(x=>x.id===editId.device);
+    const d=devices.find(x=>x.id===editId.device);
     if (d) { d.type=type; d.name=name; }
   } else {
-    devices.push({ id: uid(), type, name });
+    const newDev={ id:uid(), type, name };
+    devices.push(newDev);
+    if (type==='oms') {
+      // Auto-create LOCALBASE printer
+      printers.push({ id:uid(), name:'LOCALBASE', deviceId:newDev.id });
+    }
   }
   closeModal('device'); refresh();
 }
-
 function doSavePrinter() {
-  const name    = document.getElementById('prt-name').value.trim();
-  const deviceId = document.getElementById('prt-dev').value;
-  if (!name || !deviceId) { alert('Name and OMS are required.'); return; }
+  const name=document.getElementById('prt-name').value.trim();
+  const deviceId=document.getElementById('prt-dev').value;
+  if (!name||!deviceId) { alert('Name and OMS are required.'); return; }
   if (editId.printer) {
-    const p = printers.find(x=>x.id===editId.printer);
+    const p=printers.find(x=>x.id===editId.printer);
     if (p) { p.name=name; p.deviceId=deviceId; }
-  } else {
-    printers.push({ id: uid(), name, deviceId });
-  }
+  } else { printers.push({ id:uid(), name, deviceId }); }
   closeModal('printer'); refresh();
 }
-
 function doSavePrintJob() {
-  const name     = document.getElementById('pj-name').value.trim();
-  const targetId = document.getElementById('pj-target').value;
+  const name=document.getElementById('pj-name').value.trim();
+  const targetId=document.getElementById('pj-target').value;
   if (!name) { alert('Print job name is required.'); return; }
-  const conds = [];
-  document.querySelectorAll('#pj-conds .cond-row').forEach(row => {
-    const k = row.querySelector('.cr-key')?.value.trim();
-    const op = row.querySelector('.cr-op')?.value || 'IS';
-    const v = row.querySelector('.cr-val')?.value.trim();
-    if (k && v) conds.push({ key:k, op, val:v });
+  const conds=[];
+  document.querySelectorAll('#pj-conds .cond-row').forEach(row=>{
+    const k=row.querySelector('.cr-key')?.value.trim();
+    const op=row.querySelector('.cr-op')?.value||'IS';
+    const v=row.querySelector('.cr-val')?.value.trim();
+    if (k&&v) conds.push({key:k,op,val:v});
   });
   if (editId.printjob) {
-    const pj = printJobs.find(x=>x.id===editId.printjob);
+    const pj=printJobs.find(x=>x.id===editId.printjob);
     if (pj) { pj.name=name; pj.targetId=targetId; pj.conds=conds; }
-  } else {
-    printJobs.push({ id:uid(), enabled:true, name, targetId, conds });
-  }
+  } else { printJobs.push({ id:uid(), enabled:true, name, targetId, conds }); }
   closeModal('printjob'); refresh();
 }
-
 function doSaveItem() {
-  const name = document.getElementById('item-name').value.trim();
+  const name=document.getElementById('item-name').value.trim();
   if (!name) { alert('Item name is required.'); return; }
-  const omsVal = document.getElementById('item-oms').value;
-  const attrs  = {};
-  if (omsVal) attrs['OMS'] = omsVal;
-  document.querySelectorAll('#item-attrs .cond-row').forEach(row => {
-    const k = row.querySelector('.ak')?.value.trim();
-    const v = row.querySelector('.av')?.value.trim();
-    if (k) attrs[k] = v || '';
+  const omsVal=document.getElementById('item-oms').value;
+  const attrs={};
+  if (omsVal) attrs['OMS']=omsVal;
+  document.querySelectorAll('#item-attrs .cond-row').forEach(row=>{
+    const k=row.querySelector('.ak')?.value.trim();
+    const v=row.querySelector('.av')?.value.trim();
+    if (k) attrs[k]=v||'';
   });
   if (editId.item) {
-    const item = orderItems.find(x=>x.id===editId.item);
+    const item=orderItems.find(x=>x.id===editId.item);
     if (item) { item.name=name; item.attrs=attrs; }
-  } else {
-    orderItems.push({ id:uid(), name, attrs });
-  }
+  } else { orderItems.push({ id:uid(), name, attrs }); }
   closeModal('item'); renderOrderItems();
 }
 
 // ════════════════════════════════════════════════════════════
 // Utilities
 // ════════════════════════════════════════════════════════════
-function esc(s) {
-  return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
+function esc(s) { return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function refresh() { renderDeviceList(); renderPrintJobs(); renderOrderItems(); renderNetwork(); }
 
+// Fix duplicate RAF loop bug in animatePacket — redefine cleanly
+(function patchAnimatePacket(){
+  window.animatePacket = function(fromId, toId, color, onDone) {
+    const fp=nodePos[fromId], tp=nodePos[toId];
+    if (!fp||!tp) { onDone?.(); return; }
+    const pc=color==='blue'?'#5ab4ff':'#3ecf6e';
+    const fy=fromId==='router'?fp.y+30:fp.y+25;
+    const ty=devices.find(d=>d.id===toId&&d.type==='oms')?tp.y-28:tp.y-22;
+    highlightLine(`cl-${fromId}-${toId}`,color,900);
+    const layer=document.getElementById('layer-pkts');
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    c.setAttribute('r','6'); c.setAttribute('fill',pc); c.setAttribute('filter','url(#f-pkt)');
+    c.setAttribute('cx',fp.x); c.setAttribute('cy',fy);
+    layer.appendChild(c);
+    let t0=null; const dur=500;
+    requestAnimationFrame(function step(ts){
+      if(!t0)t0=ts;
+      const raw=Math.min((ts-t0)/dur,1),t=raw<0.5?2*raw*raw:-1+(4-2*raw)*raw;
+      c.setAttribute('cx',fp.x+(tp.x-fp.x)*t);
+      c.setAttribute('cy',fy+(ty-fy)*t);
+      if(raw<1) requestAnimationFrame(step);
+      else { c.remove(); onDone?.(); }
+    });
+  };
+})();
+
 document.querySelectorAll('.overlay').forEach(el =>
-  el.addEventListener('click', e => { if (e.target===el) el.classList.remove('open'); })
+  el.addEventListener('click', e=>{ if(e.target===el) el.classList.remove('open'); })
 );
-document.addEventListener('keydown', e => {
-  if (e.key==='Escape') document.querySelectorAll('.overlay.open').forEach(el=>el.classList.remove('open'));
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') document.querySelectorAll('.overlay.open').forEach(el=>el.classList.remove('open'));
 });
 
 // ════════════════════════════════════════════════════════════
-// Boot
+// Boot — start empty
 // ════════════════════════════════════════════════════════════
-initDefaults();
 refresh();
 </script>
 </body>
