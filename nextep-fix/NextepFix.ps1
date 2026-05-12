@@ -12,6 +12,9 @@ $CorrectWorkingDir     = "C:\Path\To\Nextep"
 $ClientHostnameFile    = "C:\Path\To\ClientHostnameFile"   # file that lists the expected client hostname
 $ClientUiXmlPath       = "C:\Path\To\ClientUI.xml"         # XML file with client UI details
 
+# Printer config XML (contains printers/Localbase check)
+$PrinterConfigXmlPath  = "C:\Path\To\PrinterConfig.xml"    # XML file containing the printers section
+
 # Kiosk movie autofix
 $KioskXmlPath          = "C:\Path\To\KioskConfig.xml"      # XML file containing the kiosk-movie element
 $KioskMoviePath        = "C:\Path\To\KioskMovie.mp4"        # correct value for the path attribute
@@ -159,6 +162,31 @@ function Show-ClientInfo {
         }
     } else {
         Write-Result "Client hostname file not found: $ClientHostnameFile" $false
+    }
+
+    # Localbase printer check
+    Write-Host ""
+    Write-Host "  Printer Config - Localbase:" -ForegroundColor White
+    if (Test-Path $PrinterConfigXmlPath) {
+        try {
+            [xml]$printerXml = Get-Content $PrinterConfigXmlPath -Raw
+            $localbaseNode = $printerXml.SelectSingleNode("//printers/Localbase")
+            if ($null -eq $localbaseNode) {
+                Write-Result "No <Localbase> element found under <printers>." $false
+            } else {
+                $localbaseValue = $localbaseNode.InnerText.Trim()
+                if ([string]::IsNullOrWhiteSpace($localbaseValue)) {
+                    Write-Result "Localbase is present but has no value." $false
+                } else {
+                    Write-Info "  Localbase" $localbaseValue
+                    Write-Result "Localbase value found."
+                }
+            }
+        } catch {
+            Write-Result "Failed to parse $PrinterConfigXmlPath : $_" $false
+        }
+    } else {
+        Write-Result "Printer config XML not found: $PrinterConfigXmlPath" $false
     }
 
     # Client UI details from XML
