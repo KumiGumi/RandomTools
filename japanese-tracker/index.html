@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C1 Ascent — 日本語C1トラッカー</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0b0818;
+  --bg2: #120d26;
+  --panel: #171130;
+  --panel2: #1e1740;
+  --line: #2a2050;
+  --line2: #3a2d68;
+  --text: #ded6f5;
+  --dim: #8b7fb8;
+  --dim2: #6a5f96;
+  --gold: #f4c542;
+  --pink: #ff6f9c;
+  --cyan: #52e0d0;
+  --green: #5ce08a;
+  --r-r: #7f8fb0;
+  --r-sr: #52a8ff;
+  --r-ssr: #f4c542;
+  --r-ur: #ff5fd0;
+}
+
+body {
+  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', 'Yu Gothic', 'Meiryo', system-ui, sans-serif;
+  background: var(--bg);
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, #2a1b52 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, #1a2a4a 0%, transparent 55%);
+  background-attachment: fixed;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+/* ══ Header ══ */
+header {
+  position: sticky; top: 0; z-index: 40;
+  background: rgba(11, 8, 24, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.hdr-in { display: flex; align-items: center; gap: 16px; padding: 10px 0; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.brand h1 {
+  font-size: 17px; font-weight: 800; letter-spacing: 0.5px;
+  background: linear-gradient(100deg, var(--gold), var(--pink) 60%, var(--cyan));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.brand .sub { font-size: 9px; color: var(--dim2); letter-spacing: 2px; text-transform: uppercase; }
+
+.lvl-box { flex: 1; min-width: 190px; }
+.lvl-top { display: flex; align-items: baseline; gap: 8px; font-size: 11px; color: var(--dim); }
+.lvl-num { font-size: 15px; font-weight: 800; color: var(--gold); }
+.lvl-title {
+  font-size: 11px; color: var(--pink); border: 1px solid #4a2140;
+  background: #2a1030; padding: 0 6px; border-radius: 3px;
+}
+.expbar { height: 7px; background: #241c44; border-radius: 4px; overflow: hidden; margin-top: 4px; position: relative; }
+.expbar i {
+  display: block; height: 100%; width: 0;
+  background: linear-gradient(90deg, #8a5cf0, var(--pink), var(--gold));
+  border-radius: 4px; transition: width 0.7s cubic-bezier(.2,.9,.25,1);
+}
+.expbar.flash::after {
+  content: ''; position: absolute; inset: 0; background: #fff;
+  animation: expflash 0.5s ease-out; pointer-events: none;
+}
+@keyframes expflash { 0% { opacity: 0.55 } 100% { opacity: 0 } }
+
+.wallet { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+.coin {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--panel); border: 1px solid var(--line);
+  padding: 4px 9px; border-radius: 20px; font-size: 12px; font-weight: 700;
+}
+.coin small { font-size: 9px; color: var(--dim2); font-weight: 600; }
+.coin.bump { animation: bump 0.45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes bump { 0%,100% { transform: scale(1) } 40% { transform: scale(1.22) } }
+
+/* Streak flame */
+.streak { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.flame-wrap { width: 30px; height: 34px; position: relative; }
+.flame { width: 100%; height: 100%; animation: flicker 2.2s ease-in-out infinite; transform-origin: 50% 90%; }
+@keyframes flicker {
+  0%,100% { transform: scale(1) rotate(0deg) }
+  25% { transform: scale(1.07,0.95) rotate(-2deg) }
+  60% { transform: scale(0.95,1.06) rotate(2deg) }
+}
+.streak-n { font-size: 19px; font-weight: 800; line-height: 1; }
+.streak-lbl { font-size: 9px; color: var(--dim2); letter-spacing: 1px; }
+
+/* ══ Panels ══ */
+section { margin-top: 20px; }
+.panel {
+  background: linear-gradient(180deg, var(--panel), var(--bg2));
+  border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+}
+.p-hdr {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 14px; background: #0f0a22; border-bottom: 1px solid var(--line);
+}
+.p-hdr h2 { font-size: 12px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: var(--cyan); }
+.p-hdr .jp { font-size: 11px; color: var(--dim2); letter-spacing: 1px; }
+.p-body { padding: 14px; }
+
+/* ══ Anchor tasks ══ */
+.anchor-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 0 0 12px; border-bottom: 1px dashed var(--line); margin-bottom: 14px;
+}
+.anchor-head label { font-size: 11px; color: var(--dim); letter-spacing: 1px; }
+select, input[type=number], input[type=text], input[type=month] {
+  background: #0d0920; border: 1px solid var(--line2); color: var(--text);
+  border-radius: 6px; padding: 5px 8px; font-size: 12px; font-family: inherit;
+}
+select:focus, input:focus { outline: none; border-color: var(--pink); }
+
+.tasks { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.task {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--panel2); border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px; transition: border-color .25s, background .25s;
+  position: relative; overflow: hidden;
+}
+.task.done { border-color: #2a6a44; background: linear-gradient(135deg, #12301f, #16223a); }
+.task-info { flex: 1; min-width: 0; }
+.task-name { font-weight: 700; font-size: 14px; }
+.task-desc { font-size: 11px; color: var(--dim); margin-top: 2px; }
+
+/* timer ring */
+.ring-btn {
+  width: 74px; height: 74px; flex-shrink: 0; position: relative;
+  background: none; border: none; cursor: pointer; padding: 0;
+}
+.ring-btn svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: #2a1f4e; stroke-width: 6; }
+.ring-fg { fill: none; stroke: var(--cyan); stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset .3s linear, stroke .3s; }
+.ring-btn.running .ring-fg { stroke: var(--pink); }
+.ring-btn.done .ring-fg { stroke: var(--green); }
+.ring-lbl {
+  position: absolute; inset: 0; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; pointer-events: none;
+}
+.ring-time { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.ring-act { font-size: 8px; color: var(--dim2); letter-spacing: 1px; text-transform: uppercase; }
+
+.chk {
+  width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; cursor: pointer;
+  border: 2px solid var(--line2); background: #0d0920;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; color: transparent; transition: all .2s;
+}
+.chk:hover { border-color: var(--pink); }
+.task.done .chk { background: var(--green); border-color: var(--green); color: #06210f; }
+.chk.pop { animation: pop 0.45s cubic-bezier(.3,1.7,.5,1); }
+@keyframes pop { 0% { transform: scale(1) } 45% { transform: scale(1.35) } 100% { transform: scale(1) } }
+
+.anchor-note { margin-top: 12px; font-size: 11px; color: var(--dim2); text-align: center; }
+.anchor-note b { color: var(--gold); }
+
+/* ══ Quick log ══ */
+.quick { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; padding-top: 14px; border-top: 1px dashed var(--line); }
+.btn {
+  background: var(--panel2); border: 1px solid var(--line2); color: var(--text);
+  padding: 7px 13px; border-radius: 7px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .18s;
+}
+.btn:hover:not(:disabled) { border-color: var(--pink); background: #2a1f4e; transform: translateY(-1px); }
+.btn:active:not(:disabled) { transform: translateY(0); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn.sm { padding: 4px 9px; font-size: 11px; }
+.btn.gold {
+  background: linear-gradient(135deg, #f4c542, #e08a2a); border-color: #f7d97a;
+  color: #2a1600; font-weight: 800;
+}
+.btn.gold:hover:not(:disabled) { background: linear-gradient(135deg, #ffd960, #f09a3a); }
+.btn.ghost { background: transparent; }
+
+/* ══ Weekly quotas ══ */
+.quotas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.quota { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 11px; }
+.q-top { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.q-name { font-size: 12px; font-weight: 700; }
+.q-count { font-size: 12px; font-variant-numeric: tabular-nums; color: var(--dim); }
+.q-count b { font-size: 17px; color: var(--text); }
+.q-bar { height: 9px; background: #241c44; border-radius: 5px; overflow: hidden; position: relative; }
+.q-bar i {
+  display: block; height: 100%; width: 0; border-radius: 5px;
+  transition: width .6s cubic-bezier(.2,.9,.25,1); position: relative; overflow: hidden;
+}
+.q-bar i::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  animation: shimmer 2.4s linear infinite;
+}
+@keyframes shimmer { 0% { transform: translateX(-100%) } 100% { transform: translateX(100%) } }
+.quota.full { border-color: #3a7a52; }
+.quota.full .q-name::after { content: ' ✓'; color: var(--green); }
+
+.weeks-strip { display: flex; gap: 5px; margin-top: 14px; flex-wrap: wrap; align-items: center; }
+.wk {
+  font-size: 9px; padding: 3px 7px; border-radius: 4px; letter-spacing: .5px;
+  border: 1px solid var(--line2); color: var(--dim2); background: #0d0920;
+}
+.wk.hit { border-color: #2a6a44; color: var(--green); background: #0f2418; }
+.wk.miss { border-color: #4a2436; color: #b06a80; background: #200f18; }
+.wk.now { border-color: var(--pink); color: var(--pink); background: #2a1030; font-weight: 700; }
+
+/* ══ Gacha ══ */
+.banner {
+  border-radius: 10px; padding: 16px; text-align: center; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, #2a1450, #431d5c 45%, #1b2a5c);
+  border: 1px solid #5a3a8a;
+}
+.banner::before {
+  content: ''; position: absolute; top: -60%; left: -20%; width: 140%; height: 220%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(244,197,66,.10) 22deg, transparent 44deg,
+              transparent 180deg, rgba(255,111,156,.10) 202deg, transparent 224deg);
+  animation: spin 24s linear infinite;
+}
+@keyframes spin { 100% { transform: rotate(360deg) } }
+.banner > * { position: relative; }
+.banner h3 { font-size: 17px; font-weight: 800; letter-spacing: 2px; }
+.banner .tag { font-size: 10px; color: #c9b6f0; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px; }
+.rates { font-size: 11px; color: #c9b6f0; margin-top: 6px; }
+.rates b { color: var(--gold); }
+.rates .up { color: var(--cyan); }
+.pity { font-size: 10px; color: #9a8ac0; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.pull-btns { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+
+.shop { display: flex; gap: 8px; align-items: center; justify-content: center; margin-top: 12px; flex-wrap: wrap; font-size: 11px; color: var(--dim); }
+
+/* roster */
+.roster {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(102px, 1fr));
+  gap: 9px; margin-top: 14px;
+}
+.unit {
+  border-radius: 9px; padding: 7px 5px 6px; text-align: center; cursor: default;
+  background: var(--panel2); border: 1px solid var(--line); position: relative; overflow: hidden;
+  transition: transform .18s;
+}
+.unit.owned:hover { transform: translateY(-3px); }
+.unit.locked { opacity: .62; }
+.unit svg { width: 100%; height: auto; display: block; }
+.unit .u-name { font-size: 10px; font-weight: 700; margin-top: 3px; line-height: 1.2; }
+.unit .u-stars { font-size: 9px; color: var(--gold); letter-spacing: -1px; height: 12px; }
+.unit .u-dupe {
+  position: absolute; top: 4px; right: 4px; font-size: 9px; font-weight: 800;
+  background: #0d0920; border: 1px solid var(--line2); border-radius: 9px; padding: 0 5px;
+}
+.unit.r-R { border-color: #3a4560; }
+.unit.r-SR { border-color: #2a5a8a; box-shadow: inset 0 0 22px rgba(82,168,255,.12); }
+.unit.r-SSR { border-color: #8a6a20; box-shadow: inset 0 0 22px rgba(244,197,66,.16); }
+.unit.r-UR { border-color: #8a2a70; box-shadow: inset 0 0 26px rgba(255,95,208,.20); }
+.rar-tag {
+  position: absolute; top: 4px; left: 4px; font-size: 8px; font-weight: 800;
+  letter-spacing: .5px; padding: 0 4px; border-radius: 3px; background: #0d0920;
+}
+.t-R { color: var(--r-r) } .t-SR { color: var(--r-sr) } .t-SSR { color: var(--r-ssr) } .t-UR { color: var(--r-ur) }
+
+/* ══ Records ══ */
+.two-col { display: grid; grid-template-columns: 1.35fr 1fr; gap: 16px; align-items: start; }
+.log-form { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th {
+  text-align: left; font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--dim2); padding: 5px 6px; border-bottom: 1px solid var(--line);
+}
+td { padding: 5px 6px; border-bottom: 1px solid #1e1740; }
+tbody tr:hover { background: #1a1338; }
+.chip { font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 10px; letter-spacing: .5px; }
+.c-listening { background: #0f2a3a; color: var(--cyan); }
+.c-production { background: #2a1030; color: var(--pink); }
+.c-free { background: #1a1a2e; color: var(--dim); }
+.c-boss { background: #3a2a08; color: var(--gold); }
+.del { background: none; border: none; color: #7a4a5a; cursor: pointer; font-size: 13px; padding: 0 3px; }
+.del:hover { color: #ff6f9c; }
+.empty { color: var(--dim2); font-size: 12px; text-align: center; padding: 18px; }
+
+.diag-form { display: grid; grid-template-columns: 1fr; gap: 7px; }
+.diag-row { display: flex; align-items: center; gap: 7px; justify-content: space-between; }
+.diag-row label { font-size: 11px; color: var(--dim); flex: 1; }
+.diag-row input { width: 92px; }
+.diag-row input[type=month] { width: 140px; }
+.diag-row input[type=text] { width: 140px; }
+.spark { margin-top: 12px; }
+.spark h4 { font-size: 10px; color: var(--dim2); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 3px; }
+.spark svg { width: 100%; height: 46px; display: block; }
+
+.foot { display: flex; gap: 8px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+.foot .btn { font-size: 11px; padding: 5px 10px; }
+
+/* ══ Pull overlay ══ */
+.ov {
+  position: fixed; inset: 0; z-index: 100; display: none;
+  align-items: center; justify-content: center; flex-direction: column;
+  background: rgba(6, 4, 14, 0.94); padding: 20px;
+}
+.ov.on { display: flex; }
+.ov-flash { position: fixed; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 101; }
+.ov-flash.go { animation: ovflash .6s ease-out; }
+@keyframes ovflash { 0% { opacity: .85 } 100% { opacity: 0 } }
+
+.capsule-stage { width: 200px; height: 240px; position: relative; }
+.capsule { position: absolute; left: 50%; top: 0; width: 110px; margin-left: -55px; }
+.capsule.drop { animation: drop .75s cubic-bezier(.5,.05,.6,1) forwards; }
+@keyframes drop { 0% { transform: translateY(-320px) rotate(-30deg); opacity: 0 } 70% { opacity: 1 } 100% { transform: translateY(70px) rotate(0deg); opacity: 1 } }
+.capsule.shake { animation: shake .6s ease-in-out 3; transform: translateY(70px); }
+@keyframes shake {
+  0%,100% { transform: translateY(70px) rotate(0) }
+  25% { transform: translateY(64px) rotate(-9deg) }
+  75% { transform: translateY(64px) rotate(9deg) }
+}
+.capsule.burst { animation: capburst .5s ease-out forwards; }
+@keyframes capburst { 0% { transform: translateY(70px) scale(1); opacity: 1 } 100% { transform: translateY(40px) scale(2.6); opacity: 0 } }
+
+.beam {
+  position: absolute; left: 50%; top: 50%; width: 6px; height: 0; margin-left: -3px;
+  border-radius: 3px; opacity: 0;
+}
+.beam.go { animation: beam .65s ease-out forwards; }
+@keyframes beam {
+  0% { height: 0; opacity: 0; margin-top: 0 }
+  35% { height: 300px; margin-top: -150px; opacity: 1; width: 6px; margin-left: -3px }
+  100% { height: 340px; margin-top: -170px; opacity: 0; width: 190px; margin-left: -95px }
+}
+
+.card-stage { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; max-width: 640px; }
+.pcard {
+  width: 132px; border-radius: 12px; padding: 10px 8px 8px; text-align: center;
+  background: linear-gradient(180deg, var(--panel2), #0e0a20);
+  border: 2px solid var(--line2); position: relative; overflow: hidden;
+  animation: flipin .5s cubic-bezier(.2,.9,.3,1.1) backwards;
+}
+@keyframes flipin {
+  0% { transform: rotateY(90deg) scale(.85); opacity: 0 }
+  100% { transform: rotateY(0) scale(1); opacity: 1 }
+}
+.pcard svg { width: 100%; height: auto; }
+.rays { transform-origin: 50px 50px; animation: spin 16s linear infinite; }
+.pcard .pc-name { font-size: 12px; font-weight: 800; margin-top: 4px; }
+.pcard .pc-kana { font-size: 9px; color: var(--dim2); }
+.pcard .pc-tag {
+  position: absolute; top: 6px; left: 6px; font-size: 9px; font-weight: 800;
+  padding: 0 5px; border-radius: 3px; background: #0d0920;
+}
+.pcard .pc-new {
+  position: absolute; top: 6px; right: 6px; font-size: 9px; font-weight: 800;
+  color: #2a1600; background: var(--gold); padding: 0 5px; border-radius: 3px;
+}
+.pcard .pc-note { font-size: 9px; color: var(--dim); margin-top: 3px; min-height: 22px; }
+.pcard.rr-SR { border-color: var(--r-sr); box-shadow: 0 0 22px rgba(82,168,255,.35) }
+.pcard.rr-SSR { border-color: var(--r-ssr); box-shadow: 0 0 28px rgba(244,197,66,.45) }
+.pcard.rr-UR {
+  border-color: var(--r-ur); box-shadow: 0 0 34px rgba(255,95,208,.55);
+  background: linear-gradient(180deg, #3a1040, #0e0a20);
+}
+.ov-msg { margin-top: 18px; font-size: 12px; color: var(--dim); letter-spacing: 1px; }
+.ov-title { font-size: 13px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 14px; font-weight: 800; }
+
+.confetti { position: absolute; width: 7px; height: 13px; top: 50%; left: 50%; opacity: 0; border-radius: 2px; }
+.confetti.go { animation: conf 1.5s cubic-bezier(.15,.6,.4,1) forwards; }
+@keyframes conf {
+  0% { opacity: 1; transform: translate(0,0) rotate(0deg) }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) }
+}
+
+/* ══ Toast ══ */
+.toasts { position: fixed; right: 14px; bottom: 14px; z-index: 120; display: flex; flex-direction: column; gap: 7px; align-items: flex-end; }
+.toast {
+  background: var(--panel2); border: 1px solid var(--line2); border-left: 3px solid var(--gold);
+  border-radius: 7px; padding: 8px 13px; font-size: 12px; font-weight: 600;
+  animation: tin .3s ease-out, tout .4s ease-in 3.4s forwards; max-width: 300px;
+}
+@keyframes tin { 0% { transform: translateX(40px); opacity: 0 } 100% { transform: translateX(0); opacity: 1 } }
+@keyframes tout { 100% { transform: translateX(40px); opacity: 0 } }
+
+@media (max-width: 820px) {
+  .two-col { grid-template-columns: 1fr; }
+}
+@media (max-width: 620px) {
+  .tasks { grid-template-columns: 1fr; }
+  .quotas { grid-template-columns: 1fr; }
+  .hdr-in { gap: 10px; }
+  .lvl-box { order: 3; flex-basis: 100%; }
+  .brand h1 { font-size: 15px; }
+  .p-body { padding: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap hdr-in">
+    <div class="brand">
+      <div>
+        <h1>C1 ASCENT</h1>
+        <div class="sub">日本語 C1 tracker</div>
+      </div>
+    </div>
+
+    <div class="streak">
+      <div class="flame-wrap">
+        <svg class="flame" id="flame" viewBox="0 0 30 34"></svg>
+      </div>
+      <div>
+        <div class="streak-n" id="streak-n">0</div>
+        <div class="streak-lbl">日連続</div>
+      </div>
+    </div>
+
+    <div class="lvl-box">
+      <div class="lvl-top">
+        <span>Lv.<span class="lvl-num" id="lvl">1</span></span>
+        <span class="lvl-title" id="title">見習い</span>
+        <span id="expnum" style="margin-left:auto;font-variant-numeric:tabular-nums"></span>
+      </div>
+      <div class="expbar" id="expbar"><i id="expfill"></i></div>
+    </div>
+
+    <div class="wallet">
+      <div class="coin" id="coin-t">🎫 <span id="n-tickets">0</span></div>
+      <div class="coin" id="coin-p">✨ <span id="n-premium">0</span></div>
+      <div class="coin" id="coin-s">🔷 <span id="n-shards">0</span><small>欠片</small></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ══ TODAY ══ -->
+  <section>
+    <div class="panel">
+      <div class="p-hdr">
+        <h2>Daily Anchor</h2>
+        <span class="jp">毎日 ・ 約25分 ・ 借金なし</span>
+      </div>
+      <div class="p-body">
+        <div class="anchor-head">
+          <label>本日の教材</label>
+          <select id="anchor-mat"></select>
+          <span style="margin-left:auto;font-size:11px;color:var(--dim2)" id="today-label"></span>
+        </div>
+
+        <div class="tasks">
+          <div class="task" id="task-reading">
+            <button class="ring-btn" id="ring-reading" title="タイマー開始／一時停止">
+              <svg viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="34"></circle>
+                <circle class="ring-fg" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="0"></circle>
+              </svg>
+              <span class="ring-lbl">
+                <span class="ring-time" id="time-reading">15:00</span>
+                <span class="ring-act" id="act-reading">start</span>
+              </span>
+            </button>
+            <div class="task-info">
+              <div class="task-name">硬い読解</div>
+              <div class="task-desc">15分。延長は自由、義務は15分で終わり。</div>
+            </div>
+            <div class="chk" id="chk-reading">✓</div>
+          </div>
+
+          <div class="task" id="task-ondoku">
+            <button class="ring-btn" id="ring-ondoku" title="タイマー開始／一時停止">
+              <svg viewBox="0 0 80 80">
+                <circle class="ring-bg" cx="40" cy="40" r="34"></circle>
+                <circle class="ring-fg" cx="40" cy="40" r="34" stroke-dasharray="213.6" stroke-dashoffset="0"></circle>
+              </svg>
+              <span class="ring-lbl">
+                <span class="ring-time" id="time-ondoku">10:00</span>
+                <span class="ring-act" id="act-ondoku">start</span>
+              </span>
+            </button>
+            <div class="task-info">
+              <div class="task-name">音読</div>
+              <div class="task-desc">10分。<b>昨日の</b>文章を声に出して読む。</div>
+            </div>
+            <div class="chk" id="chk-ondoku">✓</div>
+          </div>
+        </div>
+
+        <div class="anchor-note" id="anchor-note"></div>
+
+        <div class="quick">
+          <span style="font-size:11px;color:var(--dim2);align-self:center;letter-spacing:1px">フリー枠を記録 →</span>
+          <button class="btn sm" data-quick="listening" data-min="20">🎧 リスニング 20分</button>
+          <button class="btn sm" data-quick="production" data-min="15">✍️ 産出 15分</button>
+          <button class="btn sm" data-quick="free" data-min="20">🔧 フリー 20分</button>
+          <button class="btn sm" data-quick="boss" data-min="45">⚔️ 週ボス</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ WEEK ══ -->
+  <section>
+    <div class="panel">
+      <div class="p-hdr">
+        <h2>Weekly Quota</h2>
+        <span class="jp" id="week-label"></span>
+      </div>
+      <div class="p-body">
+        <div class="quotas" id="quotas"></div>
+        <div class="weeks-strip" id="weeks-strip"></div>
+        <div style="font-size:10px;color:var(--dim2);margin-top:10px">
+          未達の週は「未達」と記録して、それで終わり。<b style="color:var(--dim)">取り返しの義務は存在しない。</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ GACHA ══ -->
+  <section>
+    <div class="panel">
+      <div class="p-hdr">
+        <h2>Gacha</h2>
+        <span class="jp">継続が確率を上げる</span>
+      </div>
+      <div class="p-body">
+        <div class="banner">
+          <div class="tag">Streak Banner</div>
+          <h3>継続の書庫</h3>
+          <div class="rates" id="rates"></div>
+          <div class="pity" id="pity"></div>
+          <div class="pull-btns">
+            <button class="btn" id="pull1">🎫 1回引く</button>
+            <button class="btn gold" id="pull10">🎫 ×10 まとめて引く</button>
+            <button class="btn" id="pullp">✨ 確定SR+ 券を使う</button>
+          </div>
+        </div>
+
+        <div class="shop">
+          <span>交換所：</span>
+          <button class="btn sm" id="ex-ticket">🔷100 → 🎫1</button>
+          <button class="btn sm" id="ex-prem">🔷400 → ✨1</button>
+          <span id="collect-count" style="margin-left:auto"></span>
+        </div>
+
+        <div class="roster" id="roster"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ RECORDS ══ -->
+  <section>
+    <div class="two-col">
+      <div class="panel">
+        <div class="p-hdr">
+          <h2>Session Log</h2>
+          <span class="jp">記録</span>
+        </div>
+        <div class="p-body">
+          <div class="log-form">
+            <select id="f-cat">
+              <option value="listening">🎧 リスニング</option>
+              <option value="production">✍️ 産出</option>
+              <option value="free">🔧 フリー</option>
+              <option value="boss">⚔️ 週ボス</option>
+            </select>
+            <select id="f-mat"></select>
+            <input type="number" id="f-min" value="20" min="1" max="600" style="width:64px" title="分">
+            <span style="font-size:11px;color:var(--dim2)">分</span>
+            <button class="btn sm" id="f-add">＋ 記録</button>
+          </div>
+          <div id="log-table"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="p-hdr">
+          <h2>Monthly Diagnostic</h2>
+          <span class="jp">数字のみ</span>
+        </div>
+        <div class="p-body">
+          <div class="diag-form">
+            <div class="diag-row">
+              <label>対象月</label>
+              <input type="month" id="d-month">
+            </div>
+            <div class="diag-row">
+              <label>新書1ページの調べ回数</label>
+              <input type="number" id="d-lookups" min="0" step="0.1" placeholder="例 4.5">
+            </div>
+            <div class="diag-row">
+              <label>手書き速度（字/分）</label>
+              <input type="number" id="d-hand" min="0" placeholder="例 38">
+            </div>
+            <div class="diag-row">
+              <label>初見音読の記録名</label>
+              <input type="text" id="d-ref" placeholder="録音ファイル名など">
+            </div>
+            <button class="btn sm" id="d-save" style="margin-top:2px">診断を保存</button>
+          </div>
+          <div id="sparks"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <button class="btn ghost" id="btn-export">📤 バックアップを書き出す</button>
+    <button class="btn ghost" id="btn-import">📥 読み込む</button>
+    <input type="file" id="file-import" accept="application/json,.json" style="display:none">
+    <button class="btn ghost" id="btn-reset" style="color:#a05a70">全消去</button>
+  </div>
+</div>
+
+<div class="ov" id="ov">
+  <div class="ov-title" id="ov-title"></div>
+  <div class="capsule-stage" id="cap-stage">
+    <div class="beam" id="beam"></div>
+    <div class="capsule" id="capsule"></div>
+  </div>
+  <div class="card-stage" id="card-stage"></div>
+  <div class="ov-msg" id="ov-msg"></div>
+</div>
+<div class="ov-flash" id="ov-flash"></div>
+<div class="toasts" id="toasts"></div>
+
+<script>
+'use strict';
+
+/* ══════════════ CONSTANTS ══════════════ */
+
+const KEY = 'c1-ascent-v1';
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const QUOTAS = { listening: 3, production: 2, boss: 1 };
+const CAT_JP = { listening: 'リスニング', production: '産出', free: 'フリー', boss: '週ボス' };
+const CAT_ICON = { listening: '🎧', production: '✍️', free: '🔧', boss: '⚔️' };
+
+// Streak milestones -> tickets granted. Re-earnable on each fresh streak run.
+const MILESTONES = [[3,1],[7,1],[14,3],[30,5],[60,10],[100,10]];
+
+const ANCHOR_MATERIALS = [
+  'Steins;Gate（VN・地の文）',
+  'IPA 情報セキュリティ白書',
+  '谷脇『サイバーセキュリティ』',
+  'その他'
+];
+
+const MATERIALS = {
+  listening: ['考察・解説動画', 'CEDEC 講演', 'QuizKnock', 'VN 音声のみ', 'その他'],
+  production: ['語感対比文（形式語彙）', '2分即興スピーチ（録音）', 'その他'],
+  free: ['お笑いショート', 'ゲーム', 'マンガ／カードゲーム', '日本語Wiki沼', 'その他'],
+  boss: ['A 手書き400字（原稿用紙）', 'B 形式ばった報告書', 'C 3分即興＋書き起こし']
+};
+
+const RARITY_COLOR = { R: '#7f8fb0', SR: '#52a8ff', SSR: '#f4c542', UR: '#ff5fd0' };
+const DUPE_SHARDS = { R: 5, SR: 20, SSR: 60, UR: 150 };
+
+// acc: horn | ears | hat | wings | crown | halo | fin | none
+const UNITS = [
+  { id:'goi',    name:'語彙スライム',   kana:'ごいスライム',     rar:'R',  sigil:'語', acc:'none',  body:'#4bb98a', accent:'#a7f0cf', shape:'drip', note:'覚えた端から溶ける。' },
+  { id:'fusen',  name:'付箋トカゲ',     kana:'ふせんトカゲ',     rar:'R',  sigil:'付', acc:'fin',   body:'#e0b23c', accent:'#ffe79a', note:'貼った場所を忘れない。' },
+  { id:'furi',   name:'ふりがな妖精',   kana:'ふりがなようせい', rar:'R',  sigil:'仮', acc:'wings', body:'#e77fb0', accent:'#ffd0e6', note:'読めない漢字にそっと寄る。' },
+  { id:'timer',  name:'タイマー狸',     kana:'タイマーだぬき',   rar:'R',  sigil:'時', acc:'ears',  body:'#9a7b5a', accent:'#e0c9a8', note:'十五分で腹を打つ。' },
+  { id:'jisho',  name:'辞書ヒヨコ',     kana:'じしょヒヨコ',     rar:'R',  sigil:'辞', acc:'none',  body:'#e5c94a', accent:'#fff3b0', note:'まだ二千語しか知らない。' },
+
+  { id:'ondoku', name:'音読オニ',       kana:'おんどくオニ',     rar:'SR', sigil:'音', acc:'horn',  body:'#d4514f', accent:'#ffb0a0', note:'昨日の文章を叫ばせる。' },
+  { id:'sakuin', name:'索引フクロウ',   kana:'さくいんフクロウ', rar:'SR', sigil:'索', acc:'ears',  body:'#7a6ad0', accent:'#cfc4ff', note:'一秒で意味に辿り着く。' },
+  { id:'genkou', name:'原稿用紙ゴーレム', kana:'げんこうようしゴーレム', rar:'SR', sigil:'稿', acc:'hat', body:'#8a93a8', accent:'#dfe6f5', note:'四百のマスでできている。' },
+  { id:'shinsho',name:'新書ネズミ',     kana:'しんしょネズミ',   rar:'SR', sigil:'新', acc:'ears',  body:'#6ab0d8', accent:'#c8ecff', note:'二ヶ月で一冊かじる。' },
+  { id:'keigo',  name:'敬語キツネ',     kana:'けいごキツネ',     rar:'SR', sigil:'敬', acc:'horn',  body:'#e08a4a', accent:'#ffd2a8', note:'距離の取り方だけが上手い。' },
+
+  { id:'hakusho',name:'白書ドラゴン',   kana:'はくしょドラゴン', rar:'SSR', sigil:'白', acc:'wings', body:'#4a7ad0', accent:'#bcd8ff', note:'毎年ぶ厚くなって帰ってくる。' },
+  { id:'jodoshi',name:'助動詞の蛇',     kana:'じょどうしのへび', rar:'SSR', sigil:'助', acc:'fin',   body:'#4fc0a0', accent:'#b8f5e2', note:'べし・べからず・べかりけり。' },
+  { id:'bungo',  name:'文語の翁',       kana:'ぶんごのおきな',   rar:'SSR', sigil:'文', acc:'hat',   body:'#b08ad8', accent:'#e8d6ff', note:'口語では何も言わない。' },
+  { id:'tsuyaku',name:'逐次通訳の鶴',   kana:'ちくじつうやくのつる', rar:'SSR', sigil:'訳', acc:'wings', body:'#e8e2f0', accent:'#ffffff', note:'一拍遅れて完璧に喋る。' },
+
+  { id:'joken',  name:'条件次第',       kana:'じょうけんしだい', rar:'UR', sigil:'条', acc:'halo',  body:'#ff7fd0', accent:'#ffe0f5', note:'いつか話し相手になるかもしれない。' },
+  { id:'dokugaku',name:'完全独学の王',  kana:'かんぜんどくがくのおう', rar:'UR', sigil:'独', acc:'crown', body:'#f0c040', accent:'#fff0b8', note:'誰にも添削されずここまで来た。' }
+];
+
+const TITLES = [[1,'見習い'],[3,'音読者'],[5,'新書読み'],[8,'白書の徒'],[12,'文語遣い'],[16,'硬文の主'],[20,'条件次第']];
+
+/* ══════════════ STATE ══════════════ */
+
+function blankState() {
+  return {
+    version: 1,
+    anchor: {},        // 'YYYY-MM-DD' -> {reading:bool, ondoku:bool, material:string}
+    sessions: [],      // {id, date, category, minutes, material}
+    diagnostics: [],   // {month, lookups, hand, ref}
+    streak: { best: 0 },
+    gacha: { tickets: 1, premium: 0, shards: 0, pitySR: 0, pitySSR: 0, owned: {}, pulls: 0 },
+    claimed: { weeks: {}, milestones: {} }
+  };
+}
+
+let state = load();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return blankState();
+    const s = JSON.parse(raw);
+    return Object.assign(blankState(), s, {
+      streak: Object.assign({ best: 0 }, s.streak),
+      gacha: Object.assign(blankState().gacha, s.gacha),
+      claimed: Object.assign({ weeks: {}, milestones: {} }, s.claimed)
+    });
+  } catch (e) {
+    console.warn('state load failed, starting fresh', e);
+    return blankState();
+  }
+}
+
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(state)); }
+  catch (e) { toast('⚠️ 保存に失敗しました'); }
+}
+
+/* ══════════════ DATE HELPERS ══════════════ */
+
+const pad = n => String(n).padStart(2, '0');
+const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+const todayKey = () => dateKey(new Date());
+const monthKey = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
+
+function shiftDays(key, n) {
+  const [y, m, d] = key.split('-').map(Number);
+  const dt = new Date(y, m - 1, d + n);
+  return dateKey(dt);
+}
+
+// ISO-8601 week, Monday start.
+function weekKeyOf(d) {
+  const t = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  t.setDate(t.getDate() - ((t.getDay() + 6) % 7) + 3);   // nearest Thursday
+  const y = t.getFullYear();
+  const jan4 = new Date(y, 0, 4);
+  const thu1 = new Date(y, 0, 4 - ((jan4.getDay() + 6) % 7) + 3);
+  const wk = 1 + Math.round((t - thu1) / 604800000);
+  return `${y}-W${pad(wk)}`;
+}
+const weekKeyStr = key => { const [y, m, d] = key.split('-').map(Number); return weekKeyOf(new Date(y, m - 1, d)); };
+
+/* ══════════════ DERIVED ══════════════ */
+
+function anchorDone(key) {
+  const a = state.anchor[key];
+  return !!(a && a.reading && a.ondoku);
+}
+
+// Streak is derived by walking back from today — it can never desync.
+// Today being incomplete does not break the streak; the day isn't over yet.
+function streakInfo() {
+  let cur = 0;
+  let k = todayKey();
+  if (!anchorDone(k)) k = shiftDays(k, -1);
+  while (anchorDone(k)) { cur++; k = shiftDays(k, -1); }
+  return { current: cur, startKey: cur ? shiftDays(k, 1) : null };
+}
+
+function weekCounts(wk) {
+  const c = { listening: 0, production: 0, free: 0, boss: 0 };
+  for (const s of state.sessions) if (weekKeyStr(s.date) === wk) c[s.category]++;
+  return c;
+}
+
+function totalExp() {
+  let e = 0;
+  for (const k in state.anchor) if (anchorDone(k)) e += 30;
+  for (const s of state.sessions) {
+    if (s.category === 'boss') e += 80;
+    else if (s.category === 'production') e += Math.round(s.minutes * 1.5);
+    else if (s.category === 'free') e += Math.round(s.minutes * 0.5);
+    else e += s.minutes;
+  }
+  return e;
+}
+
+function levelInfo(exp) {
+  let lvl = 1, need = 120, rem = exp;
+  while (rem >= need) { rem -= need; lvl++; need = 120 + 40 * (lvl - 1); }
+  return { lvl, rem, need };
+}
+
+function titleFor(lvl) {
+  let t = TITLES[0][1];
+  for (const [l, name] of TITLES) if (lvl >= l) t = name;
+  return t;
+}
+
+// Streak lifts SSR+ rates: +0.5% per completed week, capped at +5%.
+function rateBonus() { return Math.min(5, Math.floor(streakInfo().current / 7) * 0.5); }
+function rates() {
+  const b = rateBonus();
+  const ur = 0.5 + b * 0.125;
+  const ssr = 3.5 + b * 0.875;
+  return { ur, ssr, sr: 20, r: 100 - ur - ssr - 20, bonus: b };
+}
+
+/* ══════════════ REWARDS ══════════════ */
+
+function grantTickets(n, kind, why) {
+  if (kind === 'premium') state.gacha.premium += n; else state.gacha.tickets += n;
+  toast(`${kind === 'premium' ? '✨ 確定SR+券' : '🎫 チケット'} ×${n} 獲得！ ${why}`);
+  bump(kind === 'premium' ? 'coin-p' : 'coin-t');
+}
+
+// Milestone claims are keyed by the streak run's start date, so a fresh
+// run after a break can earn them again. No debt, no permanent lockout.
+function checkMilestones() {
+  const { current, startKey } = streakInfo();
+  if (!startKey) return;
+  for (const [days, tix] of MILESTONES) {
+    if (current < days) continue;
+    const k = `${startKey}:${days}`;
+    if (state.claimed.milestones[k]) continue;
+    state.claimed.milestones[k] = true;
+    grantTickets(tix, 'normal', `${days}日連続！`);
+  }
+}
+
+function checkWeekQuotas() {
+  const wk = weekKeyOf(new Date());
+  const c = weekCounts(wk);
+  const done = state.claimed.weeks[wk] || (state.claimed.weeks[wk] = {});
+  if (c.listening >= QUOTAS.listening && !done.listening) {
+    done.listening = true; grantTickets(1, 'normal', 'リスニング達成');
+  }
+  if (c.production >= QUOTAS.production && !done.production) {
+    done.production = true; grantTickets(1, 'normal', '産出達成');
+  }
+  if (c.boss >= QUOTAS.boss && !done.boss) {
+    done.boss = true; grantTickets(1, 'premium', '週ボス撃破');
+  }
+}
+
+/* ══════════════ ACTIONS ══════════════ */
+
+function setAnchor(part, val) {
+  const k = todayKey();
+  const a = state.anchor[k] || (state.anchor[k] = { reading: false, ondoku: false, material: ANCHOR_MATERIALS[0] });
+  a[part] = val;
+  checkMilestones();
+  save();
+  render();
+  const chk = document.getElementById('chk-' + part);
+  if (val) { chk.classList.remove('pop'); void chk.offsetWidth; chk.classList.add('pop'); }
+}
+
+function addSession(category, minutes, material) {
+  state.sessions.push({
+    id: Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+    date: todayKey(), category, minutes, material
+  });
+  checkWeekQuotas();
+  save();
+  render(true);
+  toast(`${CAT_ICON[category]} ${CAT_JP[category]} ${minutes}分 を記録`);
+}
+
+function removeSession(id) {
+  state.sessions = state.sessions.filter(s => s.id !== id);
+  save();
+  render();   // quota tickets already granted are never clawed back
+}
+
+/* ══════════════ GACHA ══════════════ */
+
+function rollRarity(guaranteeSR) {
+  const g = state.gacha, r = rates();
+  if (g.pitySSR >= 39) return Math.random() < 0.12 ? 'UR' : 'SSR';
+  if (g.pitySR >= 9 || guaranteeSR) {
+    const x = Math.random() * (r.ur + r.ssr + r.sr);
+    return x < r.ur ? 'UR' : x < r.ur + r.ssr ? 'SSR' : 'SR';
+  }
+  const x = Math.random() * 100;
+  return x < r.ur ? 'UR' : x < r.ur + r.ssr ? 'SSR' : x < r.ur + r.ssr + r.sr ? 'SR' : 'R';
+}
+
+function doPull(guaranteeSR) {
+  const rar = rollRarity(guaranteeSR);
+  const g = state.gacha;
+  g.pulls++;
+  g.pitySR = (rar === 'R') ? g.pitySR + 1 : 0;
+  g.pitySSR = (rar === 'SSR' || rar === 'UR') ? 0 : g.pitySSR + 1;
+
+  const pool = UNITS.filter(u => u.rar === rar);
+  const unit = pool[Math.floor(Math.random() * pool.length)];
+  const own = g.owned[unit.id];
+  let isNew = false, stars = 1, shards = 0;
+
+  if (!own) {
+    g.owned[unit.id] = { count: 1, stars: 1 };
+    isNew = true;
+  } else {
+    own.count++;
+    if (own.stars < 5) own.stars++;
+    else { shards = DUPE_SHARDS[rar]; g.shards += shards; }
+    stars = own.stars;
+  }
+  return { unit, rar, isNew, stars, shards };
+}
+
+function pull(n, usePremium) {
+  const g = state.gacha;
+  if (usePremium) {
+    if (g.premium < 1) return toast('✨ 確定券がありません');
+    g.premium--;
+  } else {
+    if (g.tickets < n) return toast('🎫 チケットが足りません');
+    g.tickets -= n;
+  }
+  const results = [];
+  for (let i = 0; i < n; i++) results.push(doPull(usePremium && i === 0));
+  save();
+  playPull(results);
+}
+
+const RANK = { R: 0, SR: 1, SSR: 2, UR: 3 };
+
+function playPull(results) {
+  const best = results.reduce((a, b) => RANK[b.rar] > RANK[a.rar] ? b : a).rar;
+  const ov = document.getElementById('ov');
+  const stage = document.getElementById('cap-stage');
+  const cardStage = document.getElementById('card-stage');
+  const capsule = document.getElementById('capsule');
+  const beam = document.getElementById('beam');
+
+  cardStage.innerHTML = '';
+  stage.style.display = '';
+  document.getElementById('ov-title').textContent = results.length > 1 ? '10 PULL' : 'PULL';
+  document.getElementById('ov-msg').textContent = '';
+  capsule.innerHTML = capsuleSvg(best);
+  capsule.className = 'capsule';
+  beam.className = 'beam';
+  beam.style.background = `linear-gradient(180deg, transparent, ${RARITY_COLOR[best]}, #fff, ${RARITY_COLOR[best]}, transparent)`;
+  ov.classList.add('on');
+
+  const T = REDUCED ? 0.12 : 1;
+  const seq = [];
+  const at = (ms, fn) => seq.push(setTimeout(fn, ms * T));
+
+  capsule.classList.add('drop');
+  at(760, () => { capsule.classList.remove('drop'); capsule.classList.add('shake'); });
+  at(2560, () => {
+    capsule.classList.remove('shake');
+    capsule.classList.add('burst');
+    beam.classList.add('go');
+    if (RANK[best] >= 2) {
+      const f = document.getElementById('ov-flash');
+      f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+      confetti(RANK[best] === 3 ? 46 : 30);
+    }
+  });
+  at(3150, () => {
+    stage.style.display = 'none';
+    results.forEach((res, i) => {
+      const c = document.createElement('div');
+      c.className = `pcard rr-${res.rar}`;
+      c.style.animationDelay = `${i * 90 * T}ms`;
+      c.innerHTML =
+        `<span class="pc-tag t-${res.rar}">${res.rar}</span>` +
+        (res.isNew ? '<span class="pc-new">NEW</span>' : '') +
+        unitSvg(res.unit, true) +
+        `<div class="pc-name">${res.unit.name}</div>` +
+        `<div class="pc-kana">${res.unit.kana}</div>` +
+        `<div class="u-stars">${'★'.repeat(res.stars)}</div>` +
+        `<div class="pc-note">${res.isNew ? res.unit.note : (res.shards ? `🔷 欠片 +${res.shards}` : `☆ 星が上がった`)}</div>`;
+      cardStage.appendChild(c);
+    });
+    document.getElementById('ov-msg').textContent = 'クリックで閉じる';
+    render(true);
+  });
+
+  ov.onclick = () => {
+    seq.forEach(clearTimeout);
+    ov.classList.remove('on');
+    ov.onclick = null;
+    render();
+  };
+}
+
+function confetti(n) {
+  const stage = document.getElementById('ov');
+  const colors = ['#f4c542', '#ff6f9c', '#52e0d0', '#8a5cf0', '#ffffff'];
+  for (let i = 0; i < n; i++) {
+    const d = document.createElement('div');
+    d.className = 'confetti go';
+    d.style.background = colors[i % colors.length];
+    d.style.setProperty('--tx', (Math.random() * 660 - 330) + 'px');
+    d.style.setProperty('--ty', (Math.random() * 420 - 120) + 'px');
+    d.style.setProperty('--rot', (Math.random() * 900 - 450) + 'deg');
+    d.style.animationDelay = (Math.random() * 0.25) + 's';
+    stage.appendChild(d);
+    setTimeout(() => d.remove(), 2200);
+  }
+}
+
+/* ══════════════ SVG ART ══════════════ */
+
+// One shared creature template, parameterized per unit. Keeps 16 units
+// visually coherent without a single external asset.
+const BODY = {
+  def:  'M50 16 C71 16 81 33 81 51 C81 72 68 84 50 84 C32 84 19 72 19 51 C19 33 29 16 50 16Z',
+  drip: 'M50 16 C71 16 81 33 81 51 C81 64 77 74 69 79 C64 82 60 75 55 79 C51 82 47 82 43 79 C38 75 33 82 28 78 C22 73 19 63 19 51 C19 33 29 16 50 16Z'
+};
+
+function unitSvg(u, big) {
+  const glow = big ? `<ellipse cx="50" cy="52" rx="42" ry="42" fill="${u.body}" opacity=".16"/>` : '';
+  // Sunburst sits behind the body, so only the halo outside the silhouette shows.
+  const rays = (big && RANK[u.rar] >= 2)
+    ? `<g class="rays" opacity=".36">` + Array.from({ length: 14 }, (_, i) =>
+        `<path d="M50 50 L46.6 2 L53.4 2Z" fill="${RARITY_COLOR[u.rar]}" transform="rotate(${i * 25.7} 50 50)"/>`
+      ).join('') + `</g>` : '';
+  return `<svg viewBox="0 0 100 100" role="img" aria-label="${u.name}">
+    ${glow}${rays}
+    ${accessory(u, 'back')}
+    <path d="${BODY[u.shape] || BODY.def}" fill="${u.body}"/>
+    <path d="M50 16 C71 16 81 33 81 51 C81 60 78 67 73 72 C70 50 62 38 45 33 C40 31 36 26 38 20 C42 17 46 16 50 16Z"
+          fill="${u.accent}" opacity=".38"/>
+    ${accessory(u, 'front')}
+    <ellipse cx="39" cy="50" rx="7" ry="8.5" fill="#fff"/>
+    <ellipse cx="61" cy="50" rx="7" ry="8.5" fill="#fff"/>
+    <circle cx="40" cy="51.5" r="3.6" fill="#14102a"/>
+    <circle cx="62" cy="51.5" r="3.6" fill="#14102a"/>
+    <circle cx="41.6" cy="49.6" r="1.3" fill="#fff"/>
+    <circle cx="63.6" cy="49.6" r="1.3" fill="#fff"/>
+    <path d="M44 65 Q50 70 56 65" stroke="#14102a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <circle cx="77" cy="77" r="12" fill="#0d0920" stroke="${RARITY_COLOR[u.rar]}" stroke-width="1.6"/>
+    <text x="77" y="82" font-size="13" text-anchor="middle" fill="${RARITY_COLOR[u.rar]}"
+          font-family="'Hiragino Mincho ProN','Yu Mincho',serif">${u.sigil}</text>
+  </svg>`;
+}
+
+function accessory(u, layer) {
+  const b = u.body, a = u.accent;
+  if (layer === 'back') {
+    // Back-layer parts must clear the body silhouette (x 19–81, y 16–84) to read at all.
+    if (u.acc === 'wings') return `
+      <path d="M28 38 C6 22 0 44 9 55 C15 62 24 58 30 52Z" fill="${a}"/>
+      <path d="M72 38 C94 22 100 44 91 55 C85 62 76 58 70 52Z" fill="${a}"/>
+      <path d="M26 43 C13 35 7 45 13 52" fill="none" stroke="${b}" stroke-width="1.4" opacity=".45"/>
+      <path d="M74 43 C87 35 93 45 87 52" fill="none" stroke="${b}" stroke-width="1.4" opacity=".45"/>`;
+    if (u.acc === 'fin') return `
+      <path d="M50 1 L58 21 L42 21Z" fill="${a}"/>
+      <path d="M31 9 L40 23 L25 25Z" fill="${a}" opacity=".8"/>
+      <path d="M69 9 L60 23 L75 25Z" fill="${a}" opacity=".8"/>`;
+    if (u.acc === 'halo') return `<ellipse cx="50" cy="9" rx="20" ry="6.5" fill="none" stroke="${a}" stroke-width="3.4"/>`;
+    return '';
+  }
+  if (u.acc === 'horn') return `<path d="M31 22 L26 6 L41 17Z" fill="${a}"/><path d="M69 22 L74 6 L59 17Z" fill="${a}"/>`;
+  if (u.acc === 'ears') return `<ellipse cx="28" cy="20" rx="9" ry="12" fill="${b}"/><ellipse cx="72" cy="20" rx="9" ry="12" fill="${b}"/>
+      <ellipse cx="28" cy="21" rx="4" ry="6" fill="${a}"/><ellipse cx="72" cy="21" rx="4" ry="6" fill="${a}"/>`;
+  if (u.acc === 'hat') return `<rect x="30" y="6" width="40" height="14" rx="2" fill="${a}"/><rect x="24" y="19" width="52" height="4" rx="2" fill="${a}"/>
+      <path d="M30 6h40v14H30z" fill="none" stroke="${b}" stroke-width="1" opacity=".6"/>
+      <path d="M50 6v14M30 13h40" stroke="${b}" stroke-width="1" opacity=".6"/>`;
+  if (u.acc === 'crown') return `<path d="M28 20 L28 6 L38 14 L50 3 L62 14 L72 6 L72 20Z" fill="${a}" stroke="#8a6a10" stroke-width="1"/>`;
+  return '';
+}
+
+function capsuleSvg(rar) {
+  const c = RARITY_COLOR[rar];
+  return `<svg viewBox="0 0 100 100">
+    <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="${c}"/>
+    </linearGradient></defs>
+    <path d="M50 8 A42 42 0 0 1 92 50 L8 50 A42 42 0 0 1 50 8Z" fill="url(#cg)"/>
+    <path d="M8 50 L92 50 A42 42 0 0 1 8 50Z" fill="#221a44"/>
+    <rect x="6" y="46" width="88" height="9" rx="4" fill="#0d0920"/>
+    <ellipse cx="34" cy="28" rx="12" ry="8" fill="#fff" opacity=".55"/>
+  </svg>`;
+}
+
+function flameSvg(streak) {
+  if (streak <= 0) return `<path d="M15 30 C9 30 7 25 9 21 C11 25 13 24 13 21 C13 17 15 14 15 14 C15 14 17 17 17 21 C17 24 19 25 21 21 C23 25 21 30 15 30Z" fill="#3a3358"/>`;
+  const t = streak >= 30 ? ['#ff5fd0', '#f4c542', '#fff'] :
+            streak >= 14 ? ['#4a9cff', '#8fd8ff', '#fff'] :
+            streak >= 7 ? ['#ff6a2a', '#f4c542', '#fff6c0'] :
+                          ['#e05a30', '#f0a030', '#ffe0a0'];
+  const s = streak >= 30 ? 1 : streak >= 14 ? 0.94 : streak >= 7 ? 0.88 : 0.78;
+  return `<g transform="translate(15,33) scale(${s}) translate(-15,-33)">
+    <path d="M15 33 C5 33 2 25 5.5 18 C7 22 10 22.5 9.5 18 C9 12 15 4 15 4 C15 4 21 12 20.5 18 C20 22.5 23 22 24.5 18 C28 25 25 33 15 33Z" fill="${t[0]}"/>
+    <path d="M15 33 C9 33 7 27 9 22 C10 25 12 25 12 22 C12 17 15 11 15 11 C15 11 18 17 18 22 C18 25 20 25 21 22 C23 27 21 33 15 33Z" fill="${t[1]}"/>
+    <path d="M15 32 C12 32 11 28 12.5 25 C13 27 15 27.5 15 25 C15 22 15 19 15 19 C15 19 18 23 17.5 26 C17 29 18 32 15 32Z" fill="${t[2]}"/>
+  </g>`;
+}
+
+/* ══════════════ TIMERS ══════════════ */
+
+const CIRC = 213.6;
+const timers = {
+  reading: { total: 900, left: 900, endAt: null },
+  ondoku:  { total: 600, left: 600, endAt: null }
+};
+
+function toggleTimer(name) {
+  const t = timers[name];
+  if (t.endAt) { t.left = Math.max(0, Math.round((t.endAt - Date.now()) / 1000)); t.endAt = null; }
+  else {
+    if (t.left <= 0) t.left = t.total;
+    t.endAt = Date.now() + t.left * 1000;
+  }
+  paintTimer(name);
+}
+
+function tickTimers() {
+  for (const name in timers) {
+    const t = timers[name];
+    if (!t.endAt) continue;
+    const left = Math.max(0, Math.round((t.endAt - Date.now()) / 1000));
+    if (left !== t.left) { t.left = left; paintTimer(name); }
+    if (left === 0) {
+      t.endAt = null;
+      paintTimer(name);
+      toast(`⏱ ${name === 'reading' ? '硬い読解' : '音読'} 完了！`);
+      const a = state.anchor[todayKey()];
+      if (!a || !a[name]) setAnchor(name, true);
+    }
+  }
+}
+
+function paintTimer(name) {
+  const t = timers[name];
+  const btn = document.getElementById('ring-' + name);
+  const running = !!t.endAt;
+  const left = running ? Math.max(0, Math.round((t.endAt - Date.now()) / 1000)) : t.left;
+  const done = state.anchor[todayKey()] && state.anchor[todayKey()][name];
+  btn.classList.toggle('running', running);
+  btn.classList.toggle('done', !!done && !running);
+  document.getElementById('time-' + name).textContent = `${pad(Math.floor(left / 60))}:${pad(left % 60)}`;
+  document.getElementById('act-' + name).textContent = running ? 'pause' : (left < t.total ? 'resume' : 'start');
+  btn.querySelector('.ring-fg').style.strokeDashoffset = CIRC * (left / t.total);
+}
+
+/* ══════════════ RENDER ══════════════ */
+
+let lastExpPct = -1;
+
+function render(animate) {
+  const st = streakInfo();
+  state.streak.best = Math.max(state.streak.best || 0, st.current);
+
+  // ── header
+  const exp = totalExp();
+  const li = levelInfo(exp);
+  document.getElementById('lvl').textContent = li.lvl;
+  document.getElementById('title').textContent = titleFor(li.lvl);
+  document.getElementById('expnum').textContent = `${li.rem} / ${li.need} EXP`;
+  const pct = (li.rem / li.need) * 100;
+  document.getElementById('expfill').style.width = pct + '%';
+  if (animate && pct !== lastExpPct) {
+    const bar = document.getElementById('expbar');
+    bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash');
+  }
+  lastExpPct = pct;
+
+  document.getElementById('streak-n').textContent = st.current;
+  document.getElementById('streak-n').style.color =
+    st.current >= 30 ? 'var(--r-ur)' : st.current >= 14 ? '#6ab8ff' : st.current >= 7 ? 'var(--gold)' : st.current > 0 ? '#ff8a4a' : 'var(--dim2)';
+  document.getElementById('flame').innerHTML = flameSvg(st.current);
+  document.getElementById('n-tickets').textContent = state.gacha.tickets;
+  document.getElementById('n-premium').textContent = state.gacha.premium;
+  document.getElementById('n-shards').textContent = state.gacha.shards;
+
+  // ── anchor
+  const tk = todayKey();
+  const a = state.anchor[tk] || { reading: false, ondoku: false, material: ANCHOR_MATERIALS[0] };
+  document.getElementById('task-reading').classList.toggle('done', !!a.reading);
+  document.getElementById('task-ondoku').classList.toggle('done', !!a.ondoku);
+  document.getElementById('anchor-mat').value = a.material || ANCHOR_MATERIALS[0];
+  const now = new Date();
+  document.getElementById('today-label').textContent =
+    `${now.getMonth() + 1}月${now.getDate()}日（${'日月火水木金土'[now.getDay()]}）`;
+  paintTimer('reading'); paintTimer('ondoku');
+
+  const note = document.getElementById('anchor-note');
+  if (anchorDone(tk)) {
+    const nextMs = MILESTONES.find(m => m[0] > st.current);
+    note.innerHTML = nextMs
+      ? `本日のアンカー達成。次の節目は <b>${nextMs[0]}日</b>（あと ${nextMs[0] - st.current} 日 → 🎫×${nextMs[1]}）`
+      : `本日のアンカー達成。<b>${st.current}日連続</b> — 節目は全部踏破。`;
+  } else {
+    note.innerHTML = `アンカーは<b>読解＋音読の両方</b>で1日ぶん。連続記録は明日の終わりまで途切れない。`;
+  }
+
+  // ── week
+  const wk = weekKeyOf(now);
+  document.getElementById('week-label').textContent = wk.replace('-W', ' 第') + '週';
+  const c = weekCounts(wk);
+  document.getElementById('quotas').innerHTML = ['listening', 'production', 'boss'].map(cat => {
+    const need = QUOTAS[cat], have = c[cat], p = Math.min(100, (have / need) * 100);
+    const col = cat === 'listening' ? 'var(--cyan)' : cat === 'production' ? 'var(--pink)' : 'var(--gold)';
+    return `<div class="quota ${have >= need ? 'full' : ''}">
+      <div class="q-top">
+        <span class="q-name">${CAT_ICON[cat]} ${CAT_JP[cat]}</span>
+        <span class="q-count"><b>${have}</b> / ${need}</span>
+      </div>
+      <div class="q-bar"><i style="width:${p}%;background:${col}"></i></div>
+    </div>`;
+  }).join('');
+
+  const strip = [];
+  for (let i = 7; i >= 0; i--) {
+    const d = new Date(now); d.setDate(d.getDate() - i * 7);
+    const k = weekKeyOf(d), cc = weekCounts(k);
+    const hit = cc.listening >= QUOTAS.listening && cc.production >= QUOTAS.production && cc.boss >= QUOTAS.boss;
+    const touched = cc.listening + cc.production + cc.boss + cc.free > 0 || hasAnyActivity(k);
+    // Untouched past weeks stay neutral — nothing to make up, nothing to shame.
+    const cls = i === 0 ? 'now' : hit ? 'hit' : touched ? 'miss' : '';
+    const label = i === 0 ? '進行中' : hit ? '達成' : touched ? '未達' : '—';
+    strip.push(`<span class="wk ${cls}" title="${k}｜🎧${cc.listening} ✍️${cc.production} ⚔️${cc.boss}">${k.split('W')[1]}週 ${label}</span>`);
+  }
+  document.getElementById('weeks-strip').innerHTML =
+    '<span style="font-size:9px;color:var(--dim2);letter-spacing:1px;margin-right:3px">直近8週</span>' + strip.join('');
+
+  // ── gacha
+  const r = rates();
+  document.getElementById('rates').innerHTML =
+    `SSR <b>${r.ssr.toFixed(2)}%</b>　UR <b>${r.ur.toFixed(2)}%</b>　SR ${r.sr}%` +
+    (r.bonus > 0 ? ` <span class="up">（連続ボーナス +${r.bonus.toFixed(1)}%）</span>` : ' <span style="color:var(--dim2)">（7日連続ごとに +0.5%）</span>');
+  document.getElementById('pity').textContent =
+    `天井：あと ${10 - state.gacha.pitySR} 回でSR+確定 ・ あと ${40 - state.gacha.pitySSR} 回でSSR確定 ・ 累計 ${state.gacha.pulls} 回`;
+  document.getElementById('pull1').disabled = state.gacha.tickets < 1;
+  document.getElementById('pull10').disabled = state.gacha.tickets < 10;
+  document.getElementById('pullp').disabled = state.gacha.premium < 1;
+  document.getElementById('ex-ticket').disabled = state.gacha.shards < 100;
+  document.getElementById('ex-prem').disabled = state.gacha.shards < 400;
+
+  const ownedN = Object.keys(state.gacha.owned).length;
+  document.getElementById('collect-count').innerHTML =
+    `図鑑 <b style="color:var(--text)">${ownedN}</b> / ${UNITS.length}`;
+
+  document.getElementById('roster').innerHTML = UNITS.map(u => {
+    const o = state.gacha.owned[u.id];
+    if (!o) {
+      return `<div class="unit locked r-${u.rar}">
+        <span class="rar-tag t-${u.rar}">${u.rar}</span>
+        <svg viewBox="0 0 100 100"><path d="${BODY[u.shape] || BODY.def}" fill="#332a5c"/></svg>
+        <div class="u-name" style="color:var(--dim2)">？？？</div><div class="u-stars"></div></div>`;
+    }
+    return `<div class="unit owned r-${u.rar}" title="${u.note}">
+      <span class="rar-tag t-${u.rar}">${u.rar}</span>
+      ${o.count > 1 ? `<span class="u-dupe">×${o.count}</span>` : ''}
+      ${unitSvg(u, false)}
+      <div class="u-name">${u.name}</div>
+      <div class="u-stars">${'★'.repeat(o.stars)}</div>
+    </div>`;
+  }).join('');
+
+  // ── log
+  const rows = state.sessions.slice()
+    .sort((a, b) => a.date === b.date ? (a.id < b.id ? 1 : -1) : (a.date < b.date ? 1 : -1))
+    .slice(0, 25);
+  document.getElementById('log-table').innerHTML = rows.length ? `<table>
+    <thead><tr><th>日付</th><th>種別</th><th>分</th><th>教材</th><th></th></tr></thead>
+    <tbody>${rows.map(s => `<tr>
+      <td style="color:var(--dim);font-variant-numeric:tabular-nums">${s.date.slice(5)}</td>
+      <td><span class="chip c-${s.category}">${CAT_ICON[s.category]} ${CAT_JP[s.category]}</span></td>
+      <td style="font-variant-numeric:tabular-nums">${s.minutes}</td>
+      <td style="color:var(--dim);font-size:11px">${esc(s.material || '')}</td>
+      <td style="text-align:right"><button class="del" data-del="${s.id}" title="削除">✕</button></td>
+    </tr>`).join('')}</tbody></table>`
+    : '<div class="empty">まだ記録なし。上のクイックボタンか、この行から追加。</div>';
+
+  // ── diagnostics
+  document.getElementById('sparks').innerHTML = sparkHtml();
+}
+
+function hasAnyActivity(wk) {
+  for (const k in state.anchor) if (weekKeyStr(k) === wk && anchorDone(k)) return true;
+  return false;
+}
+
+function sparkHtml() {
+  const ds = state.diagnostics.slice().sort((a, b) => a.month < b.month ? -1 : 1);
+  if (!ds.length) return '<div class="empty">月末に3つの数字を入れると推移が出る。</div>';
+  const mk = (label, get, color, lowerBetter) => {
+    const pts = ds.filter(d => typeof get(d) === 'number' && !isNaN(get(d)));
+    if (pts.length === 0) return '';
+    const vals = pts.map(get);
+    const min = Math.min(...vals), max = Math.max(...vals), span = (max - min) || 1;
+    const n = pts.length;
+    const x = i => n === 1 ? 50 : 4 + (i / (n - 1)) * 92;
+    const y = v => 40 - ((v - min) / span) * 32;
+    const line = pts.map((p, i) => `${x(i)},${y(get(p))}`).join(' ');
+    const dots = pts.map((p, i) => `<circle cx="${x(i)}" cy="${y(get(p))}" r="2.4" fill="${color}"><title>${p.month}: ${get(p)}</title></circle>`).join('');
+    const first = vals[0], last = vals[n - 1];
+    const better = lowerBetter ? last < first : last > first;
+    const delta = n > 1 ? `<span style="color:${better ? 'var(--green)' : 'var(--dim)'}">${last > first ? '+' : ''}${(last - first).toFixed(1)}</span>` : '';
+    return `<div class="spark"><h4>${label} <span style="float:right">${last} ${delta}</span></h4>
+      <svg viewBox="0 0 100 46" preserveAspectRatio="none">
+        <polyline points="${line}" fill="none" stroke="${color}" stroke-width="1.6" vector-effect="non-scaling-stroke"/>
+        ${dots}
+      </svg></div>`;
+  };
+  return mk('調べ回数 / 新書1ページ（少ないほど良い）', d => d.lookups, '#52e0d0', true)
+       + mk('手書き速度（字/分）', d => d.hand, '#ff6f9c', false);
+}
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ══════════════ UI PLUMBING ══════════════ */
+
+function toast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(() => t.remove(), 4000);
+}
+
+function bump(id) {
+  const el = document.getElementById(id);
+  el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
+}
+
+function fillMaterials() {
+  document.getElementById('anchor-mat').innerHTML =
+    ANCHOR_MATERIALS.map(m => `<option>${m}</option>`).join('');
+  syncMatSelect();
+}
+
+function syncMatSelect() {
+  const cat = document.getElementById('f-cat').value;
+  document.getElementById('f-mat').innerHTML =
+    MATERIALS[cat].map(m => `<option>${m}</option>`).join('');
+  document.getElementById('f-min').value = cat === 'boss' ? 45 : cat === 'production' ? 15 : 20;
+}
+
+document.getElementById('chk-reading').onclick = () => setAnchor('reading', !(state.anchor[todayKey()] || {}).reading);
+document.getElementById('chk-ondoku').onclick = () => setAnchor('ondoku', !(state.anchor[todayKey()] || {}).ondoku);
+document.getElementById('ring-reading').onclick = () => toggleTimer('reading');
+document.getElementById('ring-ondoku').onclick = () => toggleTimer('ondoku');
+
+document.getElementById('anchor-mat').onchange = e => {
+  const k = todayKey();
+  const a = state.anchor[k] || (state.anchor[k] = { reading: false, ondoku: false });
+  a.material = e.target.value;
+  save();
+};
+
+document.querySelectorAll('[data-quick]').forEach(b => {
+  b.onclick = () => {
+    const cat = b.dataset.quick;
+    addSession(cat, Number(b.dataset.min), MATERIALS[cat][0]);
+  };
+});
+
+document.getElementById('f-cat').onchange = syncMatSelect;
+document.getElementById('f-add').onclick = () => {
+  const cat = document.getElementById('f-cat').value;
+  const min = Math.max(1, Math.min(600, Number(document.getElementById('f-min').value) || 1));
+  addSession(cat, min, document.getElementById('f-mat').value);
+};
+
+document.getElementById('log-table').addEventListener('click', e => {
+  const id = e.target.dataset && e.target.dataset.del;
+  if (id) removeSession(id);
+});
+
+document.getElementById('pull1').onclick = () => pull(1, false);
+document.getElementById('pull10').onclick = () => pull(10, false);
+document.getElementById('pullp').onclick = () => pull(1, true);
+
+document.getElementById('ex-ticket').onclick = () => {
+  if (state.gacha.shards < 100) return;
+  state.gacha.shards -= 100; state.gacha.tickets += 1;
+  save(); render(); bump('coin-t'); toast('🎫 チケットと交換した');
+};
+document.getElementById('ex-prem').onclick = () => {
+  if (state.gacha.shards < 400) return;
+  state.gacha.shards -= 400; state.gacha.premium += 1;
+  save(); render(); bump('coin-p'); toast('✨ 確定SR+券と交換した');
+};
+
+document.getElementById('d-save').onclick = () => {
+  const m = document.getElementById('d-month').value;
+  if (!m) return toast('対象月を選んでください');
+  const rec = {
+    month: m,
+    lookups: numOrNull(document.getElementById('d-lookups').value),
+    hand: numOrNull(document.getElementById('d-hand').value),
+    ref: document.getElementById('d-ref').value.trim()
+  };
+  const i = state.diagnostics.findIndex(d => d.month === m);
+  if (i >= 0) state.diagnostics[i] = rec; else state.diagnostics.push(rec);
+  save(); render();
+  toast('📊 ' + m + ' の診断を保存');
+};
+const numOrNull = v => v === '' ? null : Number(v);
+
+document.getElementById('btn-export').onclick = () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `c1-ascent-${todayKey()}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+};
+document.getElementById('btn-import').onclick = () => document.getElementById('file-import').click();
+document.getElementById('file-import').onchange = e => {
+  const f = e.target.files[0];
+  if (!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const s = JSON.parse(rd.result);
+      if (!s || typeof s !== 'object' || !('gacha' in s)) throw new Error('形式が違います');
+      state = Object.assign(blankState(), s, {
+        streak: Object.assign({ best: 0 }, s.streak),
+        gacha: Object.assign(blankState().gacha, s.gacha),
+        claimed: Object.assign({ weeks: {}, milestones: {} }, s.claimed)
+      });
+      save(); render();
+      toast('📥 読み込み完了');
+    } catch (err) { toast('⚠️ 読み込み失敗：' + err.message); }
+  };
+  rd.readAsText(f);
+  e.target.value = '';
+};
+document.getElementById('btn-reset').onclick = () => {
+  if (!confirm('すべての記録・図鑑・チケットを消します。よろしいですか？')) return;
+  state = blankState();
+  save(); render();
+  toast('初期化しました');
+};
+
+/* ══════════════ BOOT ══════════════ */
+
+fillMaterials();
+document.getElementById('d-month').value = monthKey(new Date());
+checkMilestones();
+checkWeekQuotas();
+save();
+render();
+setInterval(tickTimers, 250);
+</script>
+</body>
+</html>
