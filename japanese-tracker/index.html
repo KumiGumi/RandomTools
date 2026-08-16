@@ -670,27 +670,84 @@ const MATERIALS = {
 const RARITY_COLOR = { R: '#7f8fb0', SR: '#52a8ff', SSR: '#f4c542', UR: '#ff5fd0' };
 const DUPE_SHARDS = { R: 5, SR: 20, SSR: 60, UR: 150 };
 
-// acc: horn | ears | hat | wings | crown | halo | fin | none
+// Each unit is a row of art keys, not bespoke path data.
+//   body/accent = hair + highlight (also drive the card glow and rarity aura)
+//   hair   = back-hair silhouette : bob | long | hime | twin | pony | wild | flow
+//   bangs  = fringe               : straight | split | side | blunt | spiky | curtain
+//   outfit = collar/torso         : sailor | hoodie | dress | kimono | cape | grid |
+//                                   hakama | armor | drape | robe | suit | ethereal | regalia
+//   acc    = signature            : droplet | notes | wings | tanuki | glasses | horns |
+//                                   owl | gridclip | mouse | fox | dragon | snake | brush |
+//                                   headset | halo | crown
+//   expr   = mouth + brows        : smile | calm | smug | sleepy | shout
 const UNITS = [
-  { id:'goi',    name:'語彙スライム',   kana:'ごいスライム',     rar:'R',  sigil:'語', acc:'none',  body:'#4bb98a', accent:'#a7f0cf', shape:'drip', note:'覚えた端から溶ける。' },
-  { id:'fusen',  name:'付箋トカゲ',     kana:'ふせんトカゲ',     rar:'R',  sigil:'付', acc:'fin',   body:'#e0b23c', accent:'#ffe79a', note:'貼った場所を忘れない。' },
-  { id:'furi',   name:'ふりがな妖精',   kana:'ふりがなようせい', rar:'R',  sigil:'仮', acc:'wings', body:'#e77fb0', accent:'#ffd0e6', note:'読めない漢字にそっと寄る。' },
-  { id:'timer',  name:'タイマー狸',     kana:'タイマーだぬき',   rar:'R',  sigil:'時', acc:'ears',  body:'#9a7b5a', accent:'#e0c9a8', note:'十五分で腹を打つ。' },
-  { id:'jisho',  name:'辞書ヒヨコ',     kana:'じしょヒヨコ',     rar:'R',  sigil:'辞', acc:'none',  body:'#e5c94a', accent:'#fff3b0', note:'まだ二千語しか知らない。' },
+  { id:'goi',    name:'語彙スライム',   kana:'ごいスライム',     rar:'R',  sigil:'語',
+    body:'#4bb98a', accent:'#a7f0cf', hair2:'#2e8f66', eye:'#3fd8a8', skin:'#ffe2d0',
+    hair:'bob',  bangs:'split',    outfit:'hoodie',   acc:'droplet',  expr:'smile',
+    note:'覚えた端から溶ける。' },
+  { id:'fusen',  name:'付箋トカゲ',     kana:'ふせんトカゲ',     rar:'R',  sigil:'付',
+    body:'#e0b23c', accent:'#ffe79a', hair2:'#a8801f', eye:'#ffd24a', skin:'#ffe0c8',
+    hair:'bob',  bangs:'spiky',    outfit:'sailor',   acc:'notes',    expr:'smug',
+    note:'貼った場所を忘れない。' },
+  { id:'furi',   name:'ふりがな妖精',   kana:'ふりがなようせい', rar:'R',  sigil:'仮',
+    body:'#e77fb0', accent:'#ffd0e6', hair2:'#b25585', eye:'#ff9ec8', skin:'#ffe6da',
+    hair:'twin', bangs:'straight', outfit:'dress',    acc:'wings',    expr:'smile',
+    note:'読めない漢字にそっと寄る。' },
+  { id:'timer',  name:'タイマー狸',     kana:'タイマーだぬき',   rar:'R',  sigil:'時',
+    body:'#9a7b5a', accent:'#e0c9a8', hair2:'#6b5238', eye:'#c89a5a', skin:'#ffdcc2',
+    hair:'bob',  bangs:'straight', outfit:'hoodie',   acc:'tanuki',   expr:'sleepy',
+    note:'十五分で腹を打つ。' },
+  { id:'jisho',  name:'辞書ヒヨコ',     kana:'じしょヒヨコ',     rar:'R',  sigil:'辞',
+    body:'#e5c94a', accent:'#fff3b0', hair2:'#ab9226', eye:'#ffe066', skin:'#ffe4d2',
+    hair:'bob',  bangs:'curtain',  outfit:'sailor',   acc:'glasses',  expr:'calm',
+    note:'まだ二千語しか知らない。' },
 
-  { id:'ondoku', name:'音読オニ',       kana:'おんどくオニ',     rar:'SR', sigil:'音', acc:'horn',  body:'#d4514f', accent:'#ffb0a0', note:'昨日の文章を叫ばせる。' },
-  { id:'sakuin', name:'索引フクロウ',   kana:'さくいんフクロウ', rar:'SR', sigil:'索', acc:'ears',  body:'#7a6ad0', accent:'#cfc4ff', note:'一秒で意味に辿り着く。' },
-  { id:'genkou', name:'原稿用紙ゴーレム', kana:'げんこうようしゴーレム', rar:'SR', sigil:'稿', acc:'hat', body:'#8a93a8', accent:'#dfe6f5', note:'四百のマスでできている。' },
-  { id:'shinsho',name:'新書ネズミ',     kana:'しんしょネズミ',   rar:'SR', sigil:'新', acc:'ears',  body:'#6ab0d8', accent:'#c8ecff', note:'二ヶ月で一冊かじる。' },
-  { id:'keigo',  name:'敬語キツネ',     kana:'けいごキツネ',     rar:'SR', sigil:'敬', acc:'horn',  body:'#e08a4a', accent:'#ffd2a8', note:'距離の取り方だけが上手い。' },
+  { id:'ondoku', name:'音読オニ',       kana:'おんどくオニ',     rar:'SR', sigil:'音',
+    body:'#d4514f', accent:'#ffb0a0', hair2:'#93302f', eye:'#ff6a4a', skin:'#ffd8c4',
+    hair:'wild', bangs:'spiky',    outfit:'kimono',   acc:'horns',    expr:'shout',
+    note:'昨日の文章を叫ばせる。' },
+  { id:'sakuin', name:'索引フクロウ',   kana:'さくいんフクロウ', rar:'SR', sigil:'索',
+    body:'#7a6ad0', accent:'#cfc4ff', hair2:'#4f4192', eye:'#b09aff', skin:'#ffe2d4',
+    hair:'flow', bangs:'straight', outfit:'cape',     acc:'owl',      expr:'calm',
+    note:'一秒で意味に辿り着く。' },
+  { id:'genkou', name:'原稿用紙ゴーレム', kana:'げんこうようしゴーレム', rar:'SR', sigil:'稿',
+    body:'#8a93a8', accent:'#dfe6f5', hair2:'#5c6478', eye:'#b8c4dc', skin:'#f0e2dc',
+    hair:'hime', bangs:'blunt',    outfit:'grid',     acc:'gridclip', expr:'calm',
+    note:'四百のマスでできている。' },
+  { id:'shinsho',name:'新書ネズミ',     kana:'しんしょネズミ',   rar:'SR', sigil:'新',
+    body:'#6ab0d8', accent:'#c8ecff', hair2:'#3f7ea3', eye:'#8ad4ff', skin:'#ffe4d4',
+    hair:'bob',  bangs:'split',    outfit:'sailor',   acc:'mouse',    expr:'smile',
+    note:'二ヶ月で一冊かじる。' },
+  { id:'keigo',  name:'敬語キツネ',     kana:'けいごキツネ',     rar:'SR', sigil:'敬',
+    body:'#e08a4a', accent:'#ffd2a8', hair2:'#a55f26', eye:'#ffa860', skin:'#ffdcc4',
+    hair:'pony', bangs:'side',     outfit:'hakama',   acc:'fox',      expr:'smug',
+    note:'距離の取り方だけが上手い。' },
 
-  { id:'hakusho',name:'白書ドラゴン',   kana:'はくしょドラゴン', rar:'SSR', sigil:'白', acc:'wings', body:'#4a7ad0', accent:'#bcd8ff', note:'毎年ぶ厚くなって帰ってくる。' },
-  { id:'jodoshi',name:'助動詞の蛇',     kana:'じょどうしのへび', rar:'SSR', sigil:'助', acc:'fin',   body:'#4fc0a0', accent:'#b8f5e2', note:'べし・べからず・べかりけり。' },
-  { id:'bungo',  name:'文語の翁',       kana:'ぶんごのおきな',   rar:'SSR', sigil:'文', acc:'hat',   body:'#b08ad8', accent:'#e8d6ff', note:'口語では何も言わない。' },
-  { id:'tsuyaku',name:'逐次通訳の鶴',   kana:'ちくじつうやくのつる', rar:'SSR', sigil:'訳', acc:'wings', body:'#e8e2f0', accent:'#ffffff', note:'一拍遅れて完璧に喋る。' },
+  { id:'hakusho',name:'白書ドラゴン',   kana:'はくしょドラゴン', rar:'SSR', sigil:'白',
+    body:'#4a7ad0', accent:'#bcd8ff', hair2:'#2d5296', eye:'#6aa8ff', skin:'#ffe0d0',
+    hair:'long', bangs:'side',     outfit:'armor',    acc:'dragon',   expr:'calm',
+    note:'毎年ぶ厚くなって帰ってくる。' },
+  { id:'jodoshi',name:'助動詞の蛇',     kana:'じょどうしのへび', rar:'SSR', sigil:'助',
+    body:'#4fc0a0', accent:'#b8f5e2', hair2:'#2d8570', eye:'#5ae0b8', skin:'#ffe2d2',
+    hair:'long', bangs:'straight', outfit:'drape',    acc:'snake',    expr:'smug',
+    note:'べし・べからず・べかりけり。' },
+  { id:'bungo',  name:'文語の翁',       kana:'ぶんごのおきな',   rar:'SSR', sigil:'文',
+    body:'#b08ad8', accent:'#e8d6ff', hair2:'#7a5aa0', eye:'#c9a8ff', skin:'#ffe4d6',
+    hair:'hime', bangs:'blunt',    outfit:'robe',     acc:'brush',    expr:'calm',
+    note:'口語では何も言わない。' },
+  { id:'tsuyaku',name:'逐次通訳の鶴',   kana:'ちくじつうやくのつる', rar:'SSR', sigil:'訳',
+    body:'#e8e2f0', accent:'#ffffff', hair2:'#b0a8c4', eye:'#9ad8ff', skin:'#ffe6dc',
+    hair:'long', bangs:'curtain',  outfit:'suit',     acc:'headset',  expr:'calm',
+    note:'一拍遅れて完璧に喋る。' },
 
-  { id:'joken',  name:'条件次第',       kana:'じょうけんしだい', rar:'UR', sigil:'条', acc:'halo',  body:'#ff7fd0', accent:'#ffe0f5', note:'いつか話し相手になるかもしれない。' },
-  { id:'dokugaku',name:'完全独学の王',  kana:'かんぜんどくがくのおう', rar:'UR', sigil:'独', acc:'crown', body:'#f0c040', accent:'#fff0b8', note:'誰にも添削されずここまで来た。' }
+  { id:'joken',  name:'条件次第',       kana:'じょうけんしだい', rar:'UR', sigil:'条',
+    body:'#ff7fd0', accent:'#ffe0f5', hair2:'#c2529c', eye:'#ffa8e0', skin:'#ffe8e0',
+    hair:'flow', bangs:'split',    outfit:'ethereal', acc:'halo',     expr:'smile',
+    note:'いつか話し相手になるかもしれない。' },
+  { id:'dokugaku',name:'完全独学の王',  kana:'かんぜんどくがくのおう', rar:'UR', sigil:'独',
+    body:'#f0c040', accent:'#fff0b8', hair2:'#b08a1a', eye:'#ffd860', skin:'#ffe2cc',
+    hair:'long', bangs:'straight', outfit:'regalia',  acc:'crown',    expr:'smug',
+    note:'誰にも添削されずここまで来た。' }
 ];
 
 const TITLES = [[1,'見習い'],[3,'音読者'],[5,'新書読み'],[8,'白書の徒'],[12,'文語遣い'],[16,'硬文の主'],[20,'条件次第']];
@@ -1016,62 +1073,242 @@ function confetti(n) {
 
 // One shared creature template, parameterized per unit. Keeps 16 units
 // visually coherent without a single external asset.
-const BODY = {
-  def:  'M50 16 C71 16 81 33 81 51 C81 72 68 84 50 84 C32 84 19 72 19 51 C19 33 29 16 50 16Z',
-  drip: 'M50 16 C71 16 81 33 81 51 C81 64 77 74 69 79 C64 82 60 75 55 79 C51 82 47 82 43 79 C38 75 33 82 28 78 C22 73 19 63 19 51 C19 33 29 16 50 16Z'
+// One parameterized chibi bust drives all 16 units. Layer order is load-bearing:
+// back hair → back accessory → torso → head → face → bangs → front accessory.
+// Bangs must land after the face or the whole thing stops reading as anime.
+
+let _svgSeq = 0;
+
+const HEAD = 'M50 16 C63 16 74 26 74 42 C74 56 68 66 58 70 C55 71.5 52 72 50 72 C48 72 45 71.5 42 70 C32 66 26 56 26 42 C26 26 37 16 50 16Z';
+const SH = 'M50 72 C35 72 21 81 17 100 L83 100 C79 81 65 72 50 72Z';
+const LINE = '#3a2440';
+
+const HAIR_BACK = {
+  bob:  c => `<path d="M50 9 C74 9 82 28 82 48 C82 62 80 72 78 79 C74 81 68 80 65 76 C69 66 70 57 70 48 C70 33 63 25 50 25 C37 25 30 33 30 48 C30 57 31 66 35 76 C32 80 26 81 22 79 C20 72 18 62 18 48 C18 28 26 9 50 9Z" fill="${c}"/>`,
+  long: c => `<path d="M50 9 C74 9 82 28 82 48 C82 68 80 84 77 96 C72 98 66 97 63 93 C68 76 70 60 70 48 C70 33 63 25 50 25 C37 25 30 33 30 48 C30 60 32 76 37 93 C34 97 28 98 23 96 C20 84 18 68 18 48 C18 28 26 9 50 9Z" fill="${c}"/>`,
+  flow: c => `<path d="M50 9 C74 9 82 28 82 48 C82 66 86 80 79 95 C74 98 67 96 65 90 C70 76 70 60 70 48 C70 33 63 25 50 25 C37 25 30 33 30 48 C30 60 30 76 35 90 C33 96 26 98 21 95 C14 80 18 66 18 48 C18 28 26 9 50 9Z" fill="${c}"/>`,
+  hime: c => `<path d="M50 9 C74 9 82 28 82 48 C82 62 81 72 80 79 L66 79 C68 68 69 57 69 48 C69 33 63 25 50 25 C37 25 31 33 31 48 C31 57 32 68 34 79 L20 79 C19 72 18 62 18 48 C18 28 26 9 50 9Z" fill="${c}"/>
+              <path d="M20 76 h15 v20 h-15z M65 76 h15 v20 h-15z" fill="${c}"/>`,
+  twin: c => `<path d="M50 9 C72 9 80 27 80 46 C80 56 79 64 77 70 C73 72 68 71 66 67 C68 60 69 53 69 46 C69 32 62 25 50 25 C38 25 31 32 31 46 C31 53 32 60 34 67 C32 71 27 72 23 70 C21 64 20 56 20 46 C20 27 28 9 50 9Z" fill="${c}"/>
+              <path d="M21 44 C7 46 2 60 7 76 C10 86 17 90 22 85 C26 80 23 70 23 61 C23 52 25 47 21 44Z" fill="${c}"/>
+              <path d="M79 44 C93 46 98 60 93 76 C90 86 83 90 78 85 C74 80 77 70 77 61 C77 52 75 47 79 44Z" fill="${c}"/>`,
+  pony: c => `<path d="M50 9 C74 9 82 28 82 48 C82 60 80 68 78 74 C74 76 69 75 66 71 C69 62 70 55 70 48 C70 33 63 25 50 25 C37 25 30 33 30 48 C30 55 31 62 34 71 C31 75 26 76 22 74 C20 68 18 60 18 48 C18 28 26 9 50 9Z" fill="${c}"/>
+              <path d="M77 28 C93 32 99 50 94 68 C90 82 82 90 75 87 C70 84 76 73 78 61 C80 48 77 38 77 28Z" fill="${c}"/>`,
+  wild: c => `<path d="M50 6 L58 15 L64 7 L68 19 L79 12 L78 25 L89 24 L81 35 C83 44 83 57 81 68 C77 72 70 71 67 66 C70 57 70 51 70 47 C70 32 63 24 50 24 C37 24 30 32 30 47 C30 51 30 57 33 66 C30 71 23 72 19 68 C17 57 17 44 19 35 L11 24 L22 25 L21 12 L32 19 L36 7 L42 15Z" fill="${c}"/>`
+};
+
+const BANGS = {
+  straight: c => `<path d="M26 45 C26 27 36 18 50 18 C64 18 74 27 74 45 C72 36 67 30 61 32 C57 33 54 30 50 30 C46 30 43 33 39 32 C33 30 28 36 26 45Z" fill="${c}"/>`,
+  split:    c => `<path d="M26 45 C26 27 36 18 50 18 C64 18 74 27 74 45 C73 35 67 27 59 27 C54 27 51 32 50 37 C49 32 46 27 41 27 C33 27 27 35 26 45Z" fill="${c}"/>`,
+  side:     c => `<path d="M26 45 C26 27 36 18 50 18 C64 18 74 27 74 45 C73 33 69 27 63 27 C54 27 43 33 35 36 C30 38 27 41 26 45Z" fill="${c}"/>`,
+  blunt:    c => `<path d="M26 45 C26 27 36 18 50 18 C64 18 74 27 74 45 L74 35 L26 35Z" fill="${c}"/>`,
+  spiky:    c => `<path d="M26 46 C26 27 36 18 50 18 C64 18 74 27 74 46 L69 33 L64 41 L58 29 L52 39 L47 28 L41 39 L36 30 L31 41Z" fill="${c}"/>`,
+  curtain:  c => `<path d="M26 46 C26 27 36 18 50 18 C64 18 74 27 74 46 C72 34 66 27 60 29 C56 31 53 36 52 43 L48 43 C47 36 44 31 40 29 C34 27 28 34 26 46Z" fill="${c}"/>`
+};
+
+const OUTFIT = {
+  sailor: u => `<path d="${SH}" fill="#2c3a63"/>
+    <path d="M37 75 L50 93 L63 75 C59 73 55 72 50 72 C45 72 41 73 37 75Z" fill="#eef3ff"/>
+    <path d="M34 77 C28 81 23 88 20 96 L29 100 L40 79Z M66 77 C72 81 77 88 80 96 L71 100 L60 79Z" fill="#eef3ff"/>
+    <path d="M50 88 L44 97 L50 100 L56 97Z" fill="${u.body}"/>`,
+  hoodie: u => `<path d="${SH}" fill="${u.hair2}"/>
+    <path d="M50 72 C40 72 32 76 28 84 C34 88 42 90 50 90 C58 90 66 88 72 84 C68 76 60 72 50 72Z" fill="${u.body}"/>
+    <path d="M42 86 L40 100 M58 86 L60 100" stroke="${u.accent}" stroke-width="2" stroke-linecap="round" fill="none"/>`,
+  dress:  u => `<path d="${SH}" fill="${u.accent}"/>
+    <ellipse cx="24" cy="84" rx="10" ry="8" fill="${u.accent}"/><ellipse cx="76" cy="84" rx="10" ry="8" fill="${u.accent}"/>
+    <path d="M40 74 C44 82 56 82 60 74 C57 72 54 71 50 71 C46 71 43 72 40 74Z" fill="${u.body}" opacity=".5"/>
+    <circle cx="50" cy="80" r="3.4" fill="${u.body}"/>`,
+  kimono: u => `<path d="${SH}" fill="#7d1f2c"/>
+    <path d="M50 73 L34 100 L46 100 L52 78Z" fill="#f4efe4"/>
+    <path d="M50 73 L66 100 L54 100 L48 78Z" fill="#f4efe4"/>
+    <path d="M50 76 L40 100 L60 100Z" fill="#3a1220"/>`,
+  cape:   u => `<path d="${SH}" fill="${u.hair2}"/>
+    <path d="M50 73 C34 73 22 82 18 100 L82 100 C78 82 66 73 50 73Z" fill="${u.body}" opacity=".55"/>
+    <path d="M30 78 C36 90 64 90 70 78" stroke="${u.accent}" stroke-width="1.6" fill="none" opacity=".8"/>
+    <circle cx="50" cy="79" r="4" fill="${u.accent}"/><circle cx="50" cy="79" r="1.8" fill="${u.hair2}"/>`,
+  grid:   u => `<path d="${SH}" fill="#e8e6de"/>
+    <path d="M24 84h52M24 92h52M34 76v24M50 74v26M66 76v24" stroke="#c4544e" stroke-width="1" opacity=".55" fill="none"/>
+    <path d="M38 74 L50 88 L62 74 C58 72 54 71 50 71 C46 71 42 72 38 74Z" fill="${u.hair2}"/>`,
+  hakama: u => `<path d="${SH}" fill="${u.body}"/>
+    <path d="M50 72 L36 100 L48 100 L53 77Z M50 72 L64 100 L52 100 L47 77Z" fill="#f6f2e8"/>
+    <path d="M22 92 h56 l2 8 H20Z" fill="${u.hair2}"/>`,
+  armor:  u => `<path d="${SH}" fill="#2b3550"/>
+    <path d="M50 73 C42 73 36 77 34 84 L50 90 L66 84 C64 77 58 73 50 73Z" fill="#8fa4c8"/>
+    <ellipse cx="22" cy="86" rx="11" ry="9" fill="#8fa4c8"/><ellipse cx="78" cy="86" rx="11" ry="9" fill="#8fa4c8"/>
+    <ellipse cx="22" cy="86" rx="6" ry="4.6" fill="${u.body}"/><ellipse cx="78" cy="86" rx="6" ry="4.6" fill="${u.body}"/>
+    <path d="M50 90 L50 100" stroke="${u.accent}" stroke-width="2" fill="none"/>`,
+  drape:  u => `<path d="${SH}" fill="${u.hair2}"/>
+    <path d="M50 72 C60 76 74 84 83 100 L40 100 C44 90 47 80 50 72Z" fill="${u.body}"/>
+    <path d="M50 74 C56 80 62 88 66 100" stroke="${u.accent}" stroke-width="1.4" fill="none" opacity=".7"/>
+    <circle cx="66" cy="84" r="3.2" fill="${u.accent}"/>`,
+  robe:   u => `<path d="${SH}" fill="${u.hair2}"/>
+    <path d="M50 72 L32 100 L46 100 L52 79Z M50 72 L68 100 L54 100 L48 79Z" fill="${u.accent}"/>
+    <path d="M50 76 L42 100 L58 100Z" fill="${u.body}"/>
+    <path d="M34 96 h32" stroke="${u.body}" stroke-width="2" fill="none"/>`,
+  suit:   u => `<path d="${SH}" fill="#1f2438"/>
+    <path d="M42 73 L50 86 L58 73 C55 72 53 71 50 71 C47 71 44 72 42 73Z" fill="#f4f6ff"/>
+    <path d="M40 74 L34 100 L46 100 L50 86Z M60 74 L66 100 L54 100 L50 86Z" fill="#2c3350"/>
+    <path d="M50 86 L46 92 L50 100 L54 92Z" fill="${u.eye}"/>`,
+  ethereal: u => `<path d="${SH}" fill="${u.body}" opacity=".35"/>
+    <path d="M50 72 C38 74 28 82 22 100 L78 100 C72 82 62 74 50 72Z" fill="${u.accent}" opacity=".5"/>
+    <path d="M32 88 C40 84 60 84 68 88" stroke="#fff" stroke-width="1.4" fill="none" opacity=".6"/>`,
+  regalia: u => `<path d="${SH}" fill="#3a2450"/>
+    <path d="M50 72 C40 72 32 77 29 86 L50 92 L71 86 C68 77 60 72 50 72Z" fill="${u.body}"/>
+    <path d="M29 86 L50 92 L71 86" stroke="${u.accent}" stroke-width="1.8" fill="none"/>
+    <ellipse cx="20" cy="88" rx="9" ry="7" fill="${u.body}"/><ellipse cx="80" cy="88" rx="9" ry="7" fill="${u.body}"/>
+    <path d="M50 92 L45 99 L50 100 L55 99Z" fill="${u.accent}"/>
+    <circle cx="50" cy="84" r="3.4" fill="#ff5fd0"/>`
+};
+
+const ACC_BACK = {
+  // Gossamer, not solid — solid wings in the unit's own palette vanish into the hair.
+  wings: u => `<g fill="#ffffff" fill-opacity=".55" stroke="${u.accent}" stroke-width="1.2">
+      <path d="M31 42 C12 22 2 40 9 54 C14 63 26 58 32 50Z"/>
+      <path d="M30 56 C16 52 8 62 15 72 C21 78 29 70 31 62Z"/>
+      <path d="M69 42 C88 22 98 40 91 54 C86 63 74 58 68 50Z"/>
+      <path d="M70 56 C84 52 92 62 85 72 C79 78 71 70 69 62Z"/></g>
+    <path d="M28 46 C19 40 12 46 13 54 M72 46 C81 40 88 46 87 54" stroke="${u.accent}" stroke-width="1" fill="none" opacity=".7"/>`,
+  dragon: u => `<g fill="${u.hair2}" stroke="${u.accent}" stroke-width="1.2">
+      <path d="M30 44 C10 26 1 44 8 60 C13 70 25 64 33 55Z"/>
+      <path d="M70 44 C90 26 99 44 92 60 C87 70 75 64 67 55Z"/></g>
+    <path d="M30 45 L12 40 M30 45 L10 52 M30 45 L14 62 M70 45 L88 40 M70 45 L90 52 M70 45 L86 62"
+          stroke="${u.accent}" stroke-width="1.1" fill="none" opacity=".75"/>`,
+  // Cobra hood. Must be wider than the hair shell (x18–82) or the hair draws right over it.
+  snake: u => `<path d="M50 8 C21 8 5 30 7 53 C8 68 16 79 25 81 C18 64 18 40 27 27 C35 16 65 16 73 27 C82 40 82 64 75 81 C84 79 92 68 93 53 C95 30 79 8 50 8Z" fill="${u.hair2}"/>
+    <path d="M50 15 C29 15 16 33 16 52 M50 15 C71 15 84 33 84 52" stroke="${u.accent}" stroke-width="1.3" fill="none" opacity=".55"/>`,
+  halo:  u => `<ellipse cx="50" cy="4.5" rx="17" ry="5" fill="none" stroke="#ffe98a" stroke-width="3"/>
+               <ellipse cx="50" cy="4.5" rx="17" ry="5" fill="none" stroke="#fff" stroke-width="1" opacity=".9"/>`
+};
+
+const ACC_FRONT = {
+  droplet: u => `<path d="M50 3 C46 10 42 14 42 18 C42 23 46 26 50 26 C54 26 58 23 58 18 C58 14 54 10 50 3Z" fill="${u.accent}" opacity=".9"/>
+                 <circle cx="47" cy="17" r="2" fill="#fff" opacity=".8"/>`,
+  notes:   u => `<g transform="rotate(-14 30 30)"><rect x="22" y="24" width="13" height="13" rx="1" fill="#ffe066"/></g>
+                 <g transform="rotate(11 70 27)"><rect x="64" y="21" width="12" height="12" rx="1" fill="#8ae0a0"/></g>
+                 <g transform="rotate(-6 66 38)"><rect x="61" y="33" width="10" height="10" rx="1" fill="#ff9ec8"/></g>`,
+  tanuki:  u => `<ellipse cx="27" cy="19" rx="10" ry="9" fill="${u.hair2}"/><ellipse cx="73" cy="19" rx="10" ry="9" fill="${u.hair2}"/>
+                 <ellipse cx="27" cy="20" rx="5" ry="4.4" fill="${u.accent}"/><ellipse cx="73" cy="20" rx="5" ry="4.4" fill="${u.accent}"/>`,
+  mouse:   u => `<circle cx="26" cy="18" r="10" fill="${u.hair2}"/><circle cx="74" cy="18" r="10" fill="${u.hair2}"/>
+                 <circle cx="26" cy="18" r="5.6" fill="#ffc4d8"/><circle cx="74" cy="18" r="5.6" fill="#ffc4d8"/>`,
+  fox:     u => `<path d="M22 30 L26 6 L42 20Z" fill="${u.hair2}"/><path d="M78 30 L74 6 L58 20Z" fill="${u.hair2}"/>
+                 <path d="M27 24 L29 13 L37 21Z" fill="${u.accent}"/><path d="M73 24 L71 13 L63 21Z" fill="${u.accent}"/>`,
+  horns:   u => `<g fill="#fff0d8" stroke="#c99a68" stroke-width="1.2" stroke-linejoin="round">
+                   <path d="M31 24 C25 13 23 5 27 0 C34 5 40 14 42 22Z"/>
+                   <path d="M69 24 C75 13 77 5 73 0 C66 5 60 14 58 22Z"/></g>
+                 <path d="M31 20 C29 14 28 9 29 5 M69 20 C71 14 72 9 71 5" stroke="#c99a68" stroke-width="1" fill="none" opacity=".8"/>`,
+  dragon:  u => `<path d="M30 20 C24 12 22 6 25 3 C31 7 38 13 41 19Z" fill="${u.accent}"/>
+                 <path d="M70 20 C76 12 78 6 75 3 C69 7 62 13 59 19Z" fill="${u.accent}"/>`,
+  owl:     u => `<g fill="${u.accent}" stroke="${u.hair2}" stroke-width="1.2" stroke-linejoin="round">
+                   <path d="M27 27 L23 4 L41 19Z"/><path d="M73 27 L77 4 L59 19Z"/></g>
+                 ${glasses(u)}`,
+  glasses: u => glasses(u),
+  snake:   u => `<path d="M50 10 L55 21 L45 21Z" fill="${u.accent}"/>
+                 <path d="M44 15 h12" stroke="${u.hair2}" stroke-width="1.4" fill="none"/>`,
+  gridclip: u => `<g transform="rotate(-8 34 26)"><rect x="26" y="21" width="17" height="11" rx="1" fill="#f4f2ea" stroke="#c4544e" stroke-width=".8"/>
+                  <path d="M26 26.5h17M31.6 21v11M37.2 21v11" stroke="#c4544e" stroke-width=".7" opacity=".8"/></g>`,
+  brush:   u => `<g transform="rotate(28 70 26)"><rect x="67" y="10" width="4.4" height="19" rx="1" fill="#6b4a2a"/>
+                 <path d="M67 29 L71.4 29 L69.2 40Z" fill="#2a2030"/><rect x="66.4" y="26" width="5.6" height="3" fill="${u.accent}"/></g>`,
+  headset: u => `<path d="M24 42 C24 22 34 14 50 14 C66 14 76 22 76 42" stroke="#3a4258" stroke-width="3.4" fill="none"/>
+                 <rect x="18" y="40" width="11" height="15" rx="4" fill="#3a4258"/>
+                 <rect x="71" y="40" width="11" height="15" rx="4" fill="#3a4258"/>
+                 <path d="M29 52 C34 60 38 64 43 66" stroke="#3a4258" stroke-width="2" fill="none"/>
+                 <ellipse cx="45" cy="66" rx="3.4" ry="2.4" fill="#5a6480"/>`,
+  crown:   u => `<path d="M30 20 L29 5 L38 12 L50 1 L62 12 L71 5 L70 20Z" fill="${u.accent}" stroke="#a8801a" stroke-width="1"/>
+                 <circle cx="50" cy="12" r="2.6" fill="#ff5fd0"/><circle cx="35" cy="15" r="1.6" fill="#5ad8ff"/><circle cx="65" cy="15" r="1.6" fill="#5ad8ff"/>`,
+  wings:   () => '',
+  halo:    () => ''
+};
+
+function glasses(u) {
+  return `<g fill="none" stroke="#4a4258" stroke-width="1.6">
+    <circle cx="39" cy="52" r="9.4" fill="#cfe4ff" fill-opacity=".22"/>
+    <circle cx="61" cy="52" r="9.4" fill="#cfe4ff" fill-opacity=".22"/>
+    <path d="M48.4 51 h3.2 M29.6 50 L25 47 M70.4 50 L75 47"/></g>`;
+}
+
+// Anime eye: sclera, gradient iris, pupil, two highlights, then a heavy upper lash.
+function eye(u, cx, gid, slit) {
+  const cy = 52;
+  return `
+    <ellipse cx="${cx}" cy="${cy}" rx="6.4" ry="7.8" fill="#fff"/>
+    <ellipse cx="${cx}" cy="${cy + .4}" rx="5.4" ry="6.8" fill="url(#${gid})"/>
+    ${slit
+      ? `<ellipse cx="${cx}" cy="${cy + .4}" rx="1.3" ry="5.4" fill="#1a1030"/>`
+      : `<ellipse cx="${cx}" cy="${cy + 1}" rx="2.6" ry="3.6" fill="#1a1030"/>`}
+    <circle cx="${cx - 2}" cy="${cy - 2.8}" r="2.1" fill="#fff"/>
+    <circle cx="${cx + 2.2}" cy="${cy + 2.6}" r="1.1" fill="#fff" opacity=".75"/>
+    <path d="M${cx - 7} ${cy - 4.4} Q${cx} ${cy - 10} ${cx + 7} ${cy - 4.4}"
+          stroke="${LINE}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <path d="M${cx - 6.6} ${cy + 5.6} Q${cx} ${cy + 8.4} ${cx + 6.6} ${cy + 5.6}"
+          stroke="${LINE}" stroke-width="1" fill="none" opacity=".5"/>`;
+}
+
+const MOUTH = {
+  smile:  '<path d="M46.4 63.6 Q50 67.4 53.6 63.6" stroke="' + LINE + '" stroke-width="1.7" fill="none" stroke-linecap="round"/>',
+  calm:   '<path d="M47.4 64.2 Q50 65.8 52.6 64.2" stroke="' + LINE + '" stroke-width="1.6" fill="none" stroke-linecap="round"/>',
+  smug:   '<path d="M46 64.6 Q49.4 67 53.4 63.2" stroke="' + LINE + '" stroke-width="1.7" fill="none" stroke-linecap="round"/>',
+  sleepy: '<path d="M47.6 64.6 Q50 65.8 52.4 64.6" stroke="' + LINE + '" stroke-width="1.5" fill="none" stroke-linecap="round"/>',
+  shout:  '<ellipse cx="50" cy="65" rx="4.2" ry="5" fill="#7d2438"/><ellipse cx="50" cy="67.4" rx="2.6" ry="2" fill="#ff8a9a"/>'
+};
+
+const BROWS = {
+  smile:  `<path d="M33.6 42.6 Q39 40.4 44.4 42.4 M55.6 42.4 Q61 40.4 66.4 42.6" stroke="${LINE}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`,
+  calm:   `<path d="M34 42.6 h10 M56 42.6 h10" stroke="${LINE}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`,
+  smug:   `<path d="M34 43.4 Q39 40 44.4 41.6 M55.6 41.6 Q61 40 66 43.4" stroke="${LINE}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`,
+  sleepy: `<path d="M33.8 41.4 Q39 43.6 44.4 43 M55.6 43 Q61 43.6 66.2 41.4" stroke="${LINE}" stroke-width="1.6" fill="none" stroke-linecap="round"/>`,
+  shout:  `<path d="M34 41 Q39 43.4 44.6 43.6 M55.4 43.6 Q61 43.4 66 41" stroke="${LINE}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`
 };
 
 function unitSvg(u, big) {
+  // Gradient ids must be unique per render — the roster draws all 16 at once and a
+  // pull card can draw a unit that is already in the grid.
+  const gid = 'ir' + (_svgSeq++);
   const glow = big ? `<ellipse cx="50" cy="52" rx="42" ry="42" fill="${u.body}" opacity=".16"/>` : '';
-  // Sunburst sits behind the body, so only the halo outside the silhouette shows.
   const rays = (big && RANK[u.rar] >= 2)
     ? `<g class="rays" opacity=".36">` + Array.from({ length: 14 }, (_, i) =>
         `<path d="M50 50 L46.6 2 L53.4 2Z" fill="${RARITY_COLOR[u.rar]}" transform="rotate(${i * 25.7} 50 50)"/>`
       ).join('') + `</g>` : '';
+  const back = ACC_BACK[u.acc] ? ACC_BACK[u.acc](u) : '';
+  const front = ACC_FRONT[u.acc] ? ACC_FRONT[u.acc](u) : '';
+
   return `<svg viewBox="0 0 100 100" role="img" aria-label="${u.name}">
-    ${glow}${rays}
-    ${accessory(u, 'back')}
-    <path d="${BODY[u.shape] || BODY.def}" fill="${u.body}"/>
-    <path d="M50 16 C71 16 81 33 81 51 C81 60 78 67 73 72 C70 50 62 38 45 33 C40 31 36 26 38 20 C42 17 46 16 50 16Z"
-          fill="${u.accent}" opacity=".38"/>
-    ${accessory(u, 'front')}
-    <ellipse cx="39" cy="50" rx="7" ry="8.5" fill="#fff"/>
-    <ellipse cx="61" cy="50" rx="7" ry="8.5" fill="#fff"/>
-    <circle cx="40" cy="51.5" r="3.6" fill="#14102a"/>
-    <circle cx="62" cy="51.5" r="3.6" fill="#14102a"/>
-    <circle cx="41.6" cy="49.6" r="1.3" fill="#fff"/>
-    <circle cx="63.6" cy="49.6" r="1.3" fill="#fff"/>
-    <path d="M44 65 Q50 70 56 65" stroke="#14102a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-    <circle cx="77" cy="77" r="12" fill="#0d0920" stroke="${RARITY_COLOR[u.rar]}" stroke-width="1.6"/>
-    <text x="77" y="82" font-size="13" text-anchor="middle" fill="${RARITY_COLOR[u.rar]}"
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${u.hair2}"/><stop offset=".55" stop-color="${u.eye}"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient></defs>
+    ${glow}${rays}${back}
+    ${HAIR_BACK[u.hair](u.body)}
+    ${OUTFIT[u.outfit](u)}
+    <path d="M45 66 h10 v8 h-10z" fill="${u.skin}"/>
+    <path d="${HEAD}" fill="${u.skin}"/>
+    <ellipse cx="26.6" cy="52" rx="3" ry="4.4" fill="${u.skin}"/>
+    <ellipse cx="73.4" cy="52" rx="3" ry="4.4" fill="${u.skin}"/>
+    <ellipse cx="31" cy="59" rx="4.6" ry="2.6" fill="#ff9aa8" opacity=".45"/>
+    <ellipse cx="69" cy="59" rx="4.6" ry="2.6" fill="#ff9aa8" opacity=".45"/>
+    ${BROWS[u.expr]}
+    ${eye(u, 39, gid, u.acc === 'snake')}
+    ${eye(u, 61, gid, u.acc === 'snake')}
+    <path d="M49.4 58.4 Q50 59.4 50.9 58.6" stroke="${LINE}" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".7"/>
+    ${MOUTH[u.expr]}
+    <path d="M25.5 40 C22.5 50 23.5 60 26 69 C28 71 30 70.4 30.6 67.4 C28.4 58 28.6 48 30 41Z" fill="${u.body}"/>
+    <path d="M74.5 40 C77.5 50 76.5 60 74 69 C72 71 70 70.4 69.4 67.4 C71.6 58 71.4 48 70 41Z" fill="${u.body}"/>
+    <path d="M26.4 54 C26.6 61 27.4 66 28.4 69.6 C29.6 70.6 30.4 70 30.6 67.4 C29.4 63 28.8 58 28.7 54Z" fill="${u.hair2}" opacity=".55"/>
+    <path d="M73.6 54 C73.4 61 72.6 66 71.6 69.6 C70.4 70.6 69.6 70 69.4 67.4 C70.6 63 71.2 58 71.3 54Z" fill="${u.hair2}" opacity=".55"/>
+    ${BANGS[u.bangs](u.body)}
+    <path d="M28 40 C33 46 40 48 50 48 C60 48 67 46 72 40 C70 47 62 51 50 51 C38 51 30 47 28 40Z" fill="${u.hair2}" opacity=".28"/>
+    <path d="M50 18 C58 18 66 22 70 30 C64 26 57 24 50 24Z" fill="${u.accent}" opacity=".5"/>
+    ${front}
+    <circle cx="79" cy="79" r="11" fill="#0d0920" stroke="${RARITY_COLOR[u.rar]}" stroke-width="1.6"/>
+    <text x="79" y="83.6" font-size="12" text-anchor="middle" fill="${RARITY_COLOR[u.rar]}"
           font-family="'Hiragino Mincho ProN','Yu Mincho',serif">${u.sigil}</text>
   </svg>`;
 }
 
-function accessory(u, layer) {
-  const b = u.body, a = u.accent;
-  if (layer === 'back') {
-    // Back-layer parts must clear the body silhouette (x 19–81, y 16–84) to read at all.
-    if (u.acc === 'wings') return `
-      <path d="M28 38 C6 22 0 44 9 55 C15 62 24 58 30 52Z" fill="${a}"/>
-      <path d="M72 38 C94 22 100 44 91 55 C85 62 76 58 70 52Z" fill="${a}"/>
-      <path d="M26 43 C13 35 7 45 13 52" fill="none" stroke="${b}" stroke-width="1.4" opacity=".45"/>
-      <path d="M74 43 C87 35 93 45 87 52" fill="none" stroke="${b}" stroke-width="1.4" opacity=".45"/>`;
-    if (u.acc === 'fin') return `
-      <path d="M50 1 L58 21 L42 21Z" fill="${a}"/>
-      <path d="M31 9 L40 23 L25 25Z" fill="${a}" opacity=".8"/>
-      <path d="M69 9 L60 23 L75 25Z" fill="${a}" opacity=".8"/>`;
-    if (u.acc === 'halo') return `<ellipse cx="50" cy="9" rx="20" ry="6.5" fill="none" stroke="${a}" stroke-width="3.4"/>`;
-    return '';
-  }
-  if (u.acc === 'horn') return `<path d="M31 22 L26 6 L41 17Z" fill="${a}"/><path d="M69 22 L74 6 L59 17Z" fill="${a}"/>`;
-  if (u.acc === 'ears') return `<ellipse cx="28" cy="20" rx="9" ry="12" fill="${b}"/><ellipse cx="72" cy="20" rx="9" ry="12" fill="${b}"/>
-      <ellipse cx="28" cy="21" rx="4" ry="6" fill="${a}"/><ellipse cx="72" cy="21" rx="4" ry="6" fill="${a}"/>`;
-  if (u.acc === 'hat') return `<rect x="30" y="6" width="40" height="14" rx="2" fill="${a}"/><rect x="24" y="19" width="52" height="4" rx="2" fill="${a}"/>
-      <path d="M30 6h40v14H30z" fill="none" stroke="${b}" stroke-width="1" opacity=".6"/>
-      <path d="M50 6v14M30 13h40" stroke="${b}" stroke-width="1" opacity=".6"/>`;
-  if (u.acc === 'crown') return `<path d="M28 20 L28 6 L38 14 L50 3 L62 14 L72 6 L72 20Z" fill="${a}" stroke="#8a6a10" stroke-width="1"/>`;
-  return '';
+function silhouetteSvg() {
+  return `<svg viewBox="0 0 100 100">
+    <path d="M50 9 C74 9 82 28 82 48 C82 64 80 74 78 82 L22 82 C20 74 18 64 18 48 C18 28 26 9 50 9Z" fill="#332a5c"/>
+    <path d="${SH}" fill="#332a5c"/>
+  </svg>`;
 }
 
 function capsuleSvg(rar) {
@@ -1251,7 +1488,7 @@ function render(animate) {
     if (!o) {
       return `<div class="unit locked r-${u.rar}">
         <span class="rar-tag t-${u.rar}">${u.rar}</span>
-        <svg viewBox="0 0 100 100"><path d="${BODY[u.shape] || BODY.def}" fill="#332a5c"/></svg>
+        ${silhouetteSvg()}
         <div class="u-name" style="color:var(--dim2)">？？？</div><div class="u-stars"></div></div>`;
     }
     return `<div class="unit owned r-${u.rar}" title="${u.note}">
