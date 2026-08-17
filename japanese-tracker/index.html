@@ -75,6 +75,9 @@ header {
 }
 .expbar.flash::after {
   content: ''; position: absolute; inset: 0; background: #fff;
+  /* Base opacity must be 0: the animation has no fill-mode, so on completion the overlay
+     reverts to this value. Without it the default of 1 leaves a solid white bar. */
+  opacity: 0;
   animation: expflash 0.5s ease-out; pointer-events: none;
 }
 @keyframes expflash { 0% { opacity: 0.55 } 100% { opacity: 0 } }
@@ -1420,6 +1423,7 @@ function render(animate) {
   if (animate && pct !== lastExpPct) {
     const bar = document.getElementById('expbar');
     bar.classList.remove('flash'); void bar.offsetWidth; bar.classList.add('flash');
+    bar.addEventListener('animationend', () => bar.classList.remove('flash'), { once: true });
   }
   lastExpPct = pct;
 
